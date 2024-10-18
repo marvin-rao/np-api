@@ -52,7 +52,6 @@ The `LoginButton` component provides a pre-built button for redirecting users to
 ```tsx
 <LoginButton />
 ```
-
 ### 3. Custom Hooks
 
 #### a. `useAuthSession`
@@ -65,6 +64,8 @@ if (shouldLogin) {
   // Handle login logic, like showing a login button
 }
 ```
+
+## 3. API Hooks
 
 #### b. `useGet`
 This hook makes a `GET` request with the Bearer token automatically included in the request header.
