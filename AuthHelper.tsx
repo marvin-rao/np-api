@@ -1,5 +1,11 @@
 // @ts-ignore
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 // Provider
 const AuthContext = createContext({ loginPageUrl: "", apiBaseUrl: "" });
@@ -39,7 +45,7 @@ type UseFetchWithTokenProps = {
 
 export const openLogin = ({ loginPageUrl }: { loginPageUrl: string }) => {
   const width = 500; // Popup width
-  const height = 600; // Popup height
+  const height = 700; // Popup height
 
   // Get the center of the screen
   const left = window.screenX + (window.innerWidth - width) / 2;
@@ -153,12 +159,19 @@ export const useGet = <T,>({ path, options = {} }: UseFetchWithTokenProps) => {
 
 type UsePostProps = {
   path: string;
+  options?: FetchOptions;
 };
+
+export type RequestMethod = "post" | "patch" | "delete";
 
 export const useRequest = ({
   path,
   method,
-}: UsePostProps & { method: "post" | "patch" | "delete" }) => {
+  options = {},
+}: UsePostProps & {
+  method: RequestMethod;
+  options?: FetchOptions;
+}) => {
   const { apiBaseUrl } = useAuthData();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -174,14 +187,17 @@ export const useRequest = ({
     const token = getBToken();
 
     try {
-      const response = await fetch(apiBaseUrl + path, {
-        method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        apiBaseUrl + path + (options?.queryString ?? ""),
+        {
+          method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -200,62 +216,75 @@ export const useRequest = ({
   return { loading, error, submit };
 };
 
-export const usePost = ({ path }: UsePostProps) => {
-  return useRequest({ path, method: "post" });
+export const usePost = ({ path, options }: UsePostProps) => {
+  return useRequest({ path, method: "post", options });
 };
 
-export const useDelete = ({ path }: UsePostProps) => {
-  return useRequest({ path, method: "delete" });
+export const useDelete = ({ path, options }: UsePostProps) => {
+  return useRequest({ path, method: "delete", options });
 };
 
-export const usePatch = ({ path }: UsePostProps) => {
-  return useRequest({ path, method: "patch" });
+export const usePatch = ({ path, options }: UsePostProps) => {
+  return useRequest({ path, method: "patch", options });
 };
 
-export const LoginButton = () => {
+export type AuthButtonProps = {
+  Component?: ({ onClick }: { onClick: () => void }) => ReactNode;
+};
+
+export const LoginButton = ({ Component }: AuthButtonProps) => {
   const { loginPageUrl } = useAuthData();
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column", // Stack the text and button vertically
-        justifyContent: "center", // Center vertically
-        alignItems: "center", // Center horizontally
-        height: "220px", // Take up the full viewport height
-        textAlign: "center", // Center the text inside the container
-      }}
-    >
-      <p style={{ fontSize: "18px", marginBottom: "20px", color: "#333" }}>
-        Login to continue.
-      </p>
+  const onClick = () => {
+    if (!loginPageUrl) {
+      alert("Dev:Provide loginPageUrl in Auth Context");
+      return;
+    }
+    openLogin({ loginPageUrl });
+  };
 
-      <button
-        onClick={() => {
-          if (!loginPageUrl) {
-            alert("Dev:Provide loginPageUrl in Auth Context");
-            return;
-          }
-          openLogin({ loginPageUrl });
-        }}
-        style={{
-          backgroundColor: "#3B77CB", // Green background
-          color: "white", // White text
-          padding: "12px 20px", // Padding for the button
-          fontSize: "16px", // Font size for button text
-          border: "none", // Remove button borders
-          borderRadius: "8px", // Rounded corners
-          cursor: "pointer", // Pointer cursor on hover
-          transition: "background-color 0.3s ease", // Smooth transition for hover effect
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
-        }}
-        onMouseOver={(e) =>
-          (e.currentTarget.style.backgroundColor = "darkblue")
-        } // Darker green on hover
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3B77CB")} // Revert back to the original color
-      >
-        Login
-      </button>
-    </div>
+  return (
+    <>
+      {Component && <Component onClick={onClick} />}
+      {!Component && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column", // Stack the text and button vertically
+            justifyContent: "center", // Center vertically
+            alignItems: "center", // Center horizontally
+            height: "220px", // Take up the full viewport height
+            textAlign: "center", // Center the text inside the container
+          }}
+        >
+          <p style={{ fontSize: "18px", marginBottom: "20px", color: "#333" }}>
+            Login to continue.
+          </p>
+
+          <button
+            onClick={onClick}
+            style={{
+              backgroundColor: "#3B77CB", // Green background
+              color: "white", // White text
+              padding: "12px 20px", // Padding for the button
+              fontSize: "16px", // Font size for button text
+              border: "none", // Remove button borders
+              borderRadius: "8px", // Rounded corners
+              cursor: "pointer", // Pointer cursor on hover
+              transition: "background-color 0.3s ease", // Smooth transition for hover effect
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "darkblue")
+            } // Darker green on hover
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "#3B77CB")
+            } // Revert back to the original color
+          >
+            Login
+          </button>
+        </div>
+      )}
+    </>
   );
 };
