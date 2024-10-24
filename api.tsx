@@ -5,9 +5,7 @@ import {
   usePatch,
   usePost,
   useRequest,
-} from "./AuthHelper";
-
-// NP, will remove this to NP, an extension of this.
+} from "./helper/ApiRequestsBase";
 
 const path = "developer/apps";
 
@@ -81,7 +79,7 @@ export const useUsers = ({ projectId }: { projectId: string }) => {
 
 export const useNotes = () => {
   const { projectId } = useProjectId();
-  return useGet<ProjectUser[]>({
+  return useGet<any[]>({
     path: "notes",
     options: { queryString: `?projectId=${projectId}` },
   });

@@ -1,6 +1,5 @@
-// run `node index.js` in the terminal
-
-export { AuthProvider, LoginButton, useAuthSession } from "./AuthHelper";
+export { LoginButton } from "./helper/AuthHelper";
+export { AuthProvider, useAuthSession } from "./helper/provider";
 
 export {
     // Dev
