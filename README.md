@@ -35,10 +35,11 @@ npm install newpaper-api
 
 ### 1. `AuthProvider`
 This provider manages authentication state and provides the `loginPageUrl` and `apiBaseUrl` to the components that consume this context.
+Wrap your App Components with <AuthProvider>{children}</AuthProvider> like so : 
 
 #### Example:
 ```tsx
-import { AuthProvider } from './authContext';
+import { AuthProvider } from 'newpaper-api';
 
 <AuthProvider loginPageUrl="https://login.example.com" apiBaseUrl="https://api.example.com">
   <YourAppComponents />
