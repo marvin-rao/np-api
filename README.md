@@ -51,18 +51,15 @@ The `LoginButton` component provides a pre-built button for redirecting users to
 
 
 #### Example:
-```tsx
-import { LoginButton } from 'newpaper-api';
-<LoginButton />
-```
 
 #### a. `useAuthSession`
 This hook tells us if the user should log or not.
 
 ```tsx
 const { shouldLogin } = useAuthSession();
+import { LoginButton } from 'newpaper-api';
 
-{shouldLogin && <LoginPage />}
+{shouldLogin && <LoginButton />}
 {!shouldLogin && <AppContent />}
 ```
 
