@@ -49,21 +49,21 @@ import { AuthProvider } from 'newpaper-api';
 ### 2. `LoginButton`
 The `LoginButton` component provides a pre-built button for redirecting users to the login page.
 
+
 #### Example:
 ```tsx
+import { LoginButton } from 'newpaper-api';
 <LoginButton />
 ```
-### 3. Custom Hooks
 
 #### a. `useAuthSession`
-This hook determines if the user should log in by checking the Bearer token expiration.
+This hook tells us if the user should log or not.
 
 ```tsx
 const { shouldLogin } = useAuthSession();
 
-if (shouldLogin) {
-  // Handle login logic, like showing a login button
-}
+{shouldLogin && <LoginPage />}
+{!shouldLogin && <AppContent />}
 ```
 
 ## 3. API Hooks
