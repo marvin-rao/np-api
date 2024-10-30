@@ -35,10 +35,11 @@ npm install newpaper-api
 
 ### 1. `AuthProvider`
 This provider manages authentication state and provides the `loginPageUrl` and `apiBaseUrl` to the components that consume this context.
+Wrap your App Components with <AuthProvider>{children}</AuthProvider> like so : 
 
 #### Example:
 ```tsx
-import { AuthProvider } from './authContext';
+import { AuthProvider } from 'newpaper-api';
 
 <AuthProvider loginPageUrl="https://login.example.com" apiBaseUrl="https://api.example.com">
   <YourAppComponents />
@@ -48,21 +49,20 @@ import { AuthProvider } from './authContext';
 ### 2. `LoginButton`
 The `LoginButton` component provides a pre-built button for redirecting users to the login page.
 
+
 #### Example:
-```tsx
-<LoginButton />
-```
-### 3. Custom Hooks
 
 #### a. `useAuthSession`
-This hook determines if the user should log in by checking the Bearer token expiration.
+This hook tells us if the user should log or not.
 
 ```tsx
+import { LoginButton, useAuthSession } from 'newpaper-api';
+
+// Your Component
 const { shouldLogin } = useAuthSession();
 
-if (shouldLogin) {
-  // Handle login logic, like showing a login button
-}
+{shouldLogin && <LoginButton />}
+{!shouldLogin && <AppContent />}
 ```
 
 ## 3. API Hooks
