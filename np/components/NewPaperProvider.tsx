@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useProjectId } from "../../api";
 import {
   AuthProvider,
   AuthProviderProps,
   useAuthSession,
 } from "../../helper/provider";
-import { WorkspaceSelector } from "./WorkSpaceSelector";
+import { WorkspaceSelector } from "./WorkspaceSelector";
+import { useProjectId } from "../projects";
 
-function setQueryParam(key, value) {
+function setQueryParam(key: string, value: string) {
   const url = new URL(window.location.href); // Get the current URL
   url.searchParams.set(key, value); // Set or update the parameter
   window.history.pushState({}, "", url); // Update the URL without reloading

@@ -34,5 +34,8 @@ export type Note = {
 export type Workspace = {
     name: string,
     id: string,
-    created: number
+    created: number,
+    description: string,
+    members: number,
+    lastActive: string,
 }

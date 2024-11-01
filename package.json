@@ -1,11 +1,16 @@
 {
-  "version": "0.2.8",
+  "version": "0.3.4",
   "name": "newpaper-api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:": "tsc --noEmit && npm publish"
+    "lint": "npx tsc --noEmit",
+    "publish": "npm run lint && npm publish"
   },
   "dependencies": {
     "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.6.3"
   }
 }

@@ -1,5 +1,5 @@
-import { useProjectId, useProjectRequest } from "../api";
 import { useGet } from "../helper/ApiRequestsBase";
+import { useProjectId, useProjectRequest } from "./projects";
 import { Note } from "./types";
 
 export const useNotes = () => {

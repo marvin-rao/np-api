@@ -17,7 +17,7 @@ type UseFetchWithTokenProps = {
 
 export const useGet = <T,>({ path, options = {} }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
-  const [data, setData] = useState<T>(null);
+  const [data, setData] = useState<T>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
