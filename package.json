@@ -3,7 +3,7 @@
   "name": "newpaper-api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish:": "tsc --noEmit && npm publish"
+    "lint:": "tsc --noEmit && npm publish"
   },
   "dependencies": {
     "react": "^18.3.1"
