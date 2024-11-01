@@ -7,7 +7,7 @@ export const useAuthData = () => {
   return useContext(AuthContext);
 };
 
-type AuthProviderProps = {
+export type AuthProviderProps = {
   children: any;
   loginPageUrl: string;
   apiBaseUrl: string;

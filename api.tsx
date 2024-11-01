@@ -1,5 +1,5 @@
 import { RequestMethod, useGet, useRequest } from "./helper/ApiRequestsBase";
-import { ServerResult } from "./np/types";
+import { ServerResult, Workspace } from "./np/types";
 
 export interface ProjectUser {
   name: string;
@@ -12,8 +12,11 @@ export interface ProjectUser {
 }
 
 export const useProjectId = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const projectId = searchParams.get("projectId");
+
   return {
-    projectId: "-NMhDe6D2TVZqwDwdpTb",
+    projectId,
   };
 };
 
@@ -33,7 +36,7 @@ export const useProjectRequest = <ObjectType,>({
 };
 
 export const useProjects = () => {
-  return useGet({ path: "projects/list", options: {} });
+  return useGet<Workspace[]>({ path: "projects/list", options: {} });
 };
 
 // Users

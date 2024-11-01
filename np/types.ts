@@ -30,3 +30,9 @@ export type Note = {
     content?: string | undefined;
     fromServer?: boolean | undefined;
 }
+
+export type Workspace = {
+    name: string,
+    id: string,
+    created: number
+}
