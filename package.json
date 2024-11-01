@@ -2,7 +2,8 @@
   "version": "0.2.8",
   "name": "newpaper-api",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish:": "tsc --noEmit && npm publish"
   },
   "dependencies": {
     "react": "^18.3.1"
