@@ -1,17 +1,5 @@
-import {
-  RequestMethod,
-  useDelete,
-  useGet,
-  usePatch,
-  usePost,
-  useRequest,
-} from "./helper/ApiRequestsBase";
-
-const path = "developer/apps";
-
-export const useDeveloperApps = () => {
-  return useGet({ path, options: {} });
-};
+import { RequestMethod, useGet, useRequest } from "./helper/ApiRequestsBase";
+import { ServerResult } from "./np/types";
 
 export interface ProjectUser {
   name: string;
@@ -29,7 +17,7 @@ export const useProjectId = () => {
   };
 };
 
-export const useProjectRequest = ({
+export const useProjectRequest = <ObjectType,>({
   method,
   path,
 }: {
@@ -37,7 +25,7 @@ export const useProjectRequest = ({
   method: RequestMethod;
 }) => {
   const { projectId } = useProjectId();
-  return useRequest({
+  return useRequest<ObjectType, ServerResult>({
     path,
     method,
     options: { queryString: `?projectId=${projectId}` },
@@ -46,24 +34,6 @@ export const useProjectRequest = ({
 
 export const useProjects = () => {
   return useGet({ path: "projects/list", options: {} });
-};
-
-// Developer
-
-export const useAddDeveloperApp = () => {
-  return usePost({ path });
-};
-
-export const useUpdateDeveloperApp = () => {
-  return usePatch({ path });
-};
-
-export const useDeleteDeveloperApp = () => {
-  return useDelete({ path });
-};
-
-export const useAccountProfile = () => {
-  return useGet({ path: "account/profile", options: {} });
 };
 
 // Users
@@ -75,24 +45,6 @@ export const useUsers = ({ projectId }: { projectId: string }) => {
   });
 };
 
-// Notes
-
-export const useNotes = () => {
-  const { projectId } = useProjectId();
-  return useGet<any[]>({
-    path: "notes",
-    options: { queryString: `?projectId=${projectId}` },
-  });
-};
-
-export const useAddNote = () => {
-  return useProjectRequest({ path: "notes", method: "post" });
-};
-
-export const useUpdateNote = () => {
-  return useProjectRequest({ path: "notes", method: "patch" });
-};
-
-export const useDeleteNote = () => {
-  return useProjectRequest({ path: "notes", method: "delete" });
+export const useAccountProfile = () => {
+  return useGet({ path: "account/profile", options: {} });
 };

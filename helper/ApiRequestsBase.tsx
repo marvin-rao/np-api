@@ -62,7 +62,7 @@ type UsePostProps = {
 
 export type RequestMethod = "post" | "patch" | "delete";
 
-export const useRequest = ({
+export const useRequest = <ObjectType, SuccessResult>({
   path,
   method,
   options = {},
@@ -74,7 +74,10 @@ export const useRequest = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const submit = async (body: any, onSuccess: (data: any) => void) => {
+  const submit = async (
+    body: ObjectType,
+    onSuccess: (data: SuccessResult) => void
+  ) => {
     if (!apiBaseUrl) {
       alert("Dev:Provide apiBaseUrl in Auth Context");
       return;
@@ -109,14 +112,35 @@ export const useRequest = ({
   return { loading, error, submit };
 };
 
-export const usePost = ({ path, options }: UsePostProps) => {
-  return useRequest({ path, method: "post", options });
+export const usePost = <ObjectType, SuccessResult>({
+  path,
+  options,
+}: UsePostProps) => {
+  return useRequest<ObjectType, SuccessResult>({
+    path,
+    method: "post",
+    options,
+  });
 };
 
-export const useDelete = ({ path, options }: UsePostProps) => {
-  return useRequest({ path, method: "delete", options });
+export const useDelete = <ObjectType, SuccessResult>({
+  path,
+  options,
+}: UsePostProps) => {
+  return useRequest<ObjectType, SuccessResult>({
+    path,
+    method: "delete",
+    options,
+  });
 };
 
-export const usePatch = ({ path, options }: UsePostProps) => {
-  return useRequest({ path, method: "patch", options });
+export const usePatch = <ObjectType, SuccessResult>({
+  path,
+  options,
+}: UsePostProps) => {
+  return useRequest<ObjectType, SuccessResult>({
+    path,
+    method: "patch",
+    options,
+  });
 };
