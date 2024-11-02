@@ -9,6 +9,7 @@ export * from "./np/notes";
 export * from "./np/projects";
 export * from "./np/recruit";
 export * from "./api";
+export * from "./helper/utils";
 
 export { NewPaperProvider, WorkspaceSelector };
 

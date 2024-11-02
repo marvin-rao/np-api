@@ -6,12 +6,7 @@ import {
 } from "../../helper/provider";
 import { WorkspaceSelector } from "./WorkspaceSelector";
 import { useProjectId } from "../projects";
-
-function setQueryParam(key: string, value: string) {
-  const url = new URL(window.location.href); // Get the current URL
-  url.searchParams.set(key, value); // Set or update the parameter
-  window.history.pushState({}, "", url); // Update the URL without reloading
-}
+import { setQueryParam } from "../../helper/utils";
 
 export const NewPaperProvider = (props: AuthProviderProps) => {
   const { projectId } = useProjectId();
