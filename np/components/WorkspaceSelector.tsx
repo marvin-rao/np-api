@@ -1,235 +1,236 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Workspace } from "../types";
-import { useProjects } from "../..";
+import React, { useState } from "react";
+import { DEMO_WORKSPACES } from "./DemoWorkspaces";
 
-// Demo workspaces data remains the same
-const DEMO_WORKSPACES: Workspace[] = [
-  {
-    id: "eng-2024",
-    name: "Engineering",
-    description: "Technical team workspace for product development",
-    members: 45,
-    lastActive: "2 hours ago",
-    created: 1,
+const style = {
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    zIndex: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1rem",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backdropFilter: "blur(4px)",
   },
-  {
-    id: "mkt-2024",
-    name: "Marketing",
-    description: "Campaign planning and content management",
-    members: 23,
-    lastActive: "5 mins ago",
-    created: 1,
+  modal: {
+    width: "100%",
+    maxWidth: "28rem",
+    backgroundColor: "white",
+    borderRadius: "0.5rem",
+    boxShadow:
+      "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    overflow: "hidden",
   },
-  {
-    id: "sales-2024",
-    name: "Sales",
-    description: "Client accounts and sales pipeline",
-    members: 34,
-    lastActive: "1 hour ago",
-    created: 1,
+  header: {
+    padding: "1.5rem",
+    borderBottom: "1px solid #e5e7eb",
   },
-  {
-    id: "design-2024",
-    name: "Design",
-    description: "UI/UX and brand design projects",
-    members: 18,
-    lastActive: "Just now",
-    created: 1,
+  title: {
+    fontSize: "1.25rem",
+    fontWeight: 600,
+    color: "#111827",
   },
-  {
-    id: "hr-2024",
-    name: "Human Resources",
-    description: "Employee management and recruitment",
-    members: 12,
-    lastActive: "3 hours ago",
-    created: 1,
+  subtitle: {
+    marginTop: "0.25rem",
+    fontSize: "0.875rem",
+    color: "#6b7280",
   },
-  {
-    id: "prod-2024",
-    name: "Product",
-    description: "Product strategy and roadmap planning",
-    members: 28,
-    lastActive: "30 mins ago",
-    created: 1,
+  search: {
+    padding: "1rem",
+    borderBottom: "1px solid #e5e7eb",
   },
-  {
-    id: "cs-2024",
-    name: "Customer Success",
-    description: "Customer support and success management",
-    members: 31,
-    lastActive: "15 mins ago",
-    created: 1,
+  searchInput: {
+    width: "100%",
+    padding: "0.5rem 1rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    transition: "box-shadow 0.15s ease-in-out",
   },
-];
+  list: {
+    maxHeight: "calc(100vh - 24rem)",
+    overflowY: "auto",
+  },
+  item: {
+    width: "100%",
+    padding: "1rem 1.5rem",
+    display: "flex",
+    alignItems: "flex-start",
+    textAlign: "left",
+    border: "none",
+    borderBottom: "1px solid #e5e7eb",
+    transition: "all 0.2s ease-in-out",
+    cursor: "pointer",
+    backgroundColor: "transparent",
+  },
+  avatar: {
+    height: "2.5rem",
+    width: "2.5rem",
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "0.375rem",
+    backgroundColor: "rgba(59, 130, 246, 0.1)",
+    color: "#2563eb",
+    fontWeight: 500,
+    transition: "all 0.2s ease-in-out",
+  },
+  content: {
+    marginLeft: "1rem",
+    flex: 1,
+    minWidth: 0,
+  },
+  itemHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  itemTitle: {
+    fontWeight: 500,
+    color: "#111827",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  itemDate: {
+    marginLeft: "0.5rem",
+    fontSize: "0.75rem",
+    color: "#6b7280",
+  },
+  description: {
+    fontSize: "0.875rem",
+    color: "#6b7280",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  },
+  members: {
+    marginTop: "0.25rem",
+    fontSize: "0.75rem",
+    color: "#6b7280",
+  },
+  footer: {
+    padding: "1rem",
+    borderTop: "1px solid #e5e7eb",
+    backgroundColor: "#f9fafb",
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  cancelButton: {
+    padding: "0.5rem 1rem",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    color: "#374151",
+    backgroundColor: "transparent",
+    border: "none",
+    borderRadius: "0.375rem",
+    cursor: "pointer",
+    transition: "all 0.15s ease-in-out",
+  },
+};
 
-export const WorkspaceSelector = ({
-  open,
-  onSelect,
-  onClose,
-  demoMode,
-}: {
-  onSelect: (workspace: Workspace) => void;
-  onClose: () => void;
-  demoMode: boolean;
-  open: boolean;
-}) => {
-  const { data } = useProjects();
+const Demo = () => {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [focusedIndex, setFocusedIndex] = useState(0);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const workspaceData = demoMode ? DEMO_WORKSPACES : data ?? [];
-
-  const filteredWorkspaces = workspaceData.filter(
+  const filteredWorkspaces = DEMO_WORKSPACES.filter(
     (workspace) =>
       workspace.name.toLowerCase().includes(filter.toLowerCase()) ||
       workspace.description.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleKeyDown = useCallback(
-    (e: any) => {
-      if (!open) return;
-
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          setFocusedIndex((prev) =>
-            Math.min(prev + 1, filteredWorkspaces.length - 1)
-          );
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          setFocusedIndex((prev) => Math.max(prev - 1, 0));
-          break;
-        case "Enter":
-          e.preventDefault();
-          if (filteredWorkspaces[focusedIndex]) {
-            setSelectedId(filteredWorkspaces[focusedIndex].id);
-            onSelect(filteredWorkspaces[focusedIndex]);
-          }
-          break;
-        case "Escape":
-          e.preventDefault();
-          onClose();
-          break;
-        default:
-          break;
-      }
-    },
-    [open, filteredWorkspaces, focusedIndex, onSelect, onClose]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
-
-  useEffect(() => {
-    setFocusedIndex(0);
-  }, [filter]);
-
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
-            Select Workspace
-          </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Choose a workspace to continue
-          </p>
+    <div style={style.overlay}>
+      <div style={style.modal}>
+        <div style={style.header}>
+          <h2 style={style.title}>Select Workspace</h2>
+          <p style={style.subtitle}>Choose a workspace to continue</p>
         </div>
 
-        <div className="p-4 border-b border-gray-200">
+        <div style={style.search}>
           <input
+            style={style.searchInput}
             type="text"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-150"
             placeholder="Search workspaces..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           />
         </div>
 
-        <div className="max-h-[calc(100vh-24rem)] overflow-y-auto">
-          {filteredWorkspaces.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">
-              No workspaces found
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {filteredWorkspaces.map((workspace, index) => (
-                <button
-                  key={workspace.id}
-                  className={`w-full px-6 py-4 flex items-start text-left 
-                    transition-all duration-200 ease-in-out
-                    hover:bg-blue-50/80 focus:outline-none group
-                    ${focusedIndex === index ? "bg-blue-50" : ""}
-                    ${selectedId === workspace.id ? "bg-blue-100" : ""}
-                    ${
-                      hoveredId === workspace.id
-                        ? "shadow-md translate-x-1"
-                        : ""
-                    }`}
-                  onClick={() => {
-                    setSelectedId(workspace.id);
-                    onSelect(workspace);
-                  }}
-                  onMouseEnter={() => setHoveredId(workspace.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                >
+        <div style={style.list}>
+          {filteredWorkspaces.map((workspace) => (
+            <button
+              key={workspace.id}
+              style={{
+                ...style.item,
+                backgroundColor:
+                  selectedId === workspace.id
+                    ? "rgba(59, 130, 246, 0.1)"
+                    : hoveredId === workspace.id
+                    ? "rgba(59, 130, 246, 0.05)"
+                    : "transparent",
+                transform:
+                  hoveredId === workspace.id ? "translateX(4px)" : "none",
+                boxShadow:
+                  hoveredId === workspace.id
+                    ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                    : "none",
+              }}
+              onClick={() => setSelectedId(workspace.id)}
+              onMouseEnter={() => setHoveredId(workspace.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              <div
+                style={{
+                  ...style.avatar,
+                  backgroundColor:
+                    hoveredId === workspace.id
+                      ? "rgba(59, 130, 246, 0.2)"
+                      : "rgba(59, 130, 246, 0.1)",
+                  transform:
+                    hoveredId === workspace.id ? "scale(1.1)" : "scale(1)",
+                }}
+              >
+                {workspace.name.charAt(0).toUpperCase()}
+              </div>
+              <div style={style.content}>
+                <div style={style.itemHeader}>
                   <div
-                    className={`h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-md 
-                    transition-all duration-200 ease-in-out
-                    ${
-                      hoveredId === workspace.id
-                        ? "bg-blue-200 scale-110"
-                        : "bg-blue-100"
-                    }
-                    text-blue-600 font-medium`}
+                    style={{
+                      ...style.itemTitle,
+                      color: hoveredId === workspace.id ? "#2563eb" : "#111827",
+                    }}
                   >
-                    {workspace.name.charAt(0).toUpperCase()}
+                    {workspace.name}
                   </div>
-                  <div className="ml-4 flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <div
-                        className={`font-medium text-gray-900 truncate transition-all duration-200
-                        ${hoveredId === workspace.id ? "text-blue-600" : ""}`}
-                      >
-                        {workspace.name}
-                      </div>
-                      {workspace.lastActive && (
-                        <span className="ml-2 text-xs text-gray-500">
-                          {workspace.lastActive}
-                        </span>
-                      )}
-                    </div>
-                    {workspace.description && (
-                      <div className="text-sm text-gray-500 line-clamp-2 group-hover:text-gray-600">
-                        {workspace.description}
-                      </div>
-                    )}
-                    {workspace.members && (
-                      <div className="mt-1 text-xs text-gray-500">
-                        {workspace.members} members
-                      </div>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+                  <span style={style.itemDate}>{workspace.lastActive}</span>
+                </div>
+                <div
+                  style={{
+                    ...style.description,
+                    color: hoveredId === workspace.id ? "#4b5563" : "#6b7280",
+                  }}
+                >
+                  {workspace.description}
+                </div>
+                <div style={style.members}>{workspace.members} members</div>
+              </div>
+            </button>
+          ))}
         </div>
 
-        <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+        <div style={style.footer}>
           <button
-            type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-800 
-              focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md
-              transition-all duration-150 hover:bg-gray-100"
-            onClick={onClose}
+            style={{
+              ...style.cancelButton,
+              ":hover": {
+                color: "#111827",
+                backgroundColor: "#e5e7eb",
+              },
+            }}
           >
             Cancel
           </button>
