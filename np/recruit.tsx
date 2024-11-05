@@ -1,25 +1,14 @@
-import { useGet } from "../helper/ApiRequestsBase";
-import { useProjectId, useProjectRequest } from "./projects";
-import { RecruitSkill } from "./types";
+import { useProjectGetBase, useProjectRequest } from "./projects";
+import { RecruitProfile, RecruitSkill, SkillCategory } from "./types";
 
 export const useRecruitUsers = () => {
-  const { projectId } = useProjectId();
-  return useGet<RecruitSkill[]>({
-    path: "recruit/users",
-    options: { queryString: `?projectId=${projectId}` },
-    deps: [projectId],
-  });
+  return useProjectGetBase<RecruitProfile[]>({ path: "recruit/users" });
 };
 
 const path = "recruit/skills";
 
 export const useRecruitSkills = () => {
-  const { projectId } = useProjectId();
-  return useGet<RecruitSkill[]>({
-    path,
-    options: { queryString: `?projectId=${projectId}` },
-    deps: [projectId],
-  });
+  return useProjectGetBase<RecruitSkill[]>({ path });
 };
 
 export const useDeleteSkill = () => {
@@ -32,4 +21,24 @@ export const useAddSkill = () => {
 
 export const useUpdateSkill = () => {
   return useProjectRequest<RecruitSkill>({ path, method: "patch" });
+};
+
+// Category
+
+const c_path = path + "/category";
+
+export const useRecruitSkillsCategories = () => {
+  return useProjectGetBase<RecruitSkill[]>({ path: c_path });
+};
+
+export const useDeleteSkillCategory = () => {
+  return useProjectRequest<{ id: string }>({ path: c_path, method: "delete" });
+};
+
+export const useAddSkillCategory = () => {
+  return useProjectRequest<SkillCategory>({ path: c_path, method: "post" });
+};
+
+export const useUpdateSkillCategory = () => {
+  return useProjectRequest<SkillCategory>({ path: c_path, method: "patch" });
 };

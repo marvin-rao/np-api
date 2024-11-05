@@ -28,3 +28,12 @@ export const useProjectRequest = <ObjectType,>({
     options: { queryString: `?projectId=${projectId}` },
   });
 };
+
+export const useProjectGetBase = <T,>({ path }: { path: string }) => {
+  const { projectId } = useProjectId();
+  return useGet<T>({
+    path,
+    options: { queryString: `?projectId=${projectId}` },
+    deps: [projectId],
+  });
+};

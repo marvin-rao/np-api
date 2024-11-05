@@ -2,6 +2,22 @@ export type ServerResult<T = unknown> = {
     message: string, data: T,
 }
 
+export type RecruitProfile = {
+    id: string;
+    email: string;
+    isSessionUser: boolean;
+    name: string;
+    avatar?: {
+        original: string;
+    }
+    skills: RecruitSkill[];
+    openToWorkWithSkills: RecruitSkill[];
+    availability: {
+        monthYear: string;
+        numberOfHours: number;
+    }[];
+}
+
 export type Creator = {
     projectUid: string;
     sessionUid: string;
@@ -10,6 +26,19 @@ export type Creator = {
 };
 
 export type RecruitSkill = {
+    id: string;
+    name: string;
+    created: number;
+    creator: Creator;
+    updated?: number | undefined;
+    category?: {
+        id: string,
+        name?: string
+    }
+};
+
+
+export type SkillCategory = {
     id: string;
     name: string;
     created: number;
