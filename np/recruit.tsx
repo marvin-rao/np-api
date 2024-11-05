@@ -7,6 +7,7 @@ export const useRecruitUsers = () => {
   return useGet<RecruitSkill[]>({
     path: "recruit/users",
     options: { queryString: `?projectId=${projectId}` },
+    deps: [projectId],
   });
 };
 
@@ -17,6 +18,7 @@ export const useRecruitSkills = () => {
   return useGet<RecruitSkill[]>({
     path,
     options: { queryString: `?projectId=${projectId}` },
+    deps: [projectId],
   });
 };
 

@@ -13,13 +13,19 @@ type FetchOptions = {
 type UseFetchWithTokenProps = {
   path: string;
   options: FetchOptions;
+  deps?: Array<string | undefined | null>;
 };
 
-export const useGet = <T,>({ path, options = {} }: UseFetchWithTokenProps) => {
+export const useGet = <T,>({
+  path,
+  options = {},
+  deps,
+}: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
   const [data, setData] = useState<T>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const intDeps = deps ?? [];
 
   const fetchData = async () => {
     setLoading(true);
@@ -50,7 +56,7 @@ export const useGet = <T,>({ path, options = {} }: UseFetchWithTokenProps) => {
 
   useEffect(() => {
     fetchData();
-  }, [path]);
+  }, [path, intDeps]);
 
   return { data, loading, error, refetch: fetchData };
 };
@@ -61,6 +67,8 @@ type UsePostProps = {
 };
 
 export type RequestMethod = "post" | "patch" | "delete";
+
+export type RequestDeps = Array<string | undefined>;
 
 export const useRequest = <ObjectType, SuccessResult>({
   path,
