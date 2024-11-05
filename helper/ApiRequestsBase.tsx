@@ -56,7 +56,7 @@ export const useGet = <T,>({
 
   useEffect(() => {
     fetchData();
-  }, [path, intDeps]);
+  }, [path]);
 
   return { data, loading, error, refetch: fetchData };
 };
