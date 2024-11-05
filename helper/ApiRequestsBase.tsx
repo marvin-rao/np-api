@@ -66,7 +66,9 @@ type UsePostProps = {
   options?: FetchOptions;
 };
 
-export type RequestMethod = "post" | "patch" | "delete";
+// PATCH, because in fetch patch doesn't normalize to PATCH
+// https://github.com/nodejs/node/issues/51336
+export type RequestMethod = "post" | "PATCH" | "delete";
 
 export type RequestDeps = Array<string | undefined>;
 
@@ -148,7 +150,7 @@ export const usePatch = <ObjectType, SuccessResult>({
 }: UsePostProps) => {
   return useRequest<ObjectType, SuccessResult>({
     path,
-    method: "patch",
+    method: "PATCH",
     options,
   });
 };

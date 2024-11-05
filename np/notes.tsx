@@ -15,7 +15,7 @@ export const useAddNote = () => {
 };
 
 export const useUpdateNote = () => {
-  return useProjectRequest<Note>({ path: "notes", method: "patch" });
+  return useProjectRequest<Note>({ path: "notes", method: "PATCH" });
 };
 
 export const useDeleteNote = () => {

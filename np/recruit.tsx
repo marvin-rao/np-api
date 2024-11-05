@@ -20,7 +20,7 @@ export const useAddSkill = () => {
 };
 
 export const useUpdateSkill = () => {
-  return useProjectRequest<RecruitSkill>({ path, method: "patch" });
+  return useProjectRequest<RecruitSkill>({ path, method: "PATCH" });
 };
 
 // Category
@@ -40,5 +40,5 @@ export const useAddSkillCategory = () => {
 };
 
 export const useUpdateSkillCategory = () => {
-  return useProjectRequest<SkillCategory>({ path: c_path, method: "patch" });
+  return useProjectRequest<SkillCategory>({ path: c_path, method: "PATCH" });
 };
