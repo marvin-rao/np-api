@@ -26,9 +26,11 @@ export const AuthProvider = (props: AuthProviderProps) => {
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
     if (bearer_token) {
+      console.log("bearer_token", bearer_token);
       setBToken({ bearer_token });
     }
     const refresh_token = getUrlRefreshToken();
+    console.log("refresh_token", refresh_token);
     if (refresh_token) {
       setRefreshToken({ refresh_token });
     }

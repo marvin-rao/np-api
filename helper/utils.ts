@@ -26,7 +26,7 @@ export const setBToken = ({ bearer_token }: { bearer_token: string }) => {
 };
 
 export const setRefreshToken = ({ refresh_token }: { refresh_token: string }) => {
-    return localStorage.setItem(BearerTokenKey, refresh_token);
+    return localStorage.setItem(RefreshTokenKey, refresh_token);
 };
 
 // A Bearer in JWT
@@ -72,8 +72,13 @@ export const useHeaders = () => {
         const result = await submit({ refresh_token });
         console.log('Got refresh token', result);
         const newBToken = result?.data?.newIdToken;
-        setBToken({ bearer_token: newBToken ?? "" });
-        setRefreshToken({ refresh_token: result?.data?.newRefreshToken ?? "" });
+        if (newBToken) {
+            setBToken({ bearer_token: newBToken ?? "" });
+        }
+        const newRefreshToken = result?.data?.newRefreshToken ?? "";
+        if (newRefreshToken) {
+            setRefreshToken({ refresh_token });
+        }
 
         return {
             Authorization: `Bearer ${newBToken}`,
