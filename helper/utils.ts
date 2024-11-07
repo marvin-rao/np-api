@@ -86,10 +86,10 @@ export const useHeaders = () => {
         //     };
         // }
 
-        // return {
-        //     Authorization: `Bearer ${token}`,
-        //     "Content-Type": "application/json",
-        // };
+        return {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        };
     };
 
     return { getHeaders }
