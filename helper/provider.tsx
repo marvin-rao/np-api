@@ -1,5 +1,12 @@
-import React, { createContext, useContext } from "react";
-import { getBToken, isTokenExpired } from "./utils";
+import { createContext, useContext, useEffect } from "react";
+import {
+  getBToken,
+  getUrlBearerToken,
+  getUrlRefreshToken,
+  isTokenExpired,
+  setBToken,
+  setRefreshToken,
+} from "./utils";
 
 const AuthContext = createContext({ loginPageUrl: "", apiBaseUrl: "" });
 
@@ -15,6 +22,18 @@ export type AuthProviderProps = {
 
 export const AuthProvider = (props: AuthProviderProps) => {
   const { children, loginPageUrl, apiBaseUrl } = props;
+
+  useEffect(() => {
+    const bearer_token = getUrlBearerToken();
+    if (bearer_token) {
+      setBToken({ bearer_token });
+    }
+    const refresh_token = getUrlRefreshToken();
+    if (refresh_token) {
+      setRefreshToken({ refresh_token });
+    }
+  }, []);
+
   return (
     <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl }}>
       {children}
@@ -32,6 +51,7 @@ export const useAuthSession = () => {
     }
     return true;
   };
+
   return {
     shouldLogin: shouldLogin(),
   };

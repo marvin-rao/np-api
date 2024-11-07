@@ -1,13 +1,32 @@
 import { useRefreshToken } from "../api";
 
-export const getBToken = () => {
+const BearerTokenKey = "BearerTokenKey1"
+const RefreshTokenKey = "RefreshTokenKey1"
+
+export const getUrlBearerToken = () => {
     const params = new URLSearchParams(window.location.search);
     return params.get("bearer_token");
 };
 
-export const getRToken = () => {
+export const getUrlRefreshToken = () => {
     const params = new URLSearchParams(window.location.search);
     return params.get("refresh_token");
+};
+
+export const getBToken = () => {
+    return localStorage.getItem(BearerTokenKey);
+};
+
+export const getRefreshToken = () => {
+    return localStorage.getItem(RefreshTokenKey);
+};
+
+export const setBToken = ({ bearer_token }: { bearer_token: string }) => {
+    return localStorage.setItem(BearerTokenKey, bearer_token);
+};
+
+export const setRefreshToken = ({ refresh_token }: { refresh_token: string }) => {
+    return localStorage.setItem(BearerTokenKey, refresh_token);
 };
 
 // A Bearer in JWT
@@ -45,7 +64,7 @@ export const useHeaders = () => {
             return undefined;
         }
         // if (isTokenExpired(token)) {
-        const refresh_token = getRToken();
+        const refresh_token = getRefreshToken();
         if (!refresh_token) {
             console.log('did not find refresh_token',);
             return undefined;
@@ -53,9 +72,9 @@ export const useHeaders = () => {
         const result = await submit({ refresh_token });
         console.log('Got refresh token', result);
         const newBToken = result?.data?.newIdToken;
-        // TODO : set these to local storage
-        setQueryParam("bearer_token", newBToken ?? "");
-        setQueryParam("refresh_token", result?.data?.newRefreshToken ?? "");
+        setBToken({ bearer_token: newBToken ?? "" });
+        setRefreshToken({ refresh_token: result?.data?.newRefreshToken ?? "" });
+
         return {
             Authorization: `Bearer ${newBToken}`,
             "Content-Type": "application/json",
