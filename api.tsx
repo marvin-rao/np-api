@@ -1,4 +1,7 @@
-import { useGet, usePost } from "./helper/ApiRequestsBase";
+import { useState } from "react";
+import { useGet } from "./helper/ApiRequestsBase";
+import { useAuthData } from "./helper/provider";
+import { getBToken } from "./helper/utils";
 import { RefreshTokenResult } from "./np/types";
 
 export interface ProjectUser {
@@ -22,15 +25,55 @@ export const useAccountProfile = () => {
   return useGet({ path: "account/profile", options: {} });
 };
 
+type SuccessResult = {
+  data: RefreshTokenResult;
+  message: string;
+};
+
 export const useRefreshToken = () => {
-  return usePost<
-    { refresh_token: string },
-    {
-      data: RefreshTokenResult;
-      message: string;
+  const { apiBaseUrl } = useAuthData();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const submit = async (
+    { refresh_token }: { refresh_token: string },
+    onSuccess?: (data: SuccessResult) => void
+  ): Promise<SuccessResult | undefined> => {
+    if (!apiBaseUrl) {
+      alert("Dev:Provide apiBaseUrl in Auth Context");
+      return;
     }
-  >({
-    path: "account/refresh_token",
-    options: {},
-  });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(apiBaseUrl + "account/refresh_token", {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${getBToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refresh_token }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const result: SuccessResult = await response.json();
+      console.log("result", result);
+      if (onSuccess) {
+        onSuccess(result);
+      }
+      return result;
+    } catch (err) {
+      setError(err as Error);
+      return undefined;
+    } finally {
+      setLoading(false);
+      return undefined;
+    }
+  };
+
+  return { submit };
 };
