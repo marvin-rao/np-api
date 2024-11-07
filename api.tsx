@@ -49,7 +49,7 @@ export const useRefreshToken = () => {
 
     try {
       const response = await fetch(apiBaseUrl + "account/refresh_token", {
-        method: "post",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${getBToken()}`,
           "Content-Type": "application/json",
