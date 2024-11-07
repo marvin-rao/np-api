@@ -7,7 +7,7 @@ export const getBToken = () => {
 
 export const getRToken = () => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("r_token");
+    return params.get("refresh_token");
 };
 
 // A Bearer in JWT
