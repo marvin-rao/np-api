@@ -68,3 +68,12 @@ export type Workspace = {
     members: number,
     lastActive: string,
 }
+
+export interface RefreshTokenResult {
+    success: boolean;
+    newIdToken?: string;
+    newRefreshToken?: string;
+    expiresIn?: number;
+    decodedToken?: any;
+    error?: string;
+}

@@ -1,7 +1,7 @@
 // @ts-ignore
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthData } from "./provider";
-import { getHeaders } from "./utils";
+import { useHeaders } from "./utils";
 
 type FetchOptions = {
   method?: string;
@@ -26,6 +26,7 @@ export const useGet = <T,>({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const intDeps = deps ?? [];
+  const { getHeaders } = useHeaders();
 
   const fetchData = async () => {
     setLoading(true);
@@ -36,7 +37,7 @@ export const useGet = <T,>({
         apiBaseUrl + path + (options?.queryString ?? ""),
         {
           method: options.method || "GET",
-          headers: getHeaders(),
+          headers: await getHeaders(),
           body: JSON.stringify(options.body),
         }
       );
@@ -83,10 +84,11 @@ export const useRequest = <ObjectType, SuccessResult>({
   const { apiBaseUrl } = useAuthData();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const { getHeaders } = useHeaders();
 
   const submit = async (
     body: ObjectType,
-    onSuccess: (data: SuccessResult) => void
+    onSuccess?: (data: SuccessResult) => void
   ) => {
     if (!apiBaseUrl) {
       alert("Dev:Provide apiBaseUrl in Auth Context");
@@ -100,7 +102,7 @@ export const useRequest = <ObjectType, SuccessResult>({
         apiBaseUrl + path + (options?.queryString ?? ""),
         {
           method,
-          headers: getHeaders(),
+          headers: await getHeaders(),
           body: JSON.stringify(body),
         }
       );
@@ -111,11 +113,16 @@ export const useRequest = <ObjectType, SuccessResult>({
 
       const result = await response.json();
       console.log("result", result);
-      onSuccess(result);
+      if (onSuccess) {
+        onSuccess(result);
+      }
+      return result;
     } catch (err) {
       setError(err as Error);
+      return err;
     } finally {
       setLoading(false);
+      return undefined;
     }
   };
 
