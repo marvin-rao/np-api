@@ -31,7 +31,8 @@ type SuccessResult = {
 };
 
 export const useRefreshToken = () => {
-  const { apiBaseUrl } = useAuthData();
+  // const { apiBaseUrl } = useAuthData();
+  const apiBaseUrl = "https://newpaper.app/api/";
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
