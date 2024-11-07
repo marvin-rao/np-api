@@ -1,7 +1,6 @@
 // @ts-ignore
 import React, { ReactNode } from "react";
 import { useAuthData } from "./provider";
-import { getHeaders } from "./utils";
 
 // Opening the Popup Window
 
