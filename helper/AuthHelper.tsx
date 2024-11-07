@@ -15,7 +15,7 @@ export const openLogin = ({ loginPageUrl }: { loginPageUrl: string }) => {
 
   const loginUrl = `${loginPageUrl}?redirectUrl=${encodeURIComponent(
     redirectUrl
-  )}&tokenType=b_token`;
+  )}&tokenType=bearer_token`;
 
   window.open(
     loginUrl,

@@ -2,7 +2,7 @@ import { useRefreshToken } from "../api";
 
 export const getBToken = () => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("b_token");
+    return params.get("bearer_token");
 };
 
 export const getRToken = () => {
@@ -41,31 +41,31 @@ export const useHeaders = () => {
     const getHeaders = async () => {
         const token = getBToken();
         if (!token) {
-            console.log('did not find b_token',);
+            console.log('did not find bearer_token',);
             return undefined;
         }
-        if (isTokenExpired(token)) {
-            const refresh_token = getRToken();
-            if (!refresh_token) {
-                console.log('did not find refresh_token',);
-                return undefined;
-            }
-            const result = await submit({ refresh_token });
-            console.log('Got refresh token', result);
-            const newBToken = result?.data?.newIdToken;
-            // TODO : set these to local storage
-            setQueryParam("b_token", newBToken ?? "");
-            setQueryParam("r_token", result?.data?.newRefreshToken ?? "");
-            return {
-                Authorization: `Bearer ${newBToken}`,
-                "Content-Type": "application/json",
-            };
+        // if (isTokenExpired(token)) {
+        const refresh_token = getRToken();
+        if (!refresh_token) {
+            console.log('did not find refresh_token',);
+            return undefined;
         }
-
+        const result = await submit({ refresh_token });
+        console.log('Got refresh token', result);
+        const newBToken = result?.data?.newIdToken;
+        // TODO : set these to local storage
+        setQueryParam("bearer_token", newBToken ?? "");
+        setQueryParam("refresh_token", result?.data?.newRefreshToken ?? "");
         return {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${newBToken}`,
             "Content-Type": "application/json",
         };
+        // }
+
+        // return {
+        //     Authorization: `Bearer ${token}`,
+        //     "Content-Type": "application/json",
+        // };
     };
 
     return { getHeaders }
