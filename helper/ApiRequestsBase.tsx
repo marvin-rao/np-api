@@ -89,7 +89,7 @@ export const useRequest = <ObjectType, SuccessResult>({
   const submit = async (
     body: ObjectType,
     onSuccess?: (data: SuccessResult) => void
-  ) => {
+  ): Promise<SuccessResult | undefined> => {
     if (!apiBaseUrl) {
       alert("Dev:Provide apiBaseUrl in Auth Context");
       return;
@@ -111,7 +111,7 @@ export const useRequest = <ObjectType, SuccessResult>({
         throw new Error(`Error: ${response.status}`);
       }
 
-      const result = await response.json();
+      const result: SuccessResult = await response.json();
       console.log("result", result);
       if (onSuccess) {
         onSuccess(result);
@@ -119,7 +119,7 @@ export const useRequest = <ObjectType, SuccessResult>({
       return result;
     } catch (err) {
       setError(err as Error);
-      return err;
+      return undefined;
     } finally {
       setLoading(false);
       return undefined;

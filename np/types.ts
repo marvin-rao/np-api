@@ -69,7 +69,7 @@ export type Workspace = {
     lastActive: string,
 }
 
-export interface RefreshTokenResult {
+export type RefreshTokenResult = {
     success: boolean;
     newIdToken?: string;
     newRefreshToken?: string;

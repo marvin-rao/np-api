@@ -52,10 +52,10 @@ export const useHeaders = () => {
             }
             const result = await submit({ refresh_token });
             console.log('Got refresh token', result);
-            const newBToken = result.newIdToken;
+            const newBToken = result?.data?.newIdToken;
             // TODO : set these to local storage
             setQueryParam("b_token", newBToken ?? "");
-            setQueryParam("r_token", result.newRefreshToken ?? "");
+            setQueryParam("r_token", result?.data?.newRefreshToken ?? "");
             return {
                 Authorization: `Bearer ${newBToken}`,
                 "Content-Type": "application/json",

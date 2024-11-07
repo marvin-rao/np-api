@@ -23,7 +23,13 @@ export const useAccountProfile = () => {
 };
 
 export const useRefreshToken = () => {
-  return usePost<{ refresh_token: string }, RefreshTokenResult>({
+  return usePost<
+    { refresh_token: string },
+    {
+      data: RefreshTokenResult;
+      message: string;
+    }
+  >({
     path: "account/refresh_token",
     options: {},
   });
