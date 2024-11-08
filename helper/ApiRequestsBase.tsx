@@ -14,12 +14,14 @@ type UseFetchWithTokenProps = {
   path: string;
   options: FetchOptions;
   deps?: Array<string | undefined | null>;
+  enabled?: boolean;
 };
 
 export const useGet = <T,>({
   path,
   options = {},
   deps,
+  enabled,
 }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
   const [data, setData] = useState<T>();
@@ -56,6 +58,9 @@ export const useGet = <T,>({
   };
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
     fetchData();
   }, [path]);
 
@@ -81,6 +86,7 @@ type RequestProps<ObjectType, SuccessResult> = {
   onLoadingChange: (loading: boolean) => void;
   headers: any;
   url: string;
+  enabled?: boolean;
 };
 
 export const apiRequest = async <ObjectType, SuccessResult>(
@@ -88,6 +94,12 @@ export const apiRequest = async <ObjectType, SuccessResult>(
 ): Promise<SuccessResult | undefined> => {
   const { onLoadingChange, onError, onSuccess, body, method, headers, url } =
     props;
+  const { enabled } = props;
+
+  if (!enabled) {
+    return;
+  }
+
   if (!url) {
     alert("Dev:Provide url in Auth Context");
     return;
@@ -123,9 +135,11 @@ export const useRequest = <ObjectType, SuccessResult>({
   path,
   method,
   options = {},
+  enabled,
 }: UsePostProps & {
   method: RequestMethod;
   options?: FetchOptions;
+  enabled?: boolean;
 }) => {
   const { apiBaseUrl } = useAuthData();
   const [loading, setLoading] = useState<boolean>(false);
@@ -151,6 +165,7 @@ export const useRequest = <ObjectType, SuccessResult>({
       onLoadingChange: setLoading,
       method,
       headers: await getHeaders(),
+      enabled,
     });
   };
 

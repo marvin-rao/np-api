@@ -1,4 +1,5 @@
 import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
+import { getBToken } from "../helper/utils";
 import { ServerResult, Workspace } from "./types";
 
 export const useProjectId = () => {
@@ -11,7 +12,12 @@ export const useProjectId = () => {
 };
 
 export const useProjects = () => {
-  return useGet<Workspace[]>({ path: "projects/list", options: {} });
+  const token = getBToken();
+  return useGet<Workspace[]>({
+    path: "projects/list",
+    options: {},
+    enabled: !!token,
+  });
 };
 
 export const useProjectRequest = <ObjectType,>({
@@ -26,6 +32,7 @@ export const useProjectRequest = <ObjectType,>({
     path,
     method,
     options: { queryString: `?projectId=${projectId}` },
+    enabled: !!projectId,
   });
 };
 
