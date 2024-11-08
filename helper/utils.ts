@@ -63,33 +63,33 @@ export const useHeaders = () => {
             console.log('did not find bearer_token',);
             return undefined;
         }
-        // if (isTokenExpired(token)) {
-        const refresh_token = getRefreshToken();
-        if (!refresh_token) {
-            console.log('did not find refresh_token',);
-            return undefined;
-        }
-        const result = await submit({ refresh_token });
-        console.log('Got refresh token', result);
-        const newBToken = result?.data?.newIdToken;
-        if (newBToken) {
-            setBToken({ bearer_token: newBToken ?? "" });
-        }
-        const newRefreshToken = result?.data?.newRefreshToken ?? "";
-        if (newRefreshToken) {
-            setRefreshToken({ refresh_token });
+        if (isTokenExpired(token)) {
+            const refresh_token = getRefreshToken();
+            if (!refresh_token) {
+                console.log('did not find refresh_token',);
+                return undefined;
+            }
+            const result = await submit({ refresh_token });
+            console.log('Got refresh token', result);
+            const newBToken = result?.data?.newIdToken;
+            if (newBToken) {
+                setBToken({ bearer_token: newBToken ?? "" });
+            }
+            const newRefreshToken = result?.data?.newRefreshToken ?? "";
+            if (newRefreshToken) {
+                setRefreshToken({ refresh_token });
+            }
+
+            return {
+                Authorization: `Bearer ${newBToken}`,
+                "Content-Type": "application/json",
+            };
         }
 
         return {
-            Authorization: `Bearer ${newBToken}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
         };
-        // }
-
-        // return {
-        //     Authorization: `Bearer ${token}`,
-        //     "Content-Type": "application/json",
-        // };
     };
 
     return { getHeaders }
