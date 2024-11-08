@@ -43,7 +43,7 @@ export const useRefreshToken = () => {
       return;
     }
 
-    apiRequest<{ refresh_token: string }, SuccessResult>({
+    return apiRequest<{ refresh_token: string }, SuccessResult>({
       url: "https://newpaper.app/api/account/refresh_token",
       onSuccess: (data) => onSuccess?.(data),
       body: { refresh_token },
