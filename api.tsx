@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useGet } from "./helper/ApiRequestsBase";
-import { useAuthData } from "./helper/provider";
+import { apiRequest, useGet } from "./helper/ApiRequestsBase";
 import { getBToken } from "./helper/utils";
 import { RefreshTokenResult } from "./np/types";
 
@@ -31,7 +30,6 @@ type SuccessResult = {
 };
 
 export const useRefreshToken = () => {
-  // const { apiBaseUrl } = useAuthData();
   const apiBaseUrl = "https://newpaper.app/api/";
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -44,37 +42,20 @@ export const useRefreshToken = () => {
       alert("Dev:Provide apiBaseUrl in Auth Context");
       return;
     }
-    setLoading(true);
-    setError(null);
 
-    try {
-      const response = await fetch(apiBaseUrl + "account/refresh_token", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${getBToken()}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ refresh_token }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const result: SuccessResult = await response.json();
-      console.log("result", result);
-      if (onSuccess) {
-        onSuccess(result);
-      }
-      return result;
-    } catch (err) {
-      setError(err as Error);
-      return undefined;
-    } finally {
-      setLoading(false);
-      return undefined;
-    }
+    apiRequest<{ refresh_token: string }, SuccessResult>({
+      url: "https://newpaper.app/api/account/refresh_token",
+      onSuccess: (data) => onSuccess?.(data),
+      body: { refresh_token },
+      onError: setError,
+      onLoadingChange: setLoading,
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${getBToken()}`,
+        "Content-Type": "application/json",
+      },
+    });
   };
 
-  return { submit };
+  return { submit, error, loading };
 };

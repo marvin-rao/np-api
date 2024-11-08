@@ -73,6 +73,52 @@ export type RequestMethod = "post" | "PATCH" | "delete";
 
 export type RequestDeps = Array<string | undefined>;
 
+type RequestProps<ObjectType, SuccessResult> = {
+  body: ObjectType;
+  method: RequestMethod;
+  onSuccess: (data: SuccessResult) => void;
+  onError: (error: Error | null) => void;
+  onLoadingChange: (loading: boolean) => void;
+  headers: any;
+  url: string;
+};
+
+export const apiRequest = async <ObjectType, SuccessResult>(
+  props: RequestProps<ObjectType, SuccessResult>
+): Promise<SuccessResult | undefined> => {
+  const { onLoadingChange, onError, onSuccess, body, method, headers, url } =
+    props;
+  if (!url) {
+    alert("Dev:Provide url in Auth Context");
+    return;
+  }
+  onLoadingChange(true);
+  onError(null);
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const result: SuccessResult = await response.json();
+    console.log("result", result);
+    if (onSuccess) {
+      onSuccess(result);
+    }
+    return result;
+  } catch (err) {
+    onError(err as Error);
+    onLoadingChange(false);
+    return undefined;
+  }
+};
+
 export const useRequest = <ObjectType, SuccessResult>({
   path,
   method,
@@ -94,36 +140,18 @@ export const useRequest = <ObjectType, SuccessResult>({
       alert("Dev:Provide apiBaseUrl in Auth Context");
       return;
     }
-    setLoading(true);
-    setError(null);
 
-    try {
-      const response = await fetch(
-        apiBaseUrl + path + (options?.queryString ?? ""),
-        {
-          method,
-          headers: await getHeaders(),
-          body: JSON.stringify(body),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const result: SuccessResult = await response.json();
-      console.log("result", result);
-      if (onSuccess) {
-        onSuccess(result);
-      }
-      return result;
-    } catch (err) {
-      setError(err as Error);
-      return undefined;
-    } finally {
-      setLoading(false);
-      return undefined;
-    }
+    apiRequest<ObjectType, SuccessResult>({
+      onSuccess: (data) => {
+        onSuccess?.(data);
+      },
+      url: apiBaseUrl + path + (options?.queryString ?? ""),
+      body,
+      onError: setError,
+      onLoadingChange: setLoading,
+      method,
+      headers: await getHeaders(),
+    });
   };
 
   return { loading, error, submit };
