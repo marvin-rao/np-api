@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Workspace } from "../types";
 
 const style = {
@@ -135,12 +135,14 @@ type Props = {
   onSelect: (workspace: Workspace) => void;
   onClose: () => void;
   workspaces: Workspace[];
+  loading: boolean;
 };
 
 export const WorkspacesModalView = ({
   workspaces,
   onClose,
   onSelect,
+  loading,
 }: Props) => {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -156,103 +158,116 @@ export const WorkspacesModalView = ({
     // @ts-ignore
     <div style={style.overlay}>
       <div style={style.modal}>
-        <div style={style.header}>
-          <h2 style={style.title}>Select Workspace</h2>
-          <p style={style.subtitle}>Choose a workspace to continue</p>
-        </div>
+        {loading && (
+          <div
+            style={{ textAlign: "center", padding: "8px", fontSize: "14px" }}
+          >
+            Loading Workspaces
+          </div>
+        )}
+        {!loading && (
+          <>
+            <div style={style.header}>
+              <h2 style={style.title}>Select Workspace</h2>
+              <p style={style.subtitle}>Choose a workspace to continue</p>
+            </div>
 
-        <div style={style.search}>
-          <input
-            style={style.searchInput}
-            type="text"
-            placeholder="Search workspaces..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          />
-        </div>
-        {/* @ts-ignore */}
-        <div style={style.list}>
-          {filteredWorkspaces.map((workspace) => (
-            <button
-              key={workspace.id}
-              //   @ts-ignore
-              style={{
-                ...style.item,
-                backgroundColor:
-                  selectedId === workspace.id
-                    ? "rgba(59, 130, 246, 0.1)"
-                    : hoveredId === workspace.id
-                    ? "rgba(59, 130, 246, 0.05)"
-                    : "transparent",
-                transform:
-                  hoveredId === workspace.id ? "translateX(4px)" : "none",
-                boxShadow:
-                  hoveredId === workspace.id
-                    ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-                    : "none",
-              }}
-              onClick={() => {
-                setSelectedId(workspace.id);
-                onSelect(workspace);
-              }}
-              onMouseEnter={() => setHoveredId(workspace.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              <div
-                style={{
-                  ...style.avatar,
-                  backgroundColor:
-                    hoveredId === workspace.id
-                      ? "rgba(59, 130, 246, 0.2)"
-                      : "rgba(59, 130, 246, 0.1)",
-                  transform:
-                    hoveredId === workspace.id ? "scale(1.1)" : "scale(1)",
-                }}
-              >
-                {workspace.name.charAt(0).toUpperCase()}
-              </div>
-              <div style={style.content}>
-                <div style={style.itemHeader}>
+            <div style={style.search}>
+              <input
+                style={style.searchInput}
+                type="text"
+                placeholder="Search workspaces..."
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </div>
+            {/* @ts-ignore */}
+            <div style={style.list}>
+              {filteredWorkspaces.map((workspace) => (
+                <button
+                  key={workspace.id}
+                  //   @ts-ignore
+                  style={{
+                    ...style.item,
+                    backgroundColor:
+                      selectedId === workspace.id
+                        ? "rgba(59, 130, 246, 0.1)"
+                        : hoveredId === workspace.id
+                        ? "rgba(59, 130, 246, 0.05)"
+                        : "transparent",
+                    transform:
+                      hoveredId === workspace.id ? "translateX(4px)" : "none",
+                    boxShadow:
+                      hoveredId === workspace.id
+                        ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                        : "none",
+                  }}
+                  onClick={() => {
+                    setSelectedId(workspace.id);
+                    onSelect(workspace);
+                  }}
+                  onMouseEnter={() => setHoveredId(workspace.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                >
                   <div
                     style={{
-                      ...style.itemTitle,
-                      color: hoveredId === workspace.id ? "#2563eb" : "#111827",
+                      ...style.avatar,
+                      backgroundColor:
+                        hoveredId === workspace.id
+                          ? "rgba(59, 130, 246, 0.2)"
+                          : "rgba(59, 130, 246, 0.1)",
+                      transform:
+                        hoveredId === workspace.id ? "scale(1.1)" : "scale(1)",
                     }}
                   >
-                    {workspace.name}
+                    {workspace.name.charAt(0).toUpperCase()}
                   </div>
-                  <span style={style.itemDate}>{workspace.lastActive}</span>
-                </div>
-                <div
-                  // @ts-ignore
-                  style={{
-                    ...style.description,
-                    color: hoveredId === workspace.id ? "#4b5563" : "#6b7280",
-                  }}
-                >
-                  {workspace.description}
-                </div>
-                <div style={style.members}>{workspace.members} members</div>
-              </div>
-            </button>
-          ))}
-        </div>
+                  <div style={style.content}>
+                    <div style={style.itemHeader}>
+                      <div
+                        style={{
+                          ...style.itemTitle,
+                          color:
+                            hoveredId === workspace.id ? "#2563eb" : "#111827",
+                        }}
+                      >
+                        {workspace.name}
+                      </div>
+                      <span style={style.itemDate}>{workspace.lastActive}</span>
+                    </div>
+                    <div
+                      // @ts-ignore
+                      style={{
+                        ...style.description,
+                        color:
+                          hoveredId === workspace.id ? "#4b5563" : "#6b7280",
+                      }}
+                    >
+                      {workspace.description}
+                    </div>
+                    <div style={style.members}>{workspace.members} members</div>
+                  </div>
+                </button>
+              ))}
+            </div>
 
-        <div style={style.footer}>
-          <button
-            style={{
-              ...style.cancelButton,
-              //   @ts-ignore
-              ":hover": {
-                color: "#111827",
-                backgroundColor: "#e5e7eb",
-              },
-            }}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-        </div>
+            <div style={style.footer}>
+              <button
+                style={{
+                  ...style.cancelButton,
+                  //   @ts-ignore
+                  ":hover": {
+                    color: "#111827",
+                    backgroundColor: "#e5e7eb",
+                  },
+                }}
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

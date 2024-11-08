@@ -12,7 +12,7 @@ type Props = {
 
 export const WorkspaceSelector = (props: Props) => {
   const { open, onSelect, onClose, demoMode } = props;
-  const { data } = useProjects();
+  const { data, loading } = useProjects();
   const workspaceData = demoMode ? DEMO_WORKSPACES : data ?? [];
 
   if (!open) return null;
@@ -22,6 +22,7 @@ export const WorkspaceSelector = (props: Props) => {
       workspaces={workspaceData}
       onSelect={onSelect}
       onClose={onClose}
+      loading={loading}
     />
   );
 };
