@@ -2,6 +2,7 @@ import { useState } from "react";
 import { apiRequest, useGet } from "./helper/ApiRequestsBase";
 import { getBToken } from "./helper/utils";
 import { RefreshTokenResult } from "./np/types";
+import { useProjectGetBase } from "./np/projects";
 
 export interface ProjectUser {
   name: string;
@@ -14,10 +15,7 @@ export interface ProjectUser {
 }
 
 export const useUsers = ({ projectId }: { projectId: string }) => {
-  return useGet<ProjectUser[]>({
-    path: "users",
-    options: { queryString: `?projectId=${projectId}` },
-  });
+  return useProjectGetBase<ProjectUser[]>({ path: "users" });
 };
 
 export const useAccountProfile = () => {

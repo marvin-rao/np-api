@@ -1,5 +1,5 @@
 import { useGet } from "../../helper/ApiRequestsBase";
-import { useProjectId, useProjectRequest } from "../projects";
+import { useProjectGetBase, useProjectRequest } from "../projects";
 import { ObjectId } from "../types";
 
 interface EntityHookOptions<TName extends string> {
@@ -38,11 +38,7 @@ export function generateEntityHooks<TName extends string, T extends ObjectId>(
     entityName.charAt(0).toUpperCase() + entityName.slice(1);
 
   const useGetEntities = () => {
-    const { projectId } = useProjectId();
-    return useGet<T[]>({
-      path,
-      options: { queryString: `?projectId=${projectId}` },
-    });
+    return useProjectGetBase<T[]>({ path });
   };
 
   const useAddEntity = () => {

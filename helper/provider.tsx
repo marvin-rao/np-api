@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createContext, useContext, useEffect } from "react";
 import {
   getBToken,
@@ -20,6 +21,14 @@ export type AuthProviderProps = {
   apiBaseUrl: string;
 };
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 60 * 24,
+    },
+  },
+});
+
 export const AuthProvider = (props: AuthProviderProps) => {
   const { children, loginPageUrl, apiBaseUrl } = props;
 
@@ -35,9 +44,11 @@ export const AuthProvider = (props: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl }}>
-      {children}
-    </AuthContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl }}>
+        {children}
+      </AuthContext.Provider>
+    </QueryClientProvider>
   );
 };
 

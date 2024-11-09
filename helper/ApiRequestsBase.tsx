@@ -1,5 +1,6 @@
 // @ts-ignore
-import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useAuthData } from "./provider";
 import { useHeaders } from "./utils";
 
@@ -20,50 +21,42 @@ type UseFetchWithTokenProps = {
 export const useGet = <T,>({
   path,
   options = {},
-  deps,
-  enabled = true,
+  deps = [],
+  enabled,
 }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
-  const [data, setData] = useState<T>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
   const { getHeaders } = useHeaders();
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        apiBaseUrl + path + (options?.queryString ?? ""),
-        {
-          method: options.method || "GET",
-          headers: await getHeaders(),
-          body: JSON.stringify(options.body),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+  const fetchData = async (): Promise<T | undefined> => {
+    const response = await fetch(
+      apiBaseUrl + path + (options?.queryString ?? ""),
+      {
+        method: options.method || "GET",
+        headers: await getHeaders(),
+        body: options.body ? JSON.stringify(options.body) : undefined,
       }
+    );
 
-      const result = await response.json();
-      setData(result?.data ?? undefined);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
     }
+
+    const result = await response.json();
+    return result?.data ?? undefined;
   };
 
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-    fetchData();
-  }, [path, enabled, ...(deps?.filter((dep) => dep != null) ?? [])]);
+  const { refetch, data, error, isLoading } = useQuery({
+    queryKey: [path, deps],
+    queryFn: fetchData,
+    enabled,
+  });
 
-  return { data, loading, error, refetch: fetchData };
+  return {
+    data: data,
+    error: error,
+    loading: isLoading,
+    refetch,
+  };
 };
 
 type UsePostProps = {

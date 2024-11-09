@@ -1,10 +1,29 @@
 import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
 import { getBToken } from "../helper/utils";
 import { ServerResult, Workspace } from "./types";
+import { useEffect, useState } from "react";
 
 export const useProjectId = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const projectId = searchParams.get("projectId");
+  const [projectId, setProjectId] = useState<string | null>(
+    new URLSearchParams(window.location.search).get("projectId")
+  );
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const updatedProjectId = new URLSearchParams(window.location.search).get(
+        "projectId"
+      );
+      setProjectId(updatedProjectId);
+    };
+
+    // Listen for popstate event to detect URL changes
+    window.addEventListener("popstate", handlePopState);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   return {
     projectId,

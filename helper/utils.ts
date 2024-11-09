@@ -96,7 +96,12 @@ export const useHeaders = () => {
 }
 
 export function setQueryParam(key: string, value: string) {
-    const url = new URL(window.location.href); // Get the current URL
-    url.searchParams.set(key, value); // Set or update the parameter
-    window.history.pushState({}, "", url); // Update the URL without reloading
+    console.log('PushState', key, value);
+    const url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+
+    window.history.pushState({}, "", url);
+
+    // Dispatch a popstate event to inform React Router of the URL change
+    window.dispatchEvent(new PopStateEvent("popstate"));
 }
