@@ -1,5 +1,5 @@
 import { useProjectGetBase, useProjectRequest } from "./projects";
-import { RecruitProfile, RecruitSkill, SkillCategory } from "./types";
+import { ObjectId, RecruitProfile, RecruitSkill, SkillCategory } from "./types";
 
 export const useRecruitUsers = () => {
   return useProjectGetBase<RecruitProfile[]>({ path: "recruit/users" });
@@ -12,7 +12,7 @@ export const useRecruitSkills = () => {
 };
 
 export const useDeleteSkill = () => {
-  return useProjectRequest<{ id: string }>({ path, method: "delete" });
+  return useProjectRequest<ObjectId>({ path, method: "delete" });
 };
 
 export const useAddSkill = () => {
@@ -31,9 +31,7 @@ export const useRecruitSkillsCategories = () => {
   return useProjectGetBase<RecruitSkill[]>({ path: c_path });
 };
 
-export const useDeleteSkillCategory = () => {
-  return useProjectRequest<{ id: string }>({ path: c_path, method: "delete" });
-};
+// SS
 
 export const useAddSkillCategory = () => {
   return useProjectRequest<SkillCategory>({ path: c_path, method: "post" });
@@ -41,4 +39,8 @@ export const useAddSkillCategory = () => {
 
 export const useUpdateSkillCategory = () => {
   return useProjectRequest<SkillCategory>({ path: c_path, method: "PATCH" });
+};
+
+export const useDeleteSkillCategory = () => {
+  return useProjectRequest<ObjectId>({ path: c_path, method: "delete" });
 };

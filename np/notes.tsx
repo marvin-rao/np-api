@@ -1,23 +1,8 @@
-import { useGet } from "../helper/ApiRequestsBase";
-import { useProjectId, useProjectRequest } from "./projects";
+import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { Note } from "./types";
 
-export const useNotes = () => {
-  const { projectId } = useProjectId();
-  return useGet<Note[]>({
+export const { useNotes, useAddNote, useUpdateNote, useDeleteNote } =
+  generateEntityHooks<"note", Note>({
+    entityName: "note",
     path: "notes",
-    options: { queryString: `?projectId=${projectId}` },
   });
-};
-
-export const useAddNote = () => {
-  return useProjectRequest<Note>({ path: "notes", method: "post" });
-};
-
-export const useUpdateNote = () => {
-  return useProjectRequest<Note>({ path: "notes", method: "PATCH" });
-};
-
-export const useDeleteNote = () => {
-  return useProjectRequest<{ id: string }>({ path: "notes", method: "delete" });
-};

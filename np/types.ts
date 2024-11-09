@@ -77,3 +77,5 @@ export type RefreshTokenResult = {
     decodedToken?: any;
     error?: string;
 }
+
+export type ObjectId = { id: string };
