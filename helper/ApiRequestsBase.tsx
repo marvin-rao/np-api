@@ -21,13 +21,12 @@ export const useGet = <T,>({
   path,
   options = {},
   deps,
-  enabled,
+  enabled = true,
 }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
   const [data, setData] = useState<T>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const intDeps = deps ?? [];
   const { getHeaders } = useHeaders();
 
   const fetchData = async () => {
@@ -62,7 +61,7 @@ export const useGet = <T,>({
       return;
     }
     fetchData();
-  }, [path]);
+  }, [path, enabled, ...(deps?.filter((dep) => dep != null) ?? [])]);
 
   return { data, loading, error, refetch: fetchData };
 };
@@ -94,9 +93,10 @@ export const apiRequest = async <ObjectType, SuccessResult>(
 ): Promise<SuccessResult | undefined> => {
   const { onLoadingChange, onError, onSuccess, body, method, headers, url } =
     props;
-  const { enabled } = props;
+  const { enabled = true } = props;
 
   if (!enabled) {
+    console.log("Not enabled");
     return;
   }
 
@@ -135,7 +135,7 @@ export const useRequest = <ObjectType, SuccessResult>({
   path,
   method,
   options = {},
-  enabled,
+  enabled = true,
 }: UsePostProps & {
   method: RequestMethod;
   options?: FetchOptions;
