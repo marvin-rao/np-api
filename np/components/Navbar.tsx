@@ -162,6 +162,7 @@ export const NavbarWithProfile: React.FC<NavbarProps> = ({
             onClick={() => {
               // TODO : first confirm logout
               logout();
+              setIsOpen(false);
             }}
           >
             Logout
