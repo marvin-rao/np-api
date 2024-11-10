@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, ReactNode } from "react";
 import { useAccountProfile } from "../../api";
+import { logout } from "../../helper/utils";
 
 interface NavbarProps {
   children?: ReactNode;
@@ -18,7 +19,6 @@ export const NavbarWithProfile: React.FC<NavbarProps> = ({
   userImage = "https://via.placeholder.com/40",
   userName = "John Doe",
   userEmail = "john@example.com",
-  onLogout = () => console.log("Logout clicked"),
 }) => {
   const { data } = useAccountProfile();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -159,7 +159,10 @@ export const NavbarWithProfile: React.FC<NavbarProps> = ({
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.currentTarget.style.backgroundColor = "transparent";
             }}
-            onClick={onLogout}
+            onClick={() => {
+              // TODO : first confirm logout
+              logout();
+            }}
           >
             Logout
           </button>
