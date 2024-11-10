@@ -195,6 +195,7 @@ export const NavbarWithProfile = ({
             <button
               style={styles.logoutButton}
               onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                // @ts-ignore
                 e.currentTarget.style.backgroundColor =
                   styles.logoutButtonHover.backgroundColor;
               }}
