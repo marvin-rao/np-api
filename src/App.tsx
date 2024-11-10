@@ -10,6 +10,7 @@ import { WorkspaceSelector } from "../np/components/WorkspaceSelector";
 
 function App() {
   const [showProjectSelector, setShowProjectSelector] = useState(false);
+
   return (
     <NewPaperProvider apiBaseUrl="" loginPageUrl="">
       <NavbarWithProfile>Default App Name</NavbarWithProfile>

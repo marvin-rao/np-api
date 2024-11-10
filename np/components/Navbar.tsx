@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAccountProfile } from "../../api";
 import { logout } from "../../helper/utils";
+import { openWorkspace } from "./NewPaperProvider";
+import { WorkspaceSelector } from "./WorkspaceSelector";
 
 interface NavbarProps {
   children: any;
@@ -20,6 +22,7 @@ export const NavbarWithProfile = ({
   userName = "John Doe",
   userEmail = "john@example.com",
 }: NavbarProps) => {
+  const [showProjectSelector, setShowProjectSelector] = useState(false);
   const { data } = useAccountProfile();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
@@ -96,6 +99,7 @@ export const NavbarWithProfile = ({
     userInfo: {
       padding: "1rem",
       borderBottom: "1px solid #e5e5e5",
+      cursor: "pointer",
     },
     userName: {
       margin: "0",
@@ -191,6 +195,16 @@ export const NavbarWithProfile = ({
             <p style={styles.userEmail}>{data?.email ?? userEmail}</p>
           </div>
 
+          <div
+            style={styles.userInfo}
+            onClick={() => {
+              setShowProjectSelector(true);
+              setIsOpen(false);
+            }}
+          >
+            Change Workspace
+          </div>
+
           {!showLogoutConfirm ? (
             <button
               style={styles.logoutButton}
@@ -239,6 +253,14 @@ export const NavbarWithProfile = ({
           )}
         </div>
       </div>
+      {showProjectSelector && (
+        <WorkspaceSelector
+          demoMode={false}
+          onSelect={({ id }) => openWorkspace({ id })}
+          open={showProjectSelector}
+          onClose={() => setShowProjectSelector(false)}
+        />
+      )}
     </nav>
   );
 };
