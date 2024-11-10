@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect, ReactNode } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAccountProfile } from "../../api";
 import { logout } from "../../helper/utils";
 
 interface NavbarProps {
-  children?: ReactNode;
+  children: any;
   userImage?: string;
   userName?: string;
   userEmail?: string;
@@ -14,12 +14,12 @@ type Styles = {
   [key: string]: React.CSSProperties;
 };
 
-export const NavbarWithProfile: React.FC<NavbarProps> = ({
+export const NavbarWithProfile = ({
   children,
   userImage = "https://via.placeholder.com/40",
   userName = "John Doe",
   userEmail = "john@example.com",
-}) => {
+}: NavbarProps) => {
   const { data } = useAccountProfile();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
