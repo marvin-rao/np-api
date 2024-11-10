@@ -22,11 +22,16 @@ export const getRefreshToken = () => {
 };
 
 export const setBToken = ({ bearer_token }: { bearer_token: string }) => {
-    return localStorage.setItem(BearerTokenKey, bearer_token);
+    localStorage.setItem(BearerTokenKey, bearer_token);
 };
 
 export const setRefreshToken = ({ refresh_token }: { refresh_token: string }) => {
-    return localStorage.setItem(RefreshTokenKey, refresh_token);
+    localStorage.setItem(RefreshTokenKey, refresh_token);
+};
+
+export const logout = () => {
+    localStorage.setItem(BearerTokenKey, undefined as unknown as string);
+    localStorage.setItem(RefreshTokenKey, undefined as unknown as string);
 };
 
 // A Bearer in JWT
@@ -96,7 +101,6 @@ export const useHeaders = () => {
 }
 
 export function setQueryParam(key: string, value: string) {
-    console.log('PushState', key, value);
     const url = new URL(window.location.href);
     url.searchParams.set(key, value);
 

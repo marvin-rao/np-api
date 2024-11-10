@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, ReactNode } from "react";
+import { useAccountProfile } from "../../api";
 
 interface NavbarProps {
   children?: ReactNode;
@@ -19,6 +20,7 @@ export const NavbarWithProfile: React.FC<NavbarProps> = ({
   userEmail = "john@example.com",
   onLogout = () => console.log("Logout clicked"),
 }) => {
+  const { data } = useAccountProfile();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
@@ -143,8 +145,8 @@ export const NavbarWithProfile: React.FC<NavbarProps> = ({
           }}
         >
           <div style={styles.userInfo}>
-            <h4 style={styles.userName}>{userName}</h4>
-            <p style={styles.userEmail}>{userEmail}</p>
+            <h4 style={styles.userName}>{data?.name ?? userName}</h4>
+            <p style={styles.userEmail}>{data?.email ?? userEmail}</p>
           </div>
 
           <button
