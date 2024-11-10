@@ -22,6 +22,7 @@ export const NavbarWithProfile = ({
 }: NavbarProps) => {
   const { data } = useAccountProfile();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export const NavbarWithProfile = ({
         !popoverRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        setShowLogoutConfirm(false);
       }
     };
 
@@ -121,6 +123,46 @@ export const NavbarWithProfile = ({
     logoutButtonHover: {
       backgroundColor: "#f8f9fa",
     },
+    confirmDialog: {
+      padding: "1rem",
+      borderTop: "1px solid #e5e5e5",
+    },
+    confirmText: {
+      margin: "0 0 0.75rem 0",
+      fontSize: "0.875rem",
+      color: "#333",
+    },
+    buttonGroup: {
+      display: "flex",
+      gap: "0.5rem",
+      justifyContent: "flex-end",
+    },
+    confirmButton: {
+      padding: "0.5rem 1rem",
+      border: "none",
+      borderRadius: "4px",
+      backgroundColor: "#dc3545",
+      color: "#ffffff",
+      fontSize: "0.875rem",
+      cursor: "pointer",
+      transition: "background-color 0.2s ease",
+    },
+    cancelButton: {
+      padding: "0.5rem 1rem",
+      border: "1px solid #dee2e6",
+      borderRadius: "4px",
+      backgroundColor: "#ffffff",
+      color: "#6c757d",
+      fontSize: "0.875rem",
+      cursor: "pointer",
+      transition: "background-color 0.2s ease",
+    },
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+    setShowLogoutConfirm(false);
   };
 
   return (
@@ -149,24 +191,51 @@ export const NavbarWithProfile = ({
             <p style={styles.userEmail}>{data?.email ?? userEmail}</p>
           </div>
 
-          <button
-            style={styles.logoutButton}
-            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-              // @ts-ignore
-              e.currentTarget.style.backgroundColor =
-                styles.logoutButtonHover.backgroundColor;
-            }}
-            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-            }}
-            onClick={() => {
-              // TODO : first confirm logout
-              logout();
-              setIsOpen(false);
-            }}
-          >
-            Logout
-          </button>
+          {!showLogoutConfirm ? (
+            <button
+              style={styles.logoutButton}
+              onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.currentTarget.style.backgroundColor =
+                  styles.logoutButtonHover.backgroundColor;
+              }}
+              onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
+              onClick={() => setShowLogoutConfirm(true)}
+            >
+              Logout
+            </button>
+          ) : (
+            <div style={styles.confirmDialog}>
+              <p style={styles.confirmText}>Are you sure you want to logout?</p>
+              <div style={styles.buttonGroup}>
+                <button
+                  style={styles.cancelButton}
+                  onClick={() => setShowLogoutConfirm(false)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#f8f9fa";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#ffffff";
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  style={styles.confirmButton}
+                  onClick={handleLogout}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#c82333";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#dc3545";
+                  }}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
