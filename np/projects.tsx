@@ -1,22 +1,20 @@
+import { useEffect, useState } from "react";
 import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
 import { getBToken } from "../helper/utils";
 import { ServerResult, Workspace } from "./types";
-import { useEffect, useState } from "react";
 
 export const useProjectId = () => {
-  const extractProjectIdFromPath = (): string | null => {
-    // Match the pattern /projects/:projectId in the pathname
-    const match = window.location.pathname.match(/^\/projects\/([^/]+)$/);
+  function getWorkspaceIdFromUrl(): string | null {
+    const match = window.location.pathname.match(/\/workspace\/([^/]+)/);
     return match ? match[1] : null;
-  };
-
+  }
   const [projectId, setProjectId] = useState<string | null>(
-    extractProjectIdFromPath()
+    getWorkspaceIdFromUrl()
   );
 
   useEffect(() => {
     const handlePopState = () => {
-      setProjectId(extractProjectIdFromPath());
+      setProjectId(getWorkspaceIdFromUrl());
     };
 
     // Listen for popstate event to detect URL changes

@@ -15,10 +15,11 @@ export const NewPaperProvider = (props: AuthProviderProps) => {
   const { projectId } = useProjectId();
   const { shouldLogin } = useAuthSession();
   const [isOpen, setIsOpen] = useState(true);
+  console.log("projectId", projectId);
 
   return (
     <AuthProvider {...props}>
-      {!shouldLogin && !projectId && (
+      {!projectId && (
         <WorkspaceSelector
           open={isOpen}
           demoMode={false}
