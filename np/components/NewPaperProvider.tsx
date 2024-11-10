@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AuthProvider,
   AuthProviderProps,
   useAuthSession,
 } from "../../helper/provider";
-import { WorkspaceSelector } from "./WorkspaceSelector";
 import { useProjectId } from "../projects";
-import { setQueryParam } from "../../helper/utils";
+import { WorkspaceSelector } from "./WorkspaceSelector";
+
+export const openWorkspace = ({ id }: { id: string }) => {
+  window.location.href = `../../../../workspace/${id}/`;
+};
 
 export const NewPaperProvider = (props: AuthProviderProps) => {
   const { projectId } = useProjectId();
@@ -20,7 +23,8 @@ export const NewPaperProvider = (props: AuthProviderProps) => {
           open={isOpen}
           demoMode={false}
           onSelect={(workspace) => {
-            setQueryParam("projectId", workspace.id);
+            // setQueryParam("projectId", workspace.id);
+            openWorkspace({ id: workspace.id });
             setIsOpen(false);
           }}
           onClose={() => setIsOpen(false)}

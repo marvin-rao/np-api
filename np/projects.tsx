@@ -4,16 +4,19 @@ import { ServerResult, Workspace } from "./types";
 import { useEffect, useState } from "react";
 
 export const useProjectId = () => {
+  const extractProjectIdFromPath = (): string | null => {
+    // Match the pattern /projects/:projectId in the pathname
+    const match = window.location.pathname.match(/^\/projects\/([^/]+)$/);
+    return match ? match[1] : null;
+  };
+
   const [projectId, setProjectId] = useState<string | null>(
-    new URLSearchParams(window.location.search).get("projectId")
+    extractProjectIdFromPath()
   );
 
   useEffect(() => {
     const handlePopState = () => {
-      const updatedProjectId = new URLSearchParams(window.location.search).get(
-        "projectId"
-      );
-      setProjectId(updatedProjectId);
+      setProjectId(extractProjectIdFromPath());
     };
 
     // Listen for popstate event to detect URL changes

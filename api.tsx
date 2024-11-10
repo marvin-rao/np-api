@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { apiRequest, useGet } from "./helper/ApiRequestsBase";
 import { getBToken } from "./helper/utils";
-import { RefreshTokenResult } from "./np/types";
 import { useProjectGetBase } from "./np/projects";
+import { RefreshTokenResult } from "./np/types";
 
 export interface ProjectUser {
   name: string;
@@ -14,7 +14,7 @@ export interface ProjectUser {
   id: string;
 }
 
-export const useUsers = ({ projectId }: { projectId: string }) => {
+export const useUsers = () => {
   return useProjectGetBase<ProjectUser[]>({ path: "users" });
 };
 

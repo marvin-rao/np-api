@@ -23,7 +23,8 @@ const style = {
     overflow: "hidden",
   },
   header: {
-    padding: "1.5rem",
+    padding: "8px",
+    paddingLeft: "18px",
     borderBottom: "1px solid #e5e7eb",
   },
   title: {
@@ -32,7 +33,7 @@ const style = {
     color: "#111827",
   },
   subtitle: {
-    marginTop: "0.25rem",
+    marginTop: "8px",
     fontSize: "0.875rem",
     color: "#6b7280",
   },
@@ -41,7 +42,7 @@ const style = {
     borderBottom: "1px solid #e5e7eb",
   },
   searchInput: {
-    width: "100%",
+    width: "92%",
     padding: "0.5rem 1rem",
     border: "1px solid #d1d5db",
     borderRadius: "0.375rem",
@@ -80,6 +81,7 @@ const style = {
     marginLeft: "1rem",
     flex: 1,
     minWidth: 0,
+    cursor: "pointer",
   },
   itemHeader: {
     display: "flex",
@@ -112,7 +114,7 @@ const style = {
     color: "#6b7280",
   },
   footer: {
-    padding: "1rem",
+    padding: "0.4rem",
     borderTop: "1px solid #e5e7eb",
     backgroundColor: "#f9fafb",
     display: "flex",
