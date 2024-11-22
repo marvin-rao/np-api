@@ -5,6 +5,12 @@ export const useRecruitUsers = () => {
   return useProjectGetBase<RecruitProfile[]>({ path: "recruit/users" });
 };
 
+export const useRecruitSessionProfile = () => {
+  return useProjectGetBase<RecruitProfile[]>({
+    path: "recruit/users/session_profile",
+  });
+};
+
 const path = "recruit/skills";
 
 export const useRecruitSkills = () => {
