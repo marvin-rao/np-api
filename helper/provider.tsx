@@ -42,6 +42,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
     if (refresh_token) {
       setRefreshToken({ refresh_token });
     }
+    setTimeout(() => {
+      const rootPath = `${window.location.origin}/`;
+      window.location.href = rootPath;
+    }, 300);
   }, []);
 
   return (
