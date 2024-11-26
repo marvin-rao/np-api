@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavbarWithProfile } from "../np/components/Navbar";
+import { NPMainActionBar } from "../np/components/Navbar";
 import {
   NewPaperProvider,
   openWorkspace,
@@ -13,7 +13,7 @@ function App() {
 
   return (
     <NewPaperProvider apiBaseUrl="" loginPageUrl="">
-      <NavbarWithProfile>Default App Name</NavbarWithProfile>
+      <NPMainActionBar>Default App Name</NPMainActionBar>
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">
           Component Testing Environment

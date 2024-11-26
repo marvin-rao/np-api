@@ -35,17 +35,18 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
-    if (bearer_token) {
-      setBToken({ bearer_token });
-    }
     const refresh_token = getUrlRefreshToken();
-    if (refresh_token) {
+    if (bearer_token && refresh_token) {
+      setBToken({ bearer_token });
       setRefreshToken({ refresh_token });
+
+      setTimeout(() => {
+        const rootPath = `${window.location.origin}/`;
+        if (window.location.href !== rootPath) {
+          window.location.href = rootPath;
+        }
+      }, 100);
     }
-    setTimeout(() => {
-      const rootPath = `${window.location.origin}/`;
-      window.location.href = rootPath;
-    }, 300);
   }, []);
 
   return (

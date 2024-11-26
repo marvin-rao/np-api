@@ -16,7 +16,7 @@ type Styles = {
   [key: string]: React.CSSProperties;
 };
 
-export const NavbarWithProfile = ({
+export const NPMainActionBar = ({
   children,
   userImage = "https://via.placeholder.com/40",
   userName = "John Doe",
@@ -167,6 +167,10 @@ export const NavbarWithProfile = ({
     logout();
     setIsOpen(false);
     setShowLogoutConfirm(false);
+    const rootPath = `${window.location.origin}/`;
+    if (window.location.href !== rootPath) {
+      window.location.href = rootPath;
+    }
   };
 
   return (
