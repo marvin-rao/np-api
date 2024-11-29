@@ -3,6 +3,7 @@ import { useAccountProfile } from "../../api";
 import { logout } from "../../helper/utils";
 import { openWorkspace } from "./NewPaperProvider";
 import { WorkspaceSelector } from "./WorkspaceSelector";
+import { ProfileImage } from "./ProfileImage";
 
 interface NavbarProps {
   children: any;
@@ -18,7 +19,6 @@ type Styles = {
 
 export const NPMainActionBar = ({
   children,
-  userImage = "https://via.placeholder.com/40",
   userName = "John Doe",
   userEmail = "john@example.com",
 }: NavbarProps) => {
@@ -64,14 +64,6 @@ export const NPMainActionBar = ({
     profileSection: {
       position: "relative",
       marginLeft: "auto",
-    },
-    profileImage: {
-      width: "40px",
-      height: "40px",
-      borderRadius: "50%",
-      cursor: "pointer",
-      border: "2px solid #e5e5e5",
-      transition: "border-color 0.2s ease",
     },
     profileImageHover: {
       borderColor: "#007bff",
@@ -178,13 +170,10 @@ export const NPMainActionBar = ({
       <div style={styles.leftSection}>{children}</div>
 
       <div style={styles.profileSection} ref={popoverRef}>
-        <img
-          src={data?.avatar?.original ?? userImage}
-          alt="Profile"
-          style={{
-            ...styles.profileImage,
-            ...(isOpen && styles.profileImageHover),
-          }}
+        <ProfileImage
+          avatarUrl={data?.avatar?.original}
+          name={data?.name ?? ""}
+          isOpen={isOpen}
           onClick={() => setIsOpen(!isOpen)}
         />
 
