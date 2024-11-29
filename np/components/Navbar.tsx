@@ -179,7 +179,7 @@ export const NPMainActionBar = ({
 
       <div style={styles.profileSection} ref={popoverRef}>
         <img
-          src={userImage}
+          src={data?.avatar?.original ?? userImage}
           alt="Profile"
           style={{
             ...styles.profileImage,
