@@ -1,6 +1,7 @@
 import { useProjectGetBase, useProjectRequest } from "./projects";
 import { ObjectId, RecruitProfile, RecruitSkill, SkillCategory } from "./types";
 
+// Users
 export const useRecruitUsers = () => {
   return useProjectGetBase<RecruitProfile[]>({ path: "recruit/users" });
 };
@@ -17,6 +18,7 @@ export const useRecruitProfile = ({ userId }: { userId: string }) => {
   });
 };
 
+// Skills
 const path = "recruit/skills";
 
 export const useRecruitSkills = () => {
@@ -42,8 +44,6 @@ const c_path = path + "/category";
 export const useRecruitSkillsCategories = () => {
   return useProjectGetBase<RecruitSkill>({ path: c_path });
 };
-
-// SS
 
 export const useAddSkillCategory = () => {
   return useProjectRequest<SkillCategory>({ path: c_path, method: "post" });
