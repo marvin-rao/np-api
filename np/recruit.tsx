@@ -6,8 +6,14 @@ export const useRecruitUsers = () => {
 };
 
 export const useRecruitSessionProfile = () => {
-  return useProjectGetBase<RecruitProfile[]>({
+  return useProjectGetBase<RecruitProfile>({
     path: "recruit/users/session_profile",
+  });
+};
+
+export const useRecruitProfile = ({ userId }: { userId: string }) => {
+  return useProjectGetBase<RecruitProfile>({
+    path: `recruit/users/profile/${userId}`,
   });
 };
 
