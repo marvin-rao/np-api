@@ -18,6 +18,13 @@ export const useRecruitProfile = ({ userId }: { userId: string }) => {
   });
 };
 
+export const useUpdateRecruitProfile = ({ userId }: { userId: string }) => {
+  return useProjectRequest<RecruitProfile>({
+    path: `recruit/users/profile/${userId}`,
+    method: "PATCH",
+  });
+};
+
 // Skills
 const path = "recruit/skills";
 
