@@ -2,6 +2,7 @@ export type ServerResult<T = unknown> = {
     message: string, data: T,
 }
 
+// Recruit
 export type RecruitProfile = {
     id: string;
     email: string;
@@ -14,7 +15,7 @@ export type RecruitProfile = {
     openToWorkWithSkills: RecruitSkill[];
     jobtitle?: string,
     about?: string,
-    availableHoursPerWeek?: string
+    availableHoursPerWeek?: number
     prefersToWorkWith?: string;
 }
 
