@@ -12,10 +12,10 @@ export type RecruitProfile = {
     }
     skills: RecruitSkill[];
     openToWorkWithSkills: RecruitSkill[];
-    availability: {
-        monthYear: string;
-        numberOfHours: number;
-    }[];
+    jobtitle?: string,
+    about?: string,
+    availableHoursPerWeek?: string
+    prefersToWorkWith?: string;
 }
 
 export type Creator = {
