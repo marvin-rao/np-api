@@ -12,16 +12,16 @@ export const useRecruitSessionProfile = () => {
   });
 };
 
-export const useRecruitProfile = ({ userId }: { userId: string }) => {
-  return useProjectGetBase<RecruitProfile>({
-    path: `recruit/users/profile/${userId}`,
+export const useUpdateRecruitProfile = () => {
+  return useProjectRequest<RecruitProfile>({
+    path: `recruit/users/session_profile`,
+    method: "PATCH",
   });
 };
 
-export const useUpdateRecruitProfile = ({ userId }: { userId: string }) => {
-  return useProjectRequest<RecruitProfile>({
+export const useRecruitProfile = ({ userId }: { userId: string }) => {
+  return useProjectGetBase<RecruitProfile>({
     path: `recruit/users/profile/${userId}`,
-    method: "PATCH",
   });
 };
 
