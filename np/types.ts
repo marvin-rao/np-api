@@ -17,6 +17,8 @@ export type RecruitProfile = {
     about?: string,
     availableHoursPerWeek?: number
     prefersToWorkWith?: string;
+    phoneNumber?: string,
+    contactPhoneNumber?: string
 }
 
 export type Creator = {
