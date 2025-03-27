@@ -4,6 +4,7 @@ import { logout } from "../../helper/utils";
 import { openWorkspace } from "./NewPaperProvider";
 import { WorkspaceSelector } from "./WorkspaceSelector";
 import { ProfileImage } from "./ProfileImage";
+import { useProjectId, useProjects } from "../projects";
 
 interface NavbarProps {
   children: any;
@@ -27,6 +28,9 @@ export const NPMainActionBar = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
+  const { projectId } = useProjectId();
+  const { data: Workspaces } = useProjects();
+  const currentWorkspace = Workspaces?.find((w) => w.id == projectId);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -169,6 +173,8 @@ export const NPMainActionBar = ({
     <nav style={styles.navbar}>
       <div style={styles.leftSection}>{children}</div>
 
+      {/* show current workspace and its able to run */}
+      <h4>{currentWorkspace?.name}</h4>
       <div style={styles.profileSection} ref={popoverRef}>
         <ProfileImage
           avatarUrl={data?.avatar?.original}

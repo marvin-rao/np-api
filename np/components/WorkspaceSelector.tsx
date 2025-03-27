@@ -2,6 +2,7 @@ import { useProjects } from "../..";
 import { Workspace } from "../types";
 import { DEMO_WORKSPACES } from "./DemoWorkspaces";
 import { WorkspacesModalView } from "./WorkspacesModalView";
+import { useProjectId } from "../projects";
 
 type Props = {
   onSelect: (workspace: Workspace) => void;
@@ -13,6 +14,7 @@ type Props = {
 export const WorkspaceSelector = (props: Props) => {
   const { open, onSelect, onClose, demoMode } = props;
   const { data, loading } = useProjects();
+  const { projectId } = useProjectId();
   const workspaceData = demoMode ? DEMO_WORKSPACES : data ?? [];
 
   if (!open) return null;
@@ -23,6 +25,7 @@ export const WorkspaceSelector = (props: Props) => {
       onSelect={onSelect}
       onClose={onClose}
       loading={loading}
+      currentWorkspaceId={projectId}
     />
   );
 };

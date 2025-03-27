@@ -138,6 +138,7 @@ type Props = {
   onClose: () => void;
   workspaces: Workspace[];
   loading: boolean;
+  currentWorkspaceId?: string | null;
 };
 
 export const WorkspacesModalView = ({
@@ -145,6 +146,7 @@ export const WorkspacesModalView = ({
   onClose,
   onSelect,
   loading,
+  currentWorkspaceId,
 }: Props) => {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -192,7 +194,9 @@ export const WorkspacesModalView = ({
                   style={{
                     ...style.item,
                     backgroundColor:
-                      selectedId === workspace.id
+                      workspace.id === currentWorkspaceId
+                        ? "rgba(59, 130, 246, 0.15)"
+                        : selectedId === workspace.id
                         ? "rgba(59, 130, 246, 0.1)"
                         : hoveredId === workspace.id
                         ? "rgba(59, 130, 246, 0.05)"
@@ -202,6 +206,10 @@ export const WorkspacesModalView = ({
                     boxShadow:
                       hoveredId === workspace.id
                         ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                        : "none",
+                    borderLeft:
+                      workspace.id === currentWorkspaceId
+                        ? "4px solid #2563eb"
                         : "none",
                   }}
                   onClick={() => {
@@ -215,7 +223,9 @@ export const WorkspacesModalView = ({
                     style={{
                       ...style.avatar,
                       backgroundColor:
-                        hoveredId === workspace.id
+                        workspace.id === currentWorkspaceId
+                          ? "rgba(59, 130, 246, 0.3)"
+                          : hoveredId === workspace.id
                           ? "rgba(59, 130, 246, 0.2)"
                           : "rgba(59, 130, 246, 0.1)",
                       transform:
@@ -230,10 +240,27 @@ export const WorkspacesModalView = ({
                         style={{
                           ...style.itemTitle,
                           color:
-                            hoveredId === workspace.id ? "#2563eb" : "#111827",
+                            workspace.id === currentWorkspaceId
+                              ? "#2563eb"
+                              : hoveredId === workspace.id
+                              ? "#2563eb"
+                              : "#111827",
+                          fontWeight:
+                            workspace.id === currentWorkspaceId ? 600 : 500,
                         }}
                       >
                         {workspace.name}
+                        {workspace.id === currentWorkspaceId && (
+                          <span
+                            style={{
+                              marginLeft: "8px",
+                              fontSize: "0.75rem",
+                              color: "#2563eb",
+                            }}
+                          >
+                            (Current)
+                          </span>
+                        )}
                       </div>
                       <span style={style.itemDate}>{workspace.lastActive}</span>
                     </div>
