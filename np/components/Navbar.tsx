@@ -12,6 +12,11 @@ interface NavbarProps {
   userName?: string;
   userEmail?: string;
   onLogout?: () => void;
+  logo?: {
+    src: string;
+    alt?: string;
+    onClick?: () => void;
+  };
 }
 
 type Styles = {
@@ -22,6 +27,7 @@ export const NPMainActionBar = ({
   children,
   userName = "John Doe",
   userEmail = "john@example.com",
+  logo,
 }: NavbarProps) => {
   const [showProjectSelector, setShowProjectSelector] = useState(false);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -44,6 +50,20 @@ export const NPMainActionBar = ({
       boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       position: "relative",
       height: "50px",
+    },
+    logoSection: {
+      display: "flex",
+      alignItems: "center",
+      marginRight: "2rem",
+    },
+    logo: {
+      height: "32px",
+      width: "auto",
+      cursor: "pointer",
+      transition: "opacity 0.2s ease",
+    },
+    logoHover: {
+      opacity: 0.8,
     },
     leftSection: {
       display: "flex",
@@ -197,6 +217,22 @@ export const NPMainActionBar = ({
 
   return (
     <nav style={styles.navbar}>
+      {logo && (
+        <div style={styles.logoSection}>
+          <img
+            src={logo.src || "@np_icon.jpg"}
+            alt={logo.alt || "Logo"}
+            style={styles.logo}
+            onClick={logo.onClick}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = "0.8";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = "1";
+            }}
+          />
+        </div>
+      )}
       <div style={styles.leftSection}>{children}</div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
