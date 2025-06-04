@@ -82,3 +82,31 @@ export type RefreshTokenResult = {
 }
 
 export type ObjectId = { id: string };
+
+export type Image = {
+    id: string;
+    type: "image" | "video";
+    originUri: string;
+    original?: string | undefined;
+    s84?: string | undefined;
+    s240?: string | undefined;
+    s480?: string | undefined;
+    s720?: string | undefined;
+    s1080?: string | undefined;
+    uid?: string | undefined;
+    video?: {
+        originUri: string,
+        originalUrl?: string
+    };
+}
+
+
+export type SystemAudio = {
+    id: string;
+    originUri: string;
+    duration: number;
+    original?: string | undefined;
+    uid?: string | undefined;
+    mp3Url?: string | undefined;
+    downloadedUri?: string | undefined;
+}
