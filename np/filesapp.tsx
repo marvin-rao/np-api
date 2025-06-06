@@ -18,5 +18,5 @@ export const {
   useDeleteFilesFolder,
 } = generateEntityHooks<"filesFolder", AppFile>({
   entityName: "filesFolder",
-  path: "files_app",
+  path: "files_app/folders",
 });
