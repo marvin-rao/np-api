@@ -7,6 +7,7 @@ export { AuthProvider, useAuthSession } from "./helper/provider";
 
 export * from "./np/developer";
 export * from "./np/notes";
+export * from "./np/filesapp";
 export * from "./np/projects";
 export * from "./np/recruit";
 export * from "./api";
