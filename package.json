@@ -1,10 +1,10 @@
 {
-  "version": "2.3.0",
+  "version": "2.4.1",
   "name": "newpaper-api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx tsc --noEmit",
-    "publish": "npm run lint && npm publish",
+    "deploy": "npm run lint && npm publish",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
