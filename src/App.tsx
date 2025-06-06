@@ -5,6 +5,7 @@ import {
   openWorkspace,
 } from "../np/components/NewPaperProvider";
 import { WorkspaceSelector } from "../np/components/WorkspaceSelector";
+import { AppContent } from "./AppContent";
 // Import your components from the np directory
 // Example: import { YourComponent } from '@np/components/YourComponent';
 
@@ -12,26 +13,11 @@ function App() {
   const [showProjectSelector, setShowProjectSelector] = useState(false);
 
   return (
-    <NewPaperProvider apiBaseUrl="" loginPageUrl="">
-      <NPMainActionBar>Default App Name</NPMainActionBar>
-      <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">
-          Component Testing Environment
-        </h1>
-        <button onClick={() => setShowProjectSelector(true)}>
-          Open Projects Selector
-        </button>
-        <div className="space-y-8">
-          {/* Add your components here for testing */}
-          {/* Example: <YourComponent /> */}
-        </div>
-        <WorkspaceSelector
-          demoMode={true}
-          onSelect={({ id }) => openWorkspace({ id })}
-          open={showProjectSelector}
-          onClose={() => setShowProjectSelector(false)}
-        />
-      </div>
+    <NewPaperProvider
+      apiBaseUrl={"https://newpaper.app/api/"}
+      loginPageUrl={"https://newpaper.app/account/login"}
+    >
+      <AppContent />
     </NewPaperProvider>
   );
 }
