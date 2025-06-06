@@ -19,69 +19,21 @@ export function AppContent() {
   return (
     <div className="app-container">
       <NPMainActionBar>NP Development Suite</NPMainActionBar>
-      
-      <div className="main-content fade-in-up">
+
+      <div className="main-content">
         {/* Hero Section */}
         <div className="hero-section">
-          <h1 className="hero-title">
-            Component Testing Environment
-          </h1>
+          <h1 className="hero-title">Component Testing Environment</h1>
           <p className="hero-subtitle">
-            Build, test, and iterate on your components in a beautiful development environment
+            Build, test, and iterate on your components in a clean development
+            environment
           </p>
-          <button 
+          <button
             className="primary-button"
             onClick={() => setShowProjectSelector(true)}
           >
             Launch Project Selector
           </button>
-        </div>
-
-        {/* Stats Section */}
-        <div className="stats-section fade-in-up-delay-1">
-          <div className="stat-item">
-            <span className="stat-number">100+</span>
-            <span className="stat-label">Components</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">50+</span>
-            <span className="stat-label">Projects</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">24/7</span>
-            <span className="stat-label">Development</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">∞</span>
-            <span className="stat-label">Possibilities</span>
-          </div>
-        </div>
-
-        {/* Features Section */}
-        <div className="features-section fade-in-up-delay-2">
-          <div className="feature-card">
-            <div className="feature-icon">🚀</div>
-            <h3 className="feature-title">Fast Development</h3>
-            <p className="feature-description">
-              Rapid prototyping and testing with hot reload and instant feedback loops
-            </p>
-          </div>
-          
-          <div className="feature-card">
-            <div className="feature-icon">🎨</div>
-            <h3 className="feature-title">Beautiful Design</h3>
-            <p className="feature-description">
-              Modern UI components with stunning visual design and smooth animations
-            </p>
-          </div>
-          
-          <div className="feature-card">
-            <div className="feature-icon">⚡</div>
-            <h3 className="feature-title">High Performance</h3>
-            <p className="feature-description">
-              Optimized for speed and efficiency with minimal bundle size
-            </p>
-          </div>
         </div>
 
         {/* Component Testing Area */}
