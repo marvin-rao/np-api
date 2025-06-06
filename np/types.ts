@@ -100,6 +100,26 @@ export type Image = {
     };
 }
 
+type AppFileObjectType = "leave" | "payslip";
+
+export type AppFile = {
+    id: string;
+    url: string;
+    size: number;
+    creator: Creator;
+    created: number;
+    updated?: number;
+    mimeType: string;
+    name?: string;
+    type?: "file" | "folder";
+    folderId?: string;
+    sharedWith?: string[];
+    lock?: {
+        objectType: AppFileObjectType;
+        objectId: string;
+    };
+}
+
 
 export type SystemAudio = {
     id: string;
