@@ -21,7 +21,6 @@ export const NewPaperProvider = (props: AuthProviderProps) => {
       {!shouldLogin && !projectId && (
         <WorkspaceSelector
           open={isOpen}
-          demoMode={false}
           onSelect={(workspace) => {
             openWorkspace({ id: workspace.id });
             setIsOpen(false);
