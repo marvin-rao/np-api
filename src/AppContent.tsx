@@ -48,7 +48,6 @@ export function AppContent() {
       </div>
 
       <WorkspaceSelector
-        demoMode={true}
         onSelect={({ id }) => openWorkspace({ id })}
         open={showProjectSelector}
         onClose={() => setShowProjectSelector(false)}
