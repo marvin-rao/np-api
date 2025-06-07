@@ -357,7 +357,6 @@ export const NPMainActionBar = ({
       </div>
 
       <WorkspaceSelector
-        demoMode={true}
         onSelect={({ id }) => {
           openWorkspace({ id });
           setShowWorkspaceDropdown(false);
@@ -368,7 +367,6 @@ export const NPMainActionBar = ({
 
       {showProjectSelector && (
         <WorkspaceSelector
-          demoMode={false}
           onSelect={({ id }) => openWorkspace({ id })}
           open={showProjectSelector}
           onClose={() => setShowProjectSelector(false)}

@@ -6,12 +6,11 @@ import { useProjectId } from "../projects";
 type Props = {
   onSelect: (workspace: Workspace) => void;
   onClose: () => void;
-  demoMode: boolean;
   open: boolean;
 };
 
 export const WorkspaceSelector = (props: Props) => {
-  const { open, onSelect, onClose, demoMode } = props;
+  const { open, onSelect, onClose } = props;
   const { data, loading } = useProjects();
   const { projectId } = useProjectId();
   const workspaceData = data ?? [];
