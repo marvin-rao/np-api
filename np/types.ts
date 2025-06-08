@@ -135,6 +135,14 @@ export type JobPost = {
     id: string;
     title: string;
     description: string;
+    requirements: string[];
+    salaryRange?: string | undefined;
+    location?: string | undefined;
+    skills: {
+        id: string;
+        name: string;
+    }[];
+    department?: string | undefined;
     created: number;
     type: "full-time" | "part-time" | "contract";
     status: "closed" | "open";
