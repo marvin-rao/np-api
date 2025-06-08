@@ -13,9 +13,9 @@ export function getProjectIdFromQuery(): string | null {
   return urlParams.get("projectId");
 }
 
-export function getDesiredPathFromQuery(): string | null {
+export function getCaptiveModeFromQuery(): string | null {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get("desiredPath");
+  return urlParams.get("captiveMode");
 }
 
 function getProjectId(): string | null {
