@@ -133,6 +133,7 @@ export type SystemAudio = {
 
 export type JobPost = {
     id: string;
+    title: string;
     created: number;
     type: "full-time" | "part-time" | "contract";
     status: "closed" | "open";
