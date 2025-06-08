@@ -8,22 +8,44 @@ function getWorkspaceIdFromUrl(): string | null {
   return match ? match[1] : null;
 }
 
+function getProjectIdFromQuery(): string | null {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("projectId");
+}
+
+function getProjectId(): string | null {
+  // First try to get from URL path
+  const fromPath = getWorkspaceIdFromUrl();
+  if (fromPath) {
+    return fromPath;
+  }
+
+  // If not found in path, try query string
+  return getProjectIdFromQuery();
+}
+
 export const useProjectId = () => {
-  const [projectId, setProjectId] = useState<string | null>(
-    getWorkspaceIdFromUrl()
-  );
+  const [projectId, setProjectId] = useState<string | null>(getProjectId());
 
   useEffect(() => {
     const handlePopState = () => {
-      setProjectId(getWorkspaceIdFromUrl());
+      setProjectId(getProjectId());
+    };
+
+    const handleLocationChange = () => {
+      setProjectId(getProjectId());
     };
 
     // Listen for popstate event to detect URL changes
     window.addEventListener("popstate", handlePopState);
 
-    // Clean up event listener on component unmount
+    // Listen for hashchange to catch query parameter changes
+    window.addEventListener("hashchange", handleLocationChange);
+
+    // Clean up event listeners on component unmount
     return () => {
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handleLocationChange);
     };
   }, []);
 
