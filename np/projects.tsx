@@ -8,9 +8,14 @@ function getWorkspaceIdFromUrl(): string | null {
   return match ? match[1] : null;
 }
 
-function getProjectIdFromQuery(): string | null {
+export function getProjectIdFromQuery(): string | null {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("projectId");
+}
+
+export function getDesiredPathFromQuery(): string | null {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("desiredPath");
 }
 
 function getProjectId(): string | null {

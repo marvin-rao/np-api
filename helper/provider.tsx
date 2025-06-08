@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createContext, useContext, useEffect } from "react";
+import { getDesiredPathFromQuery, getProjectIdFromQuery } from "../np/projects";
 import {
   getBToken,
   getUrlBearerToken,
@@ -36,14 +37,20 @@ export const AuthProvider = (props: AuthProviderProps) => {
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
     const refresh_token = getUrlRefreshToken();
+    const workspaceId = getProjectIdFromQuery();
+    const desiredPath = getDesiredPathFromQuery();
     if (bearer_token && refresh_token) {
       setBToken({ bearer_token });
       setRefreshToken({ refresh_token });
 
       setTimeout(() => {
         const rootPath = `${window.location.origin}/`;
+        if (desiredPath) {
+          window.location.href = rootPath + desiredPath;
+          return;
+        }
         if (window.location.href !== rootPath) {
-          window.location.href = rootPath;
+          window.location.href = rootPath + "?projectId=" + workspaceId;
         }
       }, 100);
     }
