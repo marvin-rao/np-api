@@ -91,3 +91,9 @@ export const {
   entityName: "jobApplication",
   path: "recruit/job_applications",
 });
+
+export const useJobPost = (id: string) => {
+  return useProjectGetBase<JobPost>({
+    path: `recruit/job_posts/get_one/${id}`,
+  });
+};
