@@ -3,11 +3,12 @@ import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
 import { getBToken } from "../helper/utils";
 import { ServerResult, Workspace } from "./types";
 
+function getWorkspaceIdFromUrl(): string | null {
+  const match = window.location.pathname.match(/\/workspace\/([^/]+)/);
+  return match ? match[1] : null;
+}
+
 export const useProjectId = () => {
-  function getWorkspaceIdFromUrl(): string | null {
-    const match = window.location.pathname.match(/\/workspace\/([^/]+)/);
-    return match ? match[1] : null;
-  }
   const [projectId, setProjectId] = useState<string | null>(
     getWorkspaceIdFromUrl()
   );
