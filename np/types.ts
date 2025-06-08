@@ -17,7 +17,7 @@ export type RecruitProfile = {
     about?: string,
     availableHoursPerWeek?: number
     prefersToWorkWith?: string;
-    contactPhoneNumber?: string
+    contactPhoneNumber?: string;
 }
 
 export type Creator = {
@@ -129,4 +129,41 @@ export type SystemAudio = {
     uid?: string | undefined;
     mp3Url?: string | undefined;
     downloadedUri?: string | undefined;
+}
+
+export type JobPost = {
+    id: string;
+    created: number;
+    type: "full-time" | "part-time" | "contract";
+    status: "closed" | "open";
+    creator: {
+        sessionUid: string;
+        projectUid: string;
+        name?: string | undefined;
+        created?: number | undefined;
+        avatar?: Image;
+    };
+}
+
+export type JobApplication = {
+    id: string;
+    jobId: string;
+    applicantId: string;
+    applicantName: string;
+    email: string;
+    resumeUrl: string;
+    coverLetter: string;
+    status: "pending" | "reviewed" | "interviewed" | "accepted" | "rejected";
+    appliedAt: number;
+    tags: string[];
+    creator: Creator; // This comes from ObjectCreatorSchema
+    created: number; // This comes from CreatedSchema
+    updated?: number; // Optional, from CreatedSchema
+    files?: {
+        id: string;
+        name: string;
+        url: string;
+        type: string;
+        size: number;
+    }[];
 }

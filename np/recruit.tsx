@@ -1,5 +1,13 @@
+import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectRequest } from "./projects";
-import { ObjectId, RecruitProfile, RecruitSkill, SkillCategory } from "./types";
+import {
+  JobApplication,
+  JobPost,
+  ObjectId,
+  RecruitProfile,
+  RecruitSkill,
+  SkillCategory,
+} from "./types";
 
 // Users
 export const useRecruitUsers = () => {
@@ -63,3 +71,23 @@ export const useUpdateSkillCategory = () => {
 export const useDeleteSkillCategory = () => {
   return useProjectRequest<ObjectId>({ path: c_path, method: "delete" });
 };
+
+export const {
+  useJobPosts,
+  useDeleteJobPost,
+  useUpdateJobPost,
+  useAddJobPost,
+} = generateEntityHooks<"jobPost", JobPost>({
+  entityName: "jobPost",
+  path: "recruit/job_posts",
+});
+
+export const {
+  useAddJobApplication,
+  useDeleteJobApplication,
+  useJobApplications,
+  useUpdateJobApplication,
+} = generateEntityHooks<"jobApplication", JobApplication>({
+  entityName: "jobApplication",
+  path: "recruit/job_applications",
+});
