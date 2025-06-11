@@ -19,7 +19,7 @@ export type AuthProviderProps = {
   children: any;
   loginPageUrl: string;
   apiBaseUrl: string;
-  requireAuth: boolean;
+  requireAuth?: boolean;
 };
 
 const queryClient = new QueryClient({
