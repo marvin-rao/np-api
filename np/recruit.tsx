@@ -1,3 +1,4 @@
+import { useGet, usePost } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectRequest } from "./projects";
 import {
@@ -95,5 +96,40 @@ export const {
 export const useJobPost = (id: string) => {
   return useProjectGetBase<JobPost>({
     path: `recruit/job_posts/get_one/${id}`,
+  });
+};
+
+// Public
+
+export const usePublicJobPost = ({
+  postId,
+  projectId,
+}: {
+  postId: string;
+  projectId: string;
+}) => {
+  return useGet<JobPost>({
+    path: `recruit_public/job_posts/${projectId}/get_one/${postId}`,
+    deps: [postId, projectId],
+    options: {},
+  });
+};
+
+export const usePublicJobPosts = ({ projectId }: { projectId: string }) => {
+  return useGet<JobPost>({
+    path: `recruit_public/job_posts/${projectId}`,
+    deps: [projectId],
+    options: {},
+  });
+};
+
+export const useAddPublicJobApplication = ({
+  projectId,
+}: {
+  projectId: string;
+}) => {
+  return usePost({
+    path: `recruit_public/job_applications/${projectId}`,
+    options: {},
   });
 };

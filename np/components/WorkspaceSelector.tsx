@@ -1,7 +1,7 @@
 import { useProjects } from "../..";
+import { useProjectId } from "../projects";
 import { Workspace } from "../types";
 import { WorkspacesModalView } from "./WorkspacesModalView";
-import { useProjectId } from "../projects";
 
 type Props = {
   onSelect: (workspace: Workspace) => void;
