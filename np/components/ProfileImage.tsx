@@ -15,8 +15,8 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({
 }) => {
   const styles = {
     profileImage: {
-      width: "40px",
-      height: "40px",
+      width: "32px",
+      height: "32px",
       borderRadius: "50%",
       cursor: "pointer",
       border: "2px solid #e5e5e5",

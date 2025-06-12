@@ -79,7 +79,7 @@ export const navbarStyles: Styles = {
     },
     logoutButton: {
         display: "block",
-        width: "calc(100% - 2rem)",
+        width: "calc(100% - 1rem)",
         padding: "0.75rem 1rem",
         border: "1px solid #dc3545",
         borderRadius: "4px",
@@ -89,7 +89,7 @@ export const navbarStyles: Styles = {
         textAlign: "left",
         cursor: "pointer",
         transition: "all 0.2s ease",
-        margin: "0.5rem 0.3rem",
+        margin: "8px"
     },
     logoutButtonHover: {
         backgroundColor: "#f8f9fa",
