@@ -1,0 +1,147 @@
+import React from "react";
+
+export type Styles = {
+    [key: string]: React.CSSProperties;
+};
+
+export const navbarStyles: Styles = {
+    navbar: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "4px 1rem",
+        backgroundColor: "#ffffff",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        position: "relative",
+        height: "50px",
+    },
+    logoSection: {
+        display: "flex",
+        alignItems: "center",
+        marginRight: "2rem",
+    },
+    logo: {
+        height: "32px",
+        width: "auto",
+        cursor: "pointer",
+        transition: "opacity 0.2s ease",
+    },
+    logoHover: {
+        opacity: 0.8,
+    },
+    leftSection: {
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+    },
+    profileSection: {
+        position: "relative",
+        marginLeft: "auto",
+    },
+    profileImageHover: {
+        borderColor: "#007bff",
+    },
+    popover: {
+        position: "absolute",
+        top: "100%",
+        right: "0",
+        marginTop: "0.5rem",
+        backgroundColor: "#ffffff",
+        borderRadius: "8px",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08)",
+        width: "250px",
+        zIndex: 1000,
+        opacity: 0,
+        transform: "translateY(-10px)",
+        visibility: "hidden",
+        transition: "all 0.2s ease",
+    },
+    popoverVisible: {
+        opacity: 1,
+        transform: "translateY(0)",
+        visibility: "visible",
+    },
+    userInfo: {
+        padding: "1rem",
+        borderBottom: "1px solid #e5e5e5",
+        cursor: "pointer",
+    },
+    userName: {
+        margin: "0",
+        fontSize: "1rem",
+        fontWeight: "600",
+        color: "#333",
+    },
+    userEmail: {
+        margin: "0.25rem 0 0 0",
+        fontSize: "0.875rem",
+        color: "#666",
+    },
+    logoutButton: {
+        display: "block",
+        width: "100%",
+        padding: "0.75rem 1rem",
+        border: "none",
+        backgroundColor: "transparent",
+        color: "#dc3545",
+        fontSize: "0.875rem",
+        textAlign: "left",
+        cursor: "pointer",
+        transition: "background-color 0.2s ease",
+    },
+    logoutButtonHover: {
+        backgroundColor: "#f8f9fa",
+    },
+    confirmDialog: {
+        padding: "1rem",
+        borderTop: "1px solid #e5e5e5",
+    },
+    confirmText: {
+        margin: "0 0 0.75rem 0",
+        fontSize: "0.875rem",
+        color: "#333",
+    },
+    buttonGroup: {
+        display: "flex",
+        gap: "0.5rem",
+        justifyContent: "flex-end",
+    },
+    confirmButton: {
+        padding: "0.5rem 1rem",
+        border: "none",
+        borderRadius: "4px",
+        backgroundColor: "#dc3545",
+        color: "#ffffff",
+        fontSize: "0.875rem",
+        cursor: "pointer",
+        transition: "background-color 0.2s ease",
+    },
+    cancelButton: {
+        padding: "0.5rem 1rem",
+        border: "1px solid #dee2e6",
+        borderRadius: "4px",
+        backgroundColor: "#ffffff",
+        color: "#6c757d",
+        fontSize: "0.875rem",
+        cursor: "pointer",
+        transition: "background-color 0.2s ease",
+    },
+    workspaceButton: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        padding: "8px 12px",
+        backgroundColor: "#f8f9fa" as string,
+        border: "1px solid #e9ecef",
+        borderRadius: "6px",
+        cursor: "pointer",
+        transition: "all 0.2s ease",
+        color: "#495057",
+        fontSize: "14px",
+        fontWeight: "500",
+    },
+    workspaceButtonHover: {
+        backgroundColor: "#e9ecef" as string,
+        borderColor: "#dee2e6",
+    },
+};
