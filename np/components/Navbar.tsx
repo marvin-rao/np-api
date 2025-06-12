@@ -181,7 +181,7 @@ export const NPMainActionBar = ({
               </div>
 
               {/* Subscription Promotion */}
-              <div 
+              <div
                 style={styles.subscriptionPromo}
                 onClick={() => {
                   if (projectId) {
@@ -193,61 +193,66 @@ export const NPMainActionBar = ({
                   setIsOpen(false);
                 }}
                 onMouseEnter={(e) => {
-                  const overlay = e.currentTarget.querySelector('.promo-overlay') as HTMLElement;
-                  if (overlay) overlay.style.opacity = '1';
+                  const overlay = e.currentTarget.querySelector(
+                    ".promo-overlay"
+                  ) as HTMLElement;
+                  if (overlay) overlay.style.opacity = "1";
                 }}
                 onMouseLeave={(e) => {
-                  const overlay = e.currentTarget.querySelector('.promo-overlay') as HTMLElement;
-                  if (overlay) overlay.style.opacity = '0';
+                  const overlay = e.currentTarget.querySelector(
+                    ".promo-overlay"
+                  ) as HTMLElement;
+                  if (overlay) overlay.style.opacity = "0";
                 }}
               >
-                <div 
+                <div
                   className="promo-overlay"
                   style={styles.subscriptionPromoOverlay}
                 />
                 <h4 style={styles.subscriptionTitle}>
-                  <svg 
+                  <svg
                     style={styles.sparkleIcon}
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path 
-                      d="M12 0L14.09 8.26L22 6L14.09 8.26L12 0ZM12 0L9.91 8.26L2 6L9.91 8.26L12 0Z" 
+                    <path
+                      d="M12 0L14.09 8.26L22 6L14.09 8.26L12 0ZM12 0L9.91 8.26L2 6L9.91 8.26L12 0Z"
                       fill="currentColor"
                     />
-                    <path 
-                      d="M12 24L14.09 15.74L22 18L14.09 15.74L12 24ZM12 24L9.91 15.74L2 18L9.91 15.74L12 24Z" 
+                    <path
+                      d="M12 24L14.09 15.74L22 18L14.09 15.74L12 24ZM12 24L9.91 15.74L2 18L9.91 15.74L12 24Z"
                       fill="currentColor"
                     />
-                    <path 
-                      d="M0 12L8.26 9.91L6 2L8.26 9.91L0 12ZM0 12L8.26 14.09L6 22L8.26 14.09L0 12Z" 
+                    <path
+                      d="M0 12L8.26 9.91L6 2L8.26 9.91L0 12ZM0 12L8.26 14.09L6 22L8.26 14.09L0 12Z"
                       fill="currentColor"
                     />
-                    <path 
-                      d="M24 12L15.74 9.91L18 2L15.74 9.91L24 12ZM24 12L15.74 14.09L18 22L15.74 14.09L24 12Z" 
+                    <path
+                      d="M24 12L15.74 9.91L18 2L15.74 9.91L24 12ZM24 12L15.74 14.09L18 22L15.74 14.09L24 12Z"
                       fill="currentColor"
                     />
                   </svg>
                   Go Unlimited
                 </h4>
                 <p style={styles.subscriptionSubtitle}>
-                  Get unlimited usage, storage, and features. No more limits holding you back!
+                  Get unlimited usage, storage, and features. No more limits
+                  holding you back!
                 </p>
                 <div style={styles.subscriptionCTA}>
                   View Plans
-                  <svg 
-                    width="16" 
-                    height="16" 
-                    viewBox="0 0 16 16" 
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
                     fill="none"
-                    style={{ marginLeft: '4px' }}
+                    style={{ marginLeft: "4px" }}
                   >
-                    <path 
-                      d="M6 3L11 8L6 13" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
+                    <path
+                      d="M6 3L11 8L6 13"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                   </svg>
