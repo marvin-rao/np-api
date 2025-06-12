@@ -18,7 +18,7 @@ export const NewPaperProvider = (props: AuthProviderProps) => {
 
   return (
     <AuthProvider {...props}>
-      {!props.requireAuth && !shouldLogin && !projectId && (
+      {!props.ignoreWorkspace && !shouldLogin && !projectId && (
         <WorkspaceSelector
           open={isOpen}
           onSelect={(workspace) => {

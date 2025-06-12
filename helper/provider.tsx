@@ -19,7 +19,7 @@ export type AuthProviderProps = {
   children: any;
   loginPageUrl: string;
   apiBaseUrl: string;
-  requireAuth?: boolean;
+  ignoreWorkspace?: boolean;
 };
 
 const queryClient = new QueryClient({
