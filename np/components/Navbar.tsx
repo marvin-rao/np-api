@@ -229,10 +229,10 @@ export const NPMainActionBar = ({
                       fill="currentColor"
                     />
                   </svg>
-                  Upgrade to Pro
+                  Go Unlimited
                 </h4>
                 <p style={styles.subscriptionSubtitle}>
-                  Unlock unlimited projects, advanced analytics, and priority support with Business or Enterprise plans.
+                  Get unlimited usage, storage, and features. No more limits holding you back!
                 </p>
                 <div style={styles.subscriptionCTA}>
                   View Plans
