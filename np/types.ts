@@ -70,6 +70,7 @@ export type Workspace = {
     description: string,
     members: number,
     lastActive: string,
+    activePlanId: "free" | "business" | "enterprise",
 }
 
 export type RefreshTokenResult = {
