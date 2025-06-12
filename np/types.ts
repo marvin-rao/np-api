@@ -172,7 +172,16 @@ export type JobApplication = {
     tags: string[];
     creator: Creator; // This comes from ObjectCreatorSchema
     created: number; // This comes from CreatedSchema
-    updated?: number; // Optional, from CreatedSchema
+    updated?: number; // Optional, from CreatedSchema,
+
+    phone?: string;
+    currentLocation?: string;
+    currentCompany?: string;
+    linkedinUrl?: string;
+    twitterUrl?: string;
+    githubUrl?: string;
+    portfolioUrl?: string;
+
     files?: {
         id: string;
         name: string;
