@@ -181,6 +181,7 @@ export type JobApplication = {
     twitterUrl?: string;
     githubUrl?: string;
     portfolioUrl?: string;
+    statusChangeMessage?: string;
 
     files?: {
         id: string;
