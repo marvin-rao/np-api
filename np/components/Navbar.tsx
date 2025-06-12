@@ -165,6 +165,21 @@ export const NPMainActionBar = ({
                 Change Workspace
               </div>
 
+              <div
+                style={styles.userInfo}
+                onClick={() => {
+                  if (projectId) {
+                    window.open(
+                      `https://www.newpaper.app/project/${projectId}/settings/general`,
+                      "_blank"
+                    );
+                  }
+                  setIsOpen(false);
+                }}
+              >
+                Manage Workspace
+              </div>
+
               {!showLogoutConfirm ? (
                 <button
                   style={styles.logoutButton}
