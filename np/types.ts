@@ -153,6 +153,10 @@ export type JobPost = {
         created?: number | undefined;
         avatar?: Image;
     };
+    company?: {
+        name: string,
+        logoUrl: string,
+    }
 }
 
 export type JobApplication = {
