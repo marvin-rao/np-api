@@ -183,6 +183,8 @@ export type JobApplication = {
     githubUrl?: string;
     portfolioUrl?: string;
     statusChangeMessage?: string;
+    skills: RecruitSkill[],
+
 
     files?: {
         id: string;
