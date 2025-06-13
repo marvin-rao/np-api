@@ -12,6 +12,7 @@ export * from "./np/projects";
 export * from "./np/recruit";
 export * from "./api";
 export * from "./helper/utils";
+export * from "./np/useFileUpload";
 
 export { NewPaperProvider, WorkspaceSelector, NPMainActionBar };
 
