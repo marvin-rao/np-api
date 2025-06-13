@@ -4,6 +4,7 @@ import { useState } from "react";
 import { apiRequest } from "../helper/ApiRequestsBase";
 import { useAuthData } from "../helper/provider";
 import { Image, SystemAudio } from "./types";
+import axios from "axios";
 
 export const ApiImagesPath = (projectId: string) => {
   return `/images/?projectId=${projectId}`;
@@ -51,26 +52,14 @@ export const useFileUpload = () => {
     });
 
     try {
-      apiRequest({
-        url: apiBaseUrl + path,
-        body: formData,
-        method: "post",
-        headers: {},
-        onError: (e) => {
-          console.error("Upload error:", e);
+      const result = await axios.post(apiBaseUrl + path, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-        onLoadingChange: (isLoading) => {
-          setLoading((prev) => ({
-            ...prev,
-            [id]: isLoading,
-          }));
-        },
-        onSuccess: (data: any) => {
-          console.log("Upload success:", data);
-          onComplete(data?.data);
-        }
       });
-
+      if (result.status === 200) {
+        onComplete(result?.data?.data);
+      }
     } catch (e) {
       console.log("Error", e);
     } finally {
