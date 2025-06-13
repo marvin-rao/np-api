@@ -59,16 +59,21 @@ export const isTokenExpired = (token: string): boolean => {
     }
 };
 
+type Headers = {
+    Authorization: string,
+    "Content-Type": string,
+}
+
 export const useHeaders = () => {
     const { submit } = useRefreshToken();
 
-    const getHeaders = async () => {
+    const getHeaders = async (): Promise<Headers> => {
         const token = getBToken();
         if (!token) {
             console.log('did not find bearer_token',);
             return {
                 "Content-Type": "application/json",
-            };
+            } as Headers;
         }
         if (isTokenExpired(token)) {
             const refresh_token = getRefreshToken();
@@ -76,7 +81,7 @@ export const useHeaders = () => {
                 console.log('did not find refresh_token',);
                 return {
                     "Content-Type": "application/json",
-                };
+                } as Headers;
             }
             const result = await submit({ refresh_token });
             console.log('Got refresh token', result);
