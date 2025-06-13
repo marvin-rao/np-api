@@ -55,9 +55,7 @@ export const useFileUpload = () => {
         url: apiBaseUrl + path,
         body: formData,
         method: "post",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: {},
         onError: (e) => {
           console.error("Upload error:", e);
         },
