@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { apiRequest } from "../helper/ApiRequestsBase";
+import { useAuthData } from "../helper/provider";
 import { Image, SystemAudio } from "./types";
 
 export const ApiImagesPath = (projectId: string) => {
@@ -20,6 +21,7 @@ type DownloadKeys = { [key: string]: boolean };
 
 export const useFileUpload = () => {
   const [loading, setLoading] = useState<DownloadKeys>({});
+  const { apiBaseUrl } = useAuthData();
 
   const uploadFile = async <T>(
     id: string,
@@ -41,7 +43,7 @@ export const useFileUpload = () => {
     id: string,
     formData: FormData,
     onComplete: (result: T) => void,
-    url: string
+    path: string
   ) => {
     setLoading({
       ...loading,
@@ -50,7 +52,7 @@ export const useFileUpload = () => {
 
     try {
       apiRequest({
-        url,
+        url: apiBaseUrl + path,
         body: formData,
         method: "post",
         headers: {
