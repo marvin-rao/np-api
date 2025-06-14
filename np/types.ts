@@ -184,8 +184,8 @@ export type JobApplication = {
     portfolioUrl?: string;
     statusChangeMessage?: string;
     skills: RecruitSkill[],
-
-
+    jobTitle?: string;
+    applicantAvatar?: Image,
     files?: {
         id: string;
         name: string;
@@ -200,10 +200,11 @@ export type EventGuest = {
     optional: boolean;
 };
 
-export type EventType = "work" | "off" | "leave" | "holiday" | "shift";
+export type CalendarEventType = "event" | "appointment_schedule";
+
 
 export type CalenderEvent = {
-    type: EventType;
+    type: CalendarEventType;
     id: string;
     created: number;
     start: string;
@@ -213,7 +214,7 @@ export type CalenderEvent = {
     totalTime: number;
     date: string;
     assigneeName?: string;
-    assigneeId: string;
+    assigneeId?: string;
     assignee?: {
         avatar?: {
             original?: string;
