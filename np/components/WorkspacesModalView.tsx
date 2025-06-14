@@ -240,7 +240,7 @@ export const WorkspacesModalView = ({
                       : "none",
                   }}
                   type="text"
-                  placeholder="Search workspaces by name or description..."
+                  placeholder="Search workspaces by name..."
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
                   autoFocus
