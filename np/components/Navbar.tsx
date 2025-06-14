@@ -101,46 +101,29 @@ export const NPMainActionBar = ({
             style={{
               ...styles.workspaceButton,
               ...(showWorkspaceDropdown && styles.workspaceButtonHover),
+              transition: "all 0.2s ease",
+              transform: showWorkspaceDropdown ? "scale(1.02)" : "scale(1)",
+              boxShadow: showWorkspaceDropdown
+                ? "0 4px 12px rgba(0,0,0,0.1)"
+                : "0 2px 4px rgba(0,0,0,0.05)",
             }}
             onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor =
                 styles.workspaceButtonHover.backgroundColor || "#e9ecef";
+              e.currentTarget.style.transform = "scale(1.02)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
             }}
             onMouseLeave={(e) => {
               if (!showWorkspaceDropdown) {
                 e.currentTarget.style.backgroundColor =
                   styles.workspaceButton.backgroundColor || "#f8f9fa";
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.05)";
               }
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "2px",
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: "500",
-                  fontSize: "14px",
-                  lineHeight: "1.2",
-                }}
-              >
-                {currentWorkspace?.name || "Select Workspace"}
-              </div>
-              <div
-                style={{
-                  fontSize: "10px",
-                  color: "#9ca3af",
-                  lineHeight: "1.2",
-                }}
-              >
-                Change Workspace
-              </div>
-            </div>
+            {currentWorkspace?.name || "Select Workspace"}
             <svg
               width="12"
               height="12"
@@ -150,7 +133,6 @@ export const NPMainActionBar = ({
               style={{
                 transform: showWorkspaceDropdown ? "rotate(180deg)" : "none",
                 transition: "transform 0.2s ease",
-                marginLeft: "8px",
               }}
             >
               <path
