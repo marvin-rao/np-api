@@ -133,8 +133,8 @@ export const NPMainActionBar = ({
               </div>
               <div
                 style={{
-                  fontSize: "12px",
-                  color: "#6c757d",
+                  fontSize: "10px",
+                  color: "#9ca3af",
                   lineHeight: "1.2",
                 }}
               >
