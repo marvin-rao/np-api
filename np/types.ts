@@ -198,6 +198,7 @@ export type JobApplication = {
 export type EventGuest = {
     email: string;
     optional: boolean;
+    name: string
 };
 
 export type CalendarEventType = "event" | "appointment_schedule";
