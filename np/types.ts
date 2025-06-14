@@ -194,3 +194,40 @@ export type JobApplication = {
         size: number;
     }[];
 }
+
+export type EventGuest = {
+    email: string;
+    optional: boolean;
+};
+
+export type EventType = "work" | "off" | "leave" | "holiday" | "shift";
+
+export type CalenderEvent = {
+    type: EventType;
+    id: string;
+    created: number;
+    start: string;
+    end: string;
+    hours?: number;
+    note: string;
+    totalTime: number;
+    date: string;
+    assigneeName?: string;
+    assigneeId: string;
+    assignee?: {
+        avatar?: {
+            original?: string;
+        };
+    },
+    // Account Session Id
+    reporterId: string;
+    object?: {
+        type: "Task" | "shift";
+        id: string;
+    };
+    creator: Creator;
+    duration: number;
+    title: string;
+    guests?: EventGuest[];
+    description: string;
+};
