@@ -114,7 +114,33 @@ export const NPMainActionBar = ({
               }
             }}
           >
-            {currentWorkspace?.name || "Select Workspace"}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "2px",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  lineHeight: "1.2",
+                }}
+              >
+                {currentWorkspace?.name || "Select Workspace"}
+              </div>
+              <div
+                style={{
+                  fontSize: "12px",
+                  color: "#6c757d",
+                  lineHeight: "1.2",
+                }}
+              >
+                Change Workspace
+              </div>
+            </div>
             <svg
               width="12"
               height="12"
@@ -124,6 +150,7 @@ export const NPMainActionBar = ({
               style={{
                 transform: showWorkspaceDropdown ? "rotate(180deg)" : "none",
                 transition: "transform 0.2s ease",
+                marginLeft: "8px",
               }}
             >
               <path
