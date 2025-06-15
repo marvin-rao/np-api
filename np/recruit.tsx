@@ -83,6 +83,14 @@ export const {
   path: "recruit/job_posts",
 });
 
+export const { useJobBoardPosts } = generateEntityHooks<
+  "jobBoardPost",
+  JobPost
+>({
+  entityName: "jobBoardPost",
+  path: "recruit/job_board/posts",
+});
+
 export const {
   useAddJobApplication,
   useDeleteJobApplication,
