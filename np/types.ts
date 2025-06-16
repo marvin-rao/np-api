@@ -155,6 +155,7 @@ export type JobPost = {
         created?: number | undefined;
         avatar?: Image;
     };
+    salary?: string;
     company?: {
         name: string,
         logoUrl: string,
