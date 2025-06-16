@@ -92,7 +92,6 @@ export const { useJobBoardPosts } = generateEntityHooks<
 });
 
 export const {
-  useAddJobApplication,
   useDeleteJobApplication,
   useJobApplications,
   useUpdateJobApplication,
@@ -139,6 +138,15 @@ export const useAddPublicJobApplication = ({
   return usePost({
     path: `recruit_public/job_applications/${projectId}`,
     options: {},
+  });
+};
+
+export const useAddJobApplication = ({ projectId }: { projectId: string }) => {
+  return usePost({
+    path: `recruit/job_applications`,
+    options: {
+      queryString: "?projectId=" + projectId,
+    },
   });
 };
 
