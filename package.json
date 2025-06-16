@@ -1,5 +1,5 @@
 {
-  "version": "2.8.16",
+  "version": "2.8.17",
   "name": "newpaper-api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
