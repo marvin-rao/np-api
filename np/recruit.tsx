@@ -147,5 +147,5 @@ export const { useUserJobApplications } = generateEntityHooks<
   JobPost
 >({
   entityName: "userJobApplication",
-  path: "account_users/applications",
+  path: "recruit/account_users/applications",
 });
