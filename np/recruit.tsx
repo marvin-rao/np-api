@@ -141,3 +141,11 @@ export const useAddPublicJobApplication = ({
     options: {},
   });
 };
+
+export const { useUserJobApplications } = generateEntityHooks<
+  "userJobApplication",
+  JobPost
+>({
+  entityName: "userJobApplication",
+  path: "account_users/applications",
+});
