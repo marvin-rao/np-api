@@ -195,6 +195,7 @@ export type JobApplication = {
         type: string;
         size: number;
     }[];
+    jobPost?: JobPost
 }
 
 export type EventGuest = {
