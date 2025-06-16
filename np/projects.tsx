@@ -84,11 +84,18 @@ export const useProjectRequest = <ObjectType,>({
   });
 };
 
-export const useProjectGetBase = <T,>({ path }: { path: string }) => {
+export const useProjectGetBase = <T,>({
+  path,
+  enabled,
+}: {
+  path: string;
+  enabled?: boolean;
+}) => {
   const { projectId } = useProjectId();
   return useGet<T>({
     path,
     options: { queryString: `?projectId=${projectId}` },
     deps: [projectId],
+    enabled,
   });
 };
