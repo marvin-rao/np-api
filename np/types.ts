@@ -144,6 +144,7 @@ export type JobPost = {
         name: string;
     }[];
     department?: string | undefined;
+    projectId?: string;
     created: number;
     type: "full-time" | "part-time" | "contract";
     status: "closed" | "open";
