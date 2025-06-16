@@ -10,3 +10,13 @@ export const {
   entityName: "calendarEvent",
   path: "calendar/events",
 });
+
+export const {
+  useAddPersonalCalendarEvent,
+  useUpdatePersonalCalendarEvent,
+  useDeletePersonalCalendarEvent,
+  usePersonalCalendarEvents,
+} = generateEntityHooks<"personalCalendarEvent", CalenderEvent>({
+  entityName: "personalCalendarEvent",
+  path: "calendar/events/personal_space",
+});
