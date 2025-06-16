@@ -227,7 +227,7 @@ export type CalenderEvent = {
     // Account Session Id
     reporterId: string;
     object?: {
-        type: "Task" | "shift";
+        type: "Task" | "shift" | "jobApplication";
         id: string;
     };
     creator: Creator;
