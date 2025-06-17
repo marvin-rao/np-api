@@ -108,6 +108,9 @@ export const apiRequest = async <ObjectType, SuccessResult>(
     });
 
     if (!response.ok) {
+      const result = await response.json();
+      console.log("error:result?.data", result);
+      onError(result?.data?.message || new Error(`Error: ${response?.status}`));
       throw new Error(`Error: ${response.status}`);
     }
 
@@ -151,6 +154,7 @@ export const useRequest = <ObjectType, SuccessResult>({
     apiRequest<ObjectType, SuccessResult>({
       onSuccess: (data) => {
         onSuccess?.(data);
+        setLoading(false);
       },
       url: apiBaseUrl + path + (options?.queryString ?? ""),
       body,

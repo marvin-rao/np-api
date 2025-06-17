@@ -58,7 +58,7 @@ export const useUpdateSkill = () => {
 const c_path = path + "/category";
 
 export const useRecruitSkillsCategories = () => {
-  return useProjectGetBase<RecruitSkill>({ path: c_path });
+  return useProjectGetBase<RecruitSkill[]>({ path: c_path });
 };
 
 export const useAddSkillCategory = () => {
