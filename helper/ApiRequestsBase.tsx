@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuthData } from "./provider";
 import { useHeaders } from "./utils";
@@ -110,12 +110,11 @@ export const apiRequest = async <ObjectType, SuccessResult>(
     if (!response.ok) {
       const result = await response.json();
       console.log("error:result?.data", result);
-      onError(result?.data || new Error(`Error: ${response?.status}`));
-      throw new Error(`Error: ${response.status}`);
+      onError(result?.data);
+      return;
     }
 
     const result: SuccessResult = await response.json();
-    console.log("result", result);
     if (onSuccess) {
       onSuccess(result);
     }
