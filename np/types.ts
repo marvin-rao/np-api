@@ -160,6 +160,7 @@ export type JobPost = {
         name: string,
         logoUrl: string,
     }
+    industry?: string
 }
 
 export type JobApplication = {
