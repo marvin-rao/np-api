@@ -157,7 +157,11 @@ export const useRequest = <ObjectType, SuccessResult>({
       },
       url: apiBaseUrl + path + (options?.queryString ?? ""),
       body,
-      onError: setError,
+      onError: (error) => {
+        setError(error);
+        console.log("GotError", error);
+        setLoading(false);
+      },
       onLoadingChange: setLoading,
       method,
       headers: await getHeaders(),
