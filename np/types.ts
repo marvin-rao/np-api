@@ -1,5 +1,30 @@
 import { z } from "zod";
 
+// Zod Schemas
+export const CreatorSchema = z.object({
+    projectUid: z.string(),
+    sessionUid: z.string(),
+    name: z.string().optional(),
+    created: z.number().optional(),
+});
+
+export const RecruitSkillSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    created: z.number(),
+    creator: CreatorSchema,
+    updated: z.number().optional(),
+    category: z.object({
+        id: z.string(),
+        name: z.string().optional(),
+    }).optional(),
+    type: z.enum(["skills", "openToWorkWithSkills"]),
+    level: z.enum(["beginner", "intermediate", "advanced", "expert"]),
+});
+
+
+export type RecruitSkill = z.infer<typeof RecruitSkillSchema>;
+
 export type ServerResult<T = unknown> = {
     message: string, data: T,
 }
@@ -27,19 +52,6 @@ export type Creator = {
     sessionUid: string;
     name?: string | undefined;
     created?: number | undefined;
-};
-
-export type RecruitSkill = {
-    id: string;
-    name: string;
-    created: number;
-    creator: Creator;
-    updated?: number | undefined;
-    category?: {
-        id: string,
-        name?: string
-    }
-    type: "skills" | "openToWorkWithSkills";
 };
 
 
