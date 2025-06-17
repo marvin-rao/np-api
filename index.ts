@@ -10,6 +10,7 @@ export * from "./np/notes";
 export * from "./np/filesapp";
 export * from "./np/projects";
 export * from "./np/recruit";
+export * from "./np/career_types";
 export * from "./np/calendar";
 export * from "./api";
 export * from "./helper/utils";

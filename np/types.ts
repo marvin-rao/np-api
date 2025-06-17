@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type ServerResult<T = unknown> = {
     message: string, data: T,
 }
@@ -250,4 +252,31 @@ export type ProjectCompany = {
     website?: string; // URL format
     description?: string;
     size?: string;
+}
+
+export type ApiValidatorResult = {
+    message: string;
+    passed: boolean;
+    path?: string;
+};
+
+export type ValidationResult = {
+    success: boolean;
+    error?: string;
+};
+
+export const processValidation = <T>(value: T, schema: z.ZodUnion<any> | z.ZodObject<any> | z.ZodArray<any>): ApiValidatorResult => {
+    try {
+        schema.parse(value);
+        return {
+            passed: true, message: "",
+        };
+    } catch (error: any) {
+        const json = JSON.parse(error.message);
+        const result = json[0];
+        const message = result.message;
+        const path = result.path;
+        console.log('errorPath', path);
+        return { passed: false, message, path };
+    }
 }
