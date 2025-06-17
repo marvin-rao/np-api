@@ -247,5 +247,6 @@ export type ProjectCompany = {
     location?: string;
     website?: string; // URL format
     description?: string;
-    id: string
+    id: string,
+    size: string;
 }
