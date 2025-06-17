@@ -110,7 +110,7 @@ export const apiRequest = async <ObjectType, SuccessResult>(
     if (!response.ok) {
       const result = await response.json();
       console.log("error:result?.data", result);
-      onError(result?.data);
+      onError(result);
       return;
     }
 
