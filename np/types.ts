@@ -207,7 +207,6 @@ export type EventGuest = {
 
 export type CalendarEventType = "event" | "appointment_schedule";
 
-
 export type CalenderEvent = {
     type: CalendarEventType;
     id: string;
@@ -237,3 +236,16 @@ export type CalenderEvent = {
     guests?: EventGuest[];
     description: string;
 };
+
+export type ProjectCompany = {
+    address: string; // max 500 chars
+    name: string; // min 1, max 100 chars
+    vatNumber?: number; // non-negative
+    logo?: Image;
+    industry?: string;
+    companySize?: string;
+    location?: string;
+    website?: string; // URL format
+    description?: string;
+    id: string
+}

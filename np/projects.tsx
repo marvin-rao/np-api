@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
 import { getBToken } from "../helper/utils";
-import { ServerResult, Workspace } from "./types";
+import { generateEntityHooks } from "./hooks/generateEntityHooks";
+import { ProjectCompany, ServerResult, Workspace } from "./types";
 
 function getWorkspaceIdFromUrl(): string | null {
   const match = window.location.pathname.match(/\/workspace\/([^/]+)/);
@@ -99,3 +100,11 @@ export const useProjectGetBase = <T,>({
     enabled,
   });
 };
+
+export const {
+  useProjectCompanys: useProjectCompany,
+  useUpdateProjectCompany,
+} = generateEntityHooks<"projectCompany", ProjectCompany>({
+  entityName: "projectCompany",
+  path: "project/company",
+});
