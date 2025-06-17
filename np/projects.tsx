@@ -101,10 +101,14 @@ export const useProjectGetBase = <T,>({
   });
 };
 
-export const {
-  useProjectCompanys: useProjectCompany,
-  useUpdateProjectCompany,
-} = generateEntityHooks<"projectCompany", ProjectCompany>({
+export const { useUpdateProjectCompany } = generateEntityHooks<
+  "projectCompany",
+  ProjectCompany
+>({
   entityName: "projectCompany",
   path: "project/company",
 });
+
+export const useProjectCompany = () => {
+  return useProjectGetBase<ProjectCompany>({ path: "project/company" });
+};
