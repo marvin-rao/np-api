@@ -1,10 +1,7 @@
-/* tslint:disable */
-
+import axios from "axios";
 import { useState } from "react";
-import { apiRequest } from "../helper/ApiRequestsBase";
 import { useAuthData } from "../helper/provider";
 import { Image, SystemAudio } from "./types";
-import axios from "axios";
 
 export const ApiImagesPath = (projectId: string) => {
   return `/images/?projectId=${projectId}`;
