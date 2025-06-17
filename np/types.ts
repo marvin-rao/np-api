@@ -241,12 +241,12 @@ export type ProjectCompany = {
     address: string; // max 500 chars
     name: string; // min 1, max 100 chars
     vatNumber?: number; // non-negative
+    id: string,
     logo?: Image;
     industry?: string;
     companySize?: string;
     location?: string;
     website?: string; // URL format
     description?: string;
-    id: string,
-    size: string;
+    size?: string;
 }
