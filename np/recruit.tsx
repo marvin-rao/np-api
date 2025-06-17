@@ -1,4 +1,5 @@
 import { useGet, usePost } from "../helper/ApiRequestsBase";
+import { CareerProfile } from "./career_types";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectRequest } from "./projects";
 import {
@@ -157,3 +158,10 @@ export const { useUserJobApplications } = generateEntityHooks<
   entityName: "userJobApplication",
   path: "recruit/account_users/applications",
 });
+
+export const useUpdateCareerProfile = () => {
+  return useProjectRequest<CareerProfile>({
+    path: "recruit/account_users/profile",
+    method: "PATCH",
+  });
+};
