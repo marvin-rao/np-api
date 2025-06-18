@@ -222,9 +222,9 @@ export const PersonalInfoSchema = z.object({
   dateOfBirth: z.string().min(1, { message: "Date of birth is required" }).max(50, { message: "Date of birth format is invalid" }),
   nationality: z.string().min(1, { message: "Nationality is required" }).max(100, { message: "Nationality is too long" }),
   summary: z.string().min(1, { message: "Professional summary is required" }).max(1000, { message: "Professional summary is too long (max 1000 characters)" }),
-  linkedinUrl: z.string().min(1, { message: "LinkedIn URL is required" }).max(500, { message: "LinkedIn URL is too long" }).optional(),
-  portfolioUrl: z.string().min(1, { message: "Portfolio URL is required" }).max(500, { message: "Portfolio URL is too long" }).optional(),
-  githubUrl: z.string().min(1, { message: "GitHub URL is required" }).max(500, { message: "GitHub URL is too long" }).optional(),
+  linkedinUrl: z.string().max(500, { message: "LinkedIn URL is too long" }).optional(),
+  portfolioUrl: z.string().max(500, { message: "Portfolio URL is too long" }).optional(),
+  githubUrl: z.string().max(500, { message: "GitHub URL is too long" }).optional(),
 });
 
 export type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
