@@ -159,11 +159,38 @@ export const { useUserJobApplications } = generateEntityHooks<
   path: "recruit/account_users/applications",
 });
 
+export type ProfileSectionPayload =
+  | {
+      section: "personalInfo";
+      data: CareerProfile["personalInfo"];
+    }
+  | {
+      section: "experiences";
+      data: CareerProfile["experiences"];
+    }
+  | {
+      section: "education";
+      data: CareerProfile["education"];
+    }
+  | {
+      section: "skills";
+      data: CareerProfile["skills"];
+    }
+  | {
+      section: "languages";
+      data: CareerProfile["languages"];
+    }
+  | {
+      section: "certifications";
+      data: CareerProfile["certifications"];
+    }
+  | {
+      section: "references";
+      data: CareerProfile["references"];
+    };
+
 export const useUpdateCareerProfile = () => {
-  return usePatch<
-    { section: keyof CareerProfile; data: CareerProfile[keyof CareerProfile] },
-    { data: any; message: string }
-  >({
+  return usePatch<ProfileSectionPayload, { data: any; message: string }>({
     path: "recruit/account_users/profile",
   });
 };
