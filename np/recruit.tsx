@@ -160,7 +160,10 @@ export const { useUserJobApplications } = generateEntityHooks<
 });
 
 export const useUpdateCareerProfile = () => {
-  return usePatch<CareerProfile, { data: any; message: string }>({
+  return usePatch<
+    { section: keyof CareerProfile; data: CareerProfile[keyof CareerProfile] },
+    { data: any; message: string }
+  >({
     path: "recruit/account_users/profile",
   });
 };
