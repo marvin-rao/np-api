@@ -194,3 +194,11 @@ export const useUpdateCareerProfile = () => {
     path: "recruit/account_users/profile",
   });
 };
+
+export const useAccountCareerProfile = () => {
+  return useGet<CareerProfile>({
+    path: "recruit/account_users/profile",
+    deps: [],
+    options: {},
+  });
+};
