@@ -22,6 +22,7 @@ interface NavbarProps {
     alt?: string;
     onClick?: () => void;
   };
+  containerStyle: React.CSSProperties;
 }
 
 export const NPMainActionBar = ({
@@ -29,6 +30,7 @@ export const NPMainActionBar = ({
   userName,
   userEmail,
   logo,
+  containerStyle,
 }: NavbarProps) => {
   const [showProjectSelector, setShowProjectSelector] = useState(false);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -76,7 +78,7 @@ export const NPMainActionBar = ({
   };
 
   return (
-    <nav style={styles.navbar}>
+    <nav style={{ ...styles.navbar, ...containerStyle }}>
       {logo && (
         <div style={styles.logoSection}>
           <img
