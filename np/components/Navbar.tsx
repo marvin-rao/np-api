@@ -22,7 +22,7 @@ interface NavbarProps {
     alt?: string;
     onClick?: () => void;
   };
-  containerStyle: React.CSSProperties;
+  containerStyle?: React.CSSProperties;
 }
 
 export const NPMainActionBar = ({
