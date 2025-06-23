@@ -79,13 +79,10 @@ export const useAuthSession = () => {
       throw new Error(`Error: ${response.status}`);
     }
 
+    setCookieIsPresent(true);
     const result = await response.json();
     const data = result?.data;
     console.log("data", data);
-    const bearer_token = data?.bearer_token;
-    if (bearer_token) {
-      setBToken({ bearer_token });
-    }
     setLoading(false);
   };
 
