@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuthData } from "./provider";
-import { useHeaders } from "./utils";
+import { useHeaders, getBToken, isTokenExpired } from "./utils";
 
 type FetchOptions = {
   method?: string;
@@ -28,15 +28,27 @@ export const useGet = <T,>({
   const { getHeaders } = useHeaders();
 
   const fetchData = async (): Promise<T | undefined> => {
-    const response = await fetch(
-      apiBaseUrl + path + (options?.queryString ?? ""),
-      {
-        method: options.method || "GET",
-        headers: await getHeaders(false), // Don't include Content-Type for GET requests
-        body: options.body ? JSON.stringify(options.body) : undefined,
-        credentials: "include",
-      }
-    );
+    const url = apiBaseUrl + path + (options?.queryString ?? "");
+    console.log("Making request to:", url);
+
+    // Only add Authorization header if we have a token
+    const token = getBToken();
+    const headers: Record<string, string> = {};
+    if (token && !isTokenExpired(token)) {
+      headers.Authorization = `Bearer ${token}`;
+      console.log("Adding Authorization header");
+    } else {
+      console.log(
+        "No valid token, making request without Authorization header"
+      );
+    }
+
+    const response = await fetch(url, {
+      method: options.method || "GET",
+      ...(Object.keys(headers).length > 0 && { headers }),
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
