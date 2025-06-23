@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAuthData } from "./provider";
-import { useHeaders, getBToken, isTokenExpired } from "./utils";
+import { getBToken, isTokenExpired, useHeaders } from "./utils";
 
 type FetchOptions = {
   method?: string;
