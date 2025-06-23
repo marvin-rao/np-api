@@ -59,11 +59,6 @@ export const isTokenExpired = (token: string): boolean => {
     }
 };
 
-type Headers = {
-    Authorization?: string,
-    "Content-Type"?: string,
-}
-
 export const useHeaders = () => {
     const { submit } = useRefreshToken();
 
@@ -74,33 +69,6 @@ export const useHeaders = () => {
             return includeContentType ? {
                 "Content-Type": "application/json",
             } : {};
-        }
-        if (isTokenExpired(token)) {
-            const refresh_token = getRefreshToken();
-            if (!refresh_token) {
-                console.log('did not find refresh_token',);
-                return includeContentType ? {
-                    "Content-Type": "application/json",
-                } : {};
-            }
-            const result = await submit({ refresh_token });
-            console.log('Got refresh token', result);
-            const newBToken = result?.data?.newIdToken;
-            if (newBToken) {
-                setBToken({ bearer_token: newBToken ?? "" });
-            }
-            const newRefreshToken = result?.data?.newRefreshToken ?? "";
-            if (newRefreshToken) {
-                setRefreshToken({ refresh_token });
-            }
-
-            const headers: Record<string, string> = {
-                Authorization: `Bearer ${newBToken}`,
-            };
-            if (includeContentType) {
-                headers["Content-Type"] = "application/json";
-            }
-            return headers;
         }
 
         const headers: Record<string, string> = {
