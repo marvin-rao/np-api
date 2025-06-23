@@ -62,6 +62,9 @@ export const isTokenExpired = (token: string): boolean => {
 type Headers = {
     Authorization: string,
     "Content-Type": string,
+    "Access-Control-Allow-Origin": string,
+    "Access-Control-Allow-Methods": string,
+    "Access-Control-Allow-Headers": string,
 }
 
 export const useHeaders = () => {
@@ -73,6 +76,9 @@ export const useHeaders = () => {
             console.log('did not find bearer_token',);
             return {
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
             } as Headers;
         }
         if (isTokenExpired(token)) {
@@ -81,6 +87,9 @@ export const useHeaders = () => {
                 console.log('did not find refresh_token',);
                 return {
                     "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
                 } as Headers;
             }
             const result = await submit({ refresh_token });
@@ -97,12 +106,18 @@ export const useHeaders = () => {
             return {
                 Authorization: `Bearer ${newBToken}`,
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
             };
         }
 
         return {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         };
     };
 
