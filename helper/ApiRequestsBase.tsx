@@ -34,6 +34,7 @@ export const useGet = <T,>({
         method: options.method || "GET",
         headers: await getHeaders(),
         body: options.body ? JSON.stringify(options.body) : undefined,
+        credentials: "include",
       }
     );
 
@@ -105,6 +106,7 @@ export const apiRequest = async <ObjectType, SuccessResult>(
       method,
       headers,
       body: JSON.stringify(body),
+      credentials: "include",
     });
 
     if (!response.ok) {

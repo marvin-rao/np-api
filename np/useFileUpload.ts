@@ -53,6 +53,7 @@ export const useFileUpload = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
       if (result.status === 200) {
         onComplete(result?.data?.data);
