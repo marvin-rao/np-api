@@ -9,8 +9,24 @@ import "./AppContent.css";
 // Example: import { YourComponent } from '@np/components/YourComponent';
 
 export function AppContent() {
-  const { shouldLogin } = useAuthSession();
+  const { shouldLogin, loading } = useAuthSession();
   const [showProjectSelector, setShowProjectSelector] = useState(false);
+
+  if (loading) {
+    return (
+      <div
+        className="loading-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        Loading...
+      </div>
+    ); // You can replace this with a loading spinner or skeleton
+  }
 
   if (shouldLogin) {
     return <LoginButton />;

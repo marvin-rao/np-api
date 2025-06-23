@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   getBToken,
   getUrlBearerToken,
@@ -63,7 +63,36 @@ export const AuthProvider = (props: AuthProviderProps) => {
 };
 
 export const useAuthSession = () => {
+  const { apiBaseUrl } = useAuthData();
+  const [loading, setLoading] = useState(false);
+
+  const hasCookieSession = async () => {
+    setLoading(true);
+    const response = await fetch(apiBaseUrl + "account/session", {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const data = result?.data;
+    console.log("data", data);
+    const bearer_token = data?.bearer_token;
+    if (bearer_token) {
+      setBToken({ bearer_token });
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    hasCookieSession();
+  }, [apiBaseUrl]);
+
   const shouldLogin = () => {
+    // First check for Cookies and their validity
     const token = getBToken();
     if (token) {
       if (!isTokenExpired(token)) {
@@ -75,5 +104,6 @@ export const useAuthSession = () => {
 
   return {
     shouldLogin: shouldLogin(),
+    loading,
   };
 };
