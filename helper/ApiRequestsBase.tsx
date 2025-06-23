@@ -32,7 +32,7 @@ export const useGet = <T,>({
       apiBaseUrl + path + (options?.queryString ?? ""),
       {
         method: options.method || "GET",
-        headers: await getHeaders(),
+        // headers: await getHeaders(),
         body: options.body ? JSON.stringify(options.body) : undefined,
         credentials: "include",
       }

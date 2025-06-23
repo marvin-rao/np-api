@@ -60,7 +60,7 @@ export const isTokenExpired = (token: string): boolean => {
 };
 
 type Headers = {
-    // Authorization: string,
+    Authorization: string,
     "Content-Type": string,
 }
 
@@ -95,13 +95,13 @@ export const useHeaders = () => {
             }
 
             return {
-                // Authorization: `Bearer ${newBToken}`,
+                Authorization: `Bearer ${newBToken}`,
                 "Content-Type": "application/json",
             };
         }
 
         return {
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
         };
     };
