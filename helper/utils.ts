@@ -74,6 +74,7 @@ export const useHeaders = () => {
             console.log('did not find bearer_token',);
             return {
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": "true"
             } as Headers;
         }
         if (isTokenExpired(token)) {
@@ -82,6 +83,7 @@ export const useHeaders = () => {
                 console.log('did not find refresh_token',);
                 return {
                     "Content-Type": "application/json",
+                    "Access-Control-Allow-Credentials": "true"
                 } as Headers;
             }
             const result = await submit({ refresh_token });
