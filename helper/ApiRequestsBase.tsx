@@ -25,7 +25,6 @@ export const useGet = <T,>({
   enabled,
 }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
-  const { getHeaders } = useHeaders();
 
   const fetchData = async (): Promise<T | undefined> => {
     const url = apiBaseUrl + path + (options?.queryString ?? "");
