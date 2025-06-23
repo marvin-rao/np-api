@@ -33,7 +33,8 @@ export const useGet = <T,>({
     // Only add Authorization header if we have a token
     const token = getBToken();
     const headers: Record<string, string> = {};
-    if (token && !isTokenExpired(token)) {
+    const hasValidToken = token && !isTokenExpired(token);
+    if (hasValidToken) {
       headers.Authorization = `Bearer ${token}`;
       console.log("Adding Authorization header");
     } else {
@@ -46,7 +47,7 @@ export const useGet = <T,>({
       method: options.method || "GET",
       ...(Object.keys(headers).length > 0 && { headers }),
       body: options.body ? JSON.stringify(options.body) : undefined,
-      credentials: "include",
+      credentials: hasValidToken ? "omit" : "include",
     });
 
     if (!response.ok) {
