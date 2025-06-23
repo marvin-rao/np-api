@@ -80,9 +80,6 @@ export const useAuthSession = () => {
     }
 
     setCookieIsPresent(true);
-    const result = await response.json();
-    const data = result?.data;
-    console.log("data", data);
     setLoading(false);
   };
 
