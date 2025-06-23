@@ -68,10 +68,9 @@ export const useAuthSession = () => {
 
   const hasCookieSession = async () => {
     setLoading(true);
-    const response = await fetch(
-      "https://newpaper.app/api/ + account/session",
-      { method: "GET" }
-    );
+    const response = await fetch("https://newpaper.app/api/account/session", {
+      method: "GET",
+    });
 
     if (!response.ok) {
       setLoading(false);
