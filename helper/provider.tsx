@@ -70,6 +70,7 @@ export const useAuthSession = () => {
     setLoading(true);
     const response = await fetch("https://newpaper.app/api/account/session", {
       method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
