@@ -60,28 +60,28 @@ export const isTokenExpired = (token: string): boolean => {
 };
 
 type Headers = {
-    Authorization: string,
-    "Content-Type": string,
+    Authorization?: string,
+    "Content-Type"?: string,
 }
 
 export const useHeaders = () => {
     const { submit } = useRefreshToken();
 
-    const getHeaders = async (): Promise<Headers> => {
+    const getHeaders = async (includeContentType: boolean = true): Promise<Record<string, string>> => {
         const token = getBToken();
         if (!token) {
             console.log('did not find bearer_token',);
-            return {
+            return includeContentType ? {
                 "Content-Type": "application/json",
-            } as Headers;
+            } : {};
         }
         if (isTokenExpired(token)) {
             const refresh_token = getRefreshToken();
             if (!refresh_token) {
                 console.log('did not find refresh_token',);
-                return {
+                return includeContentType ? {
                     "Content-Type": "application/json",
-                } as Headers;
+                } : {};
             }
             const result = await submit({ refresh_token });
             console.log('Got refresh token', result);
@@ -94,16 +94,22 @@ export const useHeaders = () => {
                 setRefreshToken({ refresh_token });
             }
 
-            return {
+            const headers: Record<string, string> = {
                 Authorization: `Bearer ${newBToken}`,
-                "Content-Type": "application/json",
             };
+            if (includeContentType) {
+                headers["Content-Type"] = "application/json";
+            }
+            return headers;
         }
 
-        return {
+        const headers: Record<string, string> = {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
         };
+        if (includeContentType) {
+            headers["Content-Type"] = "application/json";
+        }
+        return headers;
     };
 
     return { getHeaders }

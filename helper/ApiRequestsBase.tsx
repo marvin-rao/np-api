@@ -25,14 +25,14 @@ export const useGet = <T,>({
   enabled,
 }: UseFetchWithTokenProps) => {
   const { apiBaseUrl } = useAuthData();
-  // const { getHeaders } = useHeaders();
+  const { getHeaders } = useHeaders();
 
   const fetchData = async (): Promise<T | undefined> => {
     const response = await fetch(
       apiBaseUrl + path + (options?.queryString ?? ""),
       {
         method: options.method || "GET",
-        // headers: await getHeaders(),
+        headers: await getHeaders(false), // Don't include Content-Type for GET requests
         body: options.body ? JSON.stringify(options.body) : undefined,
         credentials: "include",
       }
