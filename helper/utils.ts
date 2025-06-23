@@ -62,7 +62,6 @@ export const isTokenExpired = (token: string): boolean => {
 type Headers = {
     Authorization: string,
     "Content-Type": string,
-    "Access-Control-Allow-Credentials": string
 }
 
 export const useHeaders = () => {
@@ -74,7 +73,6 @@ export const useHeaders = () => {
             console.log('did not find bearer_token',);
             return {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": "true"
             } as Headers;
         }
         if (isTokenExpired(token)) {
@@ -83,7 +81,6 @@ export const useHeaders = () => {
                 console.log('did not find refresh_token',);
                 return {
                     "Content-Type": "application/json",
-                    "Access-Control-Allow-Credentials": "true"
                 } as Headers;
             }
             const result = await submit({ refresh_token });
@@ -100,14 +97,12 @@ export const useHeaders = () => {
             return {
                 Authorization: `Bearer ${newBToken}`,
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": "true"
             };
         }
 
         return {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": "true"
         };
     };
 
