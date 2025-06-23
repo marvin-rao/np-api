@@ -1,4 +1,3 @@
-import { useRefreshToken } from "../api";
 
 const BearerTokenKey = "BearerTokenKey1"
 const RefreshTokenKey = "RefreshTokenKey1"
@@ -60,7 +59,6 @@ export const isTokenExpired = (token: string): boolean => {
 };
 
 export const useHeaders = () => {
-    const { submit } = useRefreshToken();
 
     const getHeaders = async (includeContentType: boolean = true): Promise<Record<string, string>> => {
         const token = getBToken();
