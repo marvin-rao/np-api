@@ -38,7 +38,8 @@ export const isTokenExpired = (token: string): boolean => {
     try {
         const tokenParts = token.split(".");
         if (tokenParts.length !== 3) {
-            throw new Error("Invalid token");
+            console.log("Invalid token");
+            return true; // Treat token as expired if it doesn't have 3 parts
         }
 
         // Decode the payload of the JWT, which is the second part (base64url encoded)
@@ -53,7 +54,7 @@ export const isTokenExpired = (token: string): boolean => {
         const currentTime = Math.floor(Date.now() / 1000);
         return currentTime > payload.exp;
     } catch (error) {
-        console.error("Error decoding token", error);
+        console.log("Error decoding token", error);
         return true; // Treat token as expired if there's an error decoding it
     }
 };
