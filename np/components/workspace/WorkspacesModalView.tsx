@@ -26,7 +26,8 @@ export const WorkspacesModalView = ({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const { submit: createWorkspace, loading: createLoading } = useCreateWorkspace();
+  const { submit: createWorkspace, loading: createLoading } =
+    useCreateWorkspace();
 
   const filteredWorkspaces = workspaces.filter(
     (workspace) =>
@@ -39,7 +40,10 @@ export const WorkspacesModalView = ({
     setFilter("");
   };
 
-  const handleCreateWorkspace = (data: { name: string; description: string }) => {
+  const handleCreateWorkspace = (data: {
+    name: string;
+    description: string;
+  }) => {
     createWorkspace(data, (response) => {
       if (response.data) {
         onSelect(response.data);
@@ -287,7 +291,8 @@ export const WorkspacesModalView = ({
               <button
                 style={{
                   ...style.createButton,
-                  backgroundColor: hoveredId === "create" ? "#f0f7ff" : "transparent",
+                  backgroundColor:
+                    hoveredId === "create" ? "#f0f7ff" : "transparent",
                   borderColor: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
                   color: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
                 }}

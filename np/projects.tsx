@@ -71,7 +71,10 @@ export const useProjects = () => {
 };
 
 export const useCreateWorkspace = () => {
-  return useRequest<{ name: string; description: string }, ServerResult<Workspace>>({
+  return useRequest<
+    { name: string; description: string },
+    ServerResult<Workspace>
+  >({
     path: "projects/create",
     method: "post",
     options: {},

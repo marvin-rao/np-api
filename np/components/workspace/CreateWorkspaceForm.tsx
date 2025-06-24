@@ -10,13 +10,11 @@ type Props = {
 
 export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [nameError, setNameError] = useState("");
-  const [descriptionError, setDescriptionError] = useState("");
 
   const validateForm = () => {
     let isValid = true;
-    
+
     if (!name.trim()) {
       setNameError("Workspace name is required");
       isValid = false;
@@ -27,29 +25,37 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
       setNameError("");
     }
 
-    if (description.trim().length > 500) {
-      setDescriptionError("Description must be less than 500 characters");
-      isValid = false;
-    } else {
-      setDescriptionError("");
-    }
-
     return isValid;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit({ name: name.trim(), description: description.trim() });
+      onSubmit({ name: name.trim(), description: "" });
     }
   };
 
   return (
-    <div style={{ ...style.overlay } as React.CSSProperties}>
+    <div
+      style={{
+        position: "fixed" as const,
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backdropFilter: "blur(4px)",
+      }}
+    >
       <div style={style.modal}>
         <div style={style.header}>
           <div style={style.title}>Create New Workspace</div>
-          <div style={style.subtitle}>Set up a new workspace for your team</div>
+          <div style={style.subtitle}>
+            Workspaces help you organize projects, collaborate with your team,
+            and manage resources in one place
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -66,18 +72,23 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
                 }}
               >
                 Workspace Name *
-              </label>
+              </label>{" "}
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 style={{
-                  ...style.searchInput,
-                  borderColor: nameError ? "#dc2626" : "#d1d5db",
+                  width: "100%",
+                  padding: "0.75rem",
+                  border: nameError ? "1px solid #dc2626" : "1px solid #d1d5db",
+                  borderRadius: "0.375rem",
+                  fontSize: "14px",
+                  transition:
+                    "box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out",
+                  boxSizing: "border-box" as const,
                   boxShadow: nameError
                     ? "0 0 0 3px rgba(220, 38, 38, 0.1)"
                     : "none",
-                  padding: "0.75rem",
                 }}
                 placeholder="Enter workspace name..."
                 maxLength={100}
@@ -95,59 +106,6 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
                   {nameError}
                 </p>
               )}
-            </div>
-
-            {/* Description Field */}
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  fontWeight: 500,
-                  color: "#374151",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Description (Optional)
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{
-                  ...style.searchInput,
-                  borderColor: descriptionError ? "#dc2626" : "#d1d5db",
-                  boxShadow: descriptionError
-                    ? "0 0 0 3px rgba(220, 38, 38, 0.1)"
-                    : "none",
-                  padding: "0.75rem",
-                  height: "80px",
-                  resize: "vertical" as const,
-                  fontFamily: "inherit",
-                }}
-                placeholder="Describe your workspace..."
-                maxLength={500}
-                disabled={loading}
-              />
-              {descriptionError && (
-                <p
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "#dc2626",
-                    marginTop: "0.25rem",
-                  }}
-                >
-                  {descriptionError}
-                </p>
-              )}
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#6b7280",
-                  marginTop: "0.25rem",
-                }}
-              >
-                {description.length}/500 characters
-              </p>
             </div>
           </div>
 
@@ -178,7 +136,8 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
                 fontSize: "0.875rem",
                 fontWeight: 500,
                 color: "white",
-                backgroundColor: loading || !name.trim() ? "#9ca3af" : "#2563eb",
+                backgroundColor:
+                  loading || !name.trim() ? "#9ca3af" : "#2563eb",
                 border: "none",
                 borderRadius: "0.375rem",
                 cursor: loading || !name.trim() ? "not-allowed" : "pointer",
@@ -190,7 +149,11 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
             >
               {loading && (
                 <svg
-                  style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    animation: "spin 1s linear infinite",
+                  }}
                   fill="none"
                   viewBox="0 0 24 24"
                 >
