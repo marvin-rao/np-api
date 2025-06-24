@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Workspace } from "../../types";
+import { useAuthData } from "../../../helper/provider";
 import { useCreateWorkspace } from "../../projects";
+import { Workspace } from "../../types";
 import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
 import { style } from "./styles";
 
@@ -21,13 +22,12 @@ export const WorkspacesModalView = ({
   currentWorkspaceId,
   onWorkspaceCreated,
 }: Props) => {
+  const { callerProduct } = useAuthData();
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-
-  const { submit: createWorkspace, loading: createLoading } =
-    useCreateWorkspace();
+  const { submit, loading: createLoading } = useCreateWorkspace();
 
   const filteredWorkspaces = workspaces.filter(
     (workspace) =>
@@ -44,7 +44,23 @@ export const WorkspacesModalView = ({
     name: string;
     description: string;
   }) => {
-    createWorkspace(data, (response) => {
+    const payload: Workspace = {
+      ...data,
+      productSettings: {
+        [callerProduct]: {
+          enabled: true,
+          isPrivate: false,
+          users: {},
+        },
+      },
+      id: "____",
+      activePlanId: "free",
+      created: +new Date(),
+      members: 1,
+      lastActive: new Date().toLocaleDateString(),
+    } as Workspace;
+
+    submit(payload, (response) => {
       if (response.data) {
         onSelect(response.data);
         setShowCreateForm(false);

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Workspace } from "../../types";
 import { style } from "./styles";
 
 type Props = {

@@ -9,7 +9,11 @@ import {
   setRefreshToken,
 } from "./utils";
 
-const AuthContext = createContext({ loginPageUrl: "", apiBaseUrl: "" });
+const AuthContext = createContext({
+  loginPageUrl: "",
+  apiBaseUrl: "",
+  callerProduct: "",
+});
 
 export const useAuthData = () => {
   return useContext(AuthContext);
@@ -20,6 +24,7 @@ export type AuthProviderProps = {
   loginPageUrl: string;
   apiBaseUrl: string;
   ignoreWorkspace?: boolean;
+  callerProduct: "recruit" | "career" | "filesapp";
 };
 
 const queryClient = new QueryClient({
@@ -32,7 +37,7 @@ const queryClient = new QueryClient({
 });
 
 export const AuthProvider = (props: AuthProviderProps) => {
-  const { children, loginPageUrl, apiBaseUrl } = props;
+  const { children, loginPageUrl, apiBaseUrl, callerProduct } = props;
 
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
@@ -55,7 +60,7 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl }}>
+      <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl, callerProduct }}>
         {children}
       </AuthContext.Provider>
     </QueryClientProvider>

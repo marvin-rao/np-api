@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ProductSettings } from "./components/workspace/types";
 
 // Zod Schemas
 export const CreatorSchema = z.object({
@@ -85,6 +86,7 @@ export type Workspace = {
     members: number,
     lastActive: string,
     activePlanId: "free" | "business" | "enterprise",
+    productSettings?: ProductSettings
 }
 
 export type RefreshTokenResult = {

@@ -19,14 +19,12 @@ export const WorkspaceSelector = (props: Props) => {
 
   return (
     <WorkspacesModalView
-      workspaces={[]}
+      workspaces={workspaceData}
       onSelect={onSelect}
       onClose={onClose}
       loading={loading}
       currentWorkspaceId={projectId}
-      onWorkspaceCreated={() => {
-        refetch();
-      }}
+      onWorkspaceCreated={refetch}
     />
   );
 };
