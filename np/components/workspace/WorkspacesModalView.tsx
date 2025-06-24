@@ -157,7 +157,13 @@ export const WorkspacesModalView = ({
                       </button>
                     </>
                   ) : (
-                    <>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
                       <div style={{ marginBottom: "1rem" }}>
                         No workspaces available
                       </div>
@@ -183,7 +189,7 @@ export const WorkspacesModalView = ({
                         </svg>
                         Create Your First Workspace
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
               ) : (

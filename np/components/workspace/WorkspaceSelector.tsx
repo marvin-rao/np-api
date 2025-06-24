@@ -19,7 +19,7 @@ export const WorkspaceSelector = (props: Props) => {
 
   return (
     <WorkspacesModalView
-      workspaces={workspaceData}
+      workspaces={[]}
       onSelect={onSelect}
       onClose={onClose}
       loading={loading}
