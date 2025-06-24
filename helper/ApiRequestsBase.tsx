@@ -3,68 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { appFetch, RequestMethod } from "./fetchUtils";
 import { useAuthData } from "./provider";
-import { getBToken, isTokenExpired } from "./utils";
 
 type FetchOptions = {
   method?: RequestMethod;
   body?: any;
   headers?: Record<string, string>;
   queryString?: string;
-};
-
-type UseFetchWithTokenProps = {
-  path: string;
-  options: FetchOptions;
-  deps?: Array<string | undefined | null>;
-  enabled?: boolean;
-};
-
-export const useGet = <T,>({
-  path,
-  options = {},
-  deps = [],
-  enabled,
-}: UseFetchWithTokenProps) => {
-  const { apiBaseUrl } = useAuthData();
-
-  const fetchData = async (): Promise<T | undefined> => {
-    const url = apiBaseUrl + path + (options?.queryString ?? "");
-
-    const token = getBToken();
-    const headers: Record<string, string> = {};
-    const hasValidToken = token && !isTokenExpired(token);
-    if (hasValidToken) {
-      headers.Authorization = `Bearer ${token}`;
-      console.log("Adding Authorization header");
-    }
-
-    const response = await appFetch({
-      headers: { ...(Object.keys(headers).length > 0 && { headers }) },
-      method: options.method || "GET",
-      url,
-      body: options.body,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-    return result?.data ?? undefined;
-  };
-
-  const { refetch, data, error, isLoading } = useQuery({
-    queryKey: [path, deps],
-    queryFn: fetchData,
-    enabled,
-  });
-
-  return {
-    data: data,
-    error: error,
-    loading: isLoading,
-    refetch,
-  };
 };
 
 type UsePostProps = {
@@ -80,7 +24,6 @@ type RequestProps<ObjectType, SuccessResult> = {
   onSuccess: (data: SuccessResult) => void;
   onError: (error: Error | null) => void;
   onLoadingChange: (loading: boolean) => void;
-  // headers: any;
   url: string;
   enabled?: boolean;
 };
@@ -103,18 +46,8 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   onLoadingChange(true);
   onError(null);
 
-  const token = getBToken();
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-  const hasValidToken = token && !isTokenExpired(token);
-  if (hasValidToken) {
-    headers.Authorization = `Bearer ${token}`;
-    console.log("Adding Authorization header");
-  }
-
   try {
-    const response = await appFetch({ headers, method, url, body });
+    const response = await appFetch({ method, url, body });
 
     if (!response.ok) {
       const result = await response.json();
@@ -179,35 +112,60 @@ export const useRequest = <ObjectType, SuccessResult>(
 
 // Hooks
 
-export const usePost = <ObjectType, SuccessResult>({
-  path,
-  options,
-}: UsePostProps) => {
+type UseFetchWithTokenProps = {
+  path: string;
+  options: FetchOptions;
+  deps?: Array<string | undefined | null>;
+  enabled?: boolean;
+};
+
+export const useGet = <T,>(props: UseFetchWithTokenProps) => {
+  const { apiBaseUrl } = useAuthData();
+  const { path, options = {}, deps = [], enabled } = props;
+
+  const fetchData = async (): Promise<T | undefined> => {
+    const response = await appFetch({
+      method: options.method || "GET",
+      url: apiBaseUrl + path + (options?.queryString ?? ""),
+      body: options.body,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return (await response.json())?.data ?? undefined;
+  };
+
+  const { refetch, data, error, isLoading } = useQuery({
+    queryKey: [path, deps],
+    queryFn: fetchData,
+    enabled,
+  });
+
+  return { data: data, error: error, loading: isLoading, refetch };
+};
+
+export const usePost = <ObjectType, SuccessResult>(props: UsePostProps) => {
   return useRequest<ObjectType, SuccessResult>({
-    path,
+    path: props.path,
     method: "post",
-    options,
+    options: props.options || {},
   });
 };
 
-export const useDelete = <ObjectType, SuccessResult>({
-  path,
-  options,
-}: UsePostProps) => {
+export const useDelete = <ObjectType, SuccessResult>(props: UsePostProps) => {
   return useRequest<ObjectType, SuccessResult>({
-    path,
+    path: props.path,
     method: "delete",
-    options,
+    options: props.options || {},
   });
 };
 
-export const usePatch = <ObjectType, SuccessResult>({
-  path,
-  options,
-}: UsePostProps) => {
+export const usePatch = <ObjectType, SuccessResult>(props: UsePostProps) => {
   return useRequest<ObjectType, SuccessResult>({
-    path,
+    path: props.path,
     method: "PATCH",
-    options,
+    options: props.options,
   });
 };

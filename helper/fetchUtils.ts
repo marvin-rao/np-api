@@ -5,7 +5,6 @@ import { getBToken, isTokenExpired } from "./utils";
 export type RequestMethod = "post" | "PATCH" | "delete" | "GET";
 
 export const appFetch = async ({
-    headers,
     method,
     url,
     body,
@@ -13,10 +12,19 @@ export const appFetch = async ({
     body: any;
     method: RequestMethod;
     url: string;
-    headers?: any;
 }) => {
     const token = getBToken();
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+
     const hasValidToken = token && !isTokenExpired(token);
+
+    if (hasValidToken) {
+        headers.Authorization = `Bearer ${token}`;
+        console.log("Adding Authorization header");
+    }
+
     const response = await fetch(url, {
         method,
         headers,
