@@ -80,7 +80,7 @@ type RequestProps<ObjectType, SuccessResult> = {
   onSuccess: (data: SuccessResult) => void;
   onError: (error: Error | null) => void;
   onLoadingChange: (loading: boolean) => void;
-  headers: any;
+  // headers: any;
   url: string;
   enabled?: boolean;
 };
@@ -88,8 +88,7 @@ type RequestProps<ObjectType, SuccessResult> = {
 export const apiRequest = async <ObjectType, SuccessResult>(
   props: RequestProps<ObjectType, SuccessResult>
 ): Promise<SuccessResult | undefined> => {
-  const { onLoadingChange, onError, onSuccess, body, method, headers, url } =
-    props;
+  const { onLoadingChange, onError, onSuccess, body, method, url } = props;
   const { enabled = true } = props;
 
   if (!enabled) {
@@ -104,9 +103,17 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   onLoadingChange(true);
   onError(null);
 
+  const token = getBToken();
+  const headers: Record<string, string> = {};
+  const hasValidToken = token && !isTokenExpired(token);
+  if (hasValidToken) {
+    headers.Authorization = `Bearer ${token}`;
+    console.log("Adding Authorization header");
+  }
+
   try {
     const response = await appFetch({
-      headers,
+      headers: { ...(Object.keys(headers).length > 0 && { headers }) },
       method,
       url,
       body: JSON.stringify(body),
