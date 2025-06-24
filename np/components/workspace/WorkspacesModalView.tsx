@@ -29,12 +29,14 @@ export const WorkspacesModalView = ({
   const [showCreateForm, setShowCreateForm] = useState(false);
   const { submit, loading: createLoading } = useCreateWorkspace();
 
-  const filteredWorkspaces = workspaces.filter(
-    (workspace) =>
-      workspace.name.toLowerCase().includes(filter.toLowerCase()) ||
-      (workspace.description &&
-        workspace.description.toLowerCase().includes(filter.toLowerCase()))
-  );
+  const filteredWorkspaces = workspaces
+    .filter(
+      (workspace) =>
+        workspace.name.toLowerCase().includes(filter.toLowerCase()) ||
+        (workspace.description &&
+          workspace.description.toLowerCase().includes(filter.toLowerCase()))
+    )
+    .sort((a, b) => b.created - a.created);
 
   const handleClearSearch = () => {
     setFilter("");
