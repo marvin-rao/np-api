@@ -1,11 +1,12 @@
 // @ts-ignore
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { appFetch, RequestMethod } from "./fetchUtils";
 import { useAuthData } from "./provider";
 import { getBToken, isTokenExpired, useHeaders } from "./utils";
 
 type FetchOptions = {
-  method?: string;
+  method?: RequestMethod;
   body?: any;
   headers?: Record<string, string>;
   queryString?: string;
@@ -28,26 +29,20 @@ export const useGet = <T,>({
 
   const fetchData = async (): Promise<T | undefined> => {
     const url = apiBaseUrl + path + (options?.queryString ?? "");
-    console.log("Making request to:", url);
 
-    // Only add Authorization header if we have a token
     const token = getBToken();
     const headers: Record<string, string> = {};
     const hasValidToken = token && !isTokenExpired(token);
     if (hasValidToken) {
       headers.Authorization = `Bearer ${token}`;
       console.log("Adding Authorization header");
-    } else {
-      console.log(
-        "No valid token, making request without Authorization header"
-      );
     }
 
-    const response = await fetch(url, {
+    const response = await appFetch({
+      headers: { ...(Object.keys(headers).length > 0 && { headers }) },
       method: options.method || "GET",
-      ...(Object.keys(headers).length > 0 && { headers }),
+      url,
       body: options.body ? JSON.stringify(options.body) : undefined,
-      credentials: hasValidToken ? "omit" : "include",
     });
 
     if (!response.ok) {
@@ -76,10 +71,6 @@ type UsePostProps = {
   path: string;
   options?: FetchOptions;
 };
-
-// PATCH, because in fetch patch doesn't normalize to PATCH
-// https://github.com/nodejs/node/issues/51336
-export type RequestMethod = "post" | "PATCH" | "delete";
 
 export type RequestDeps = Array<string | undefined>;
 
@@ -113,15 +104,12 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   onLoadingChange(true);
   onError(null);
 
-  const token = getBToken();
-  const hasValidToken = token && !isTokenExpired(token);
-
   try {
-    const response = await fetch(url, {
-      method,
+    const response = await appFetch({
       headers,
+      method,
+      url,
       body: JSON.stringify(body),
-      credentials: hasValidToken ? "omit" : "include",
     });
 
     if (!response.ok) {
@@ -143,16 +131,14 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   }
 };
 
-export const useRequest = <ObjectType, SuccessResult>({
-  path,
-  method,
-  options = {},
-  enabled = true,
-}: UsePostProps & {
-  method: RequestMethod;
-  options?: FetchOptions;
-  enabled?: boolean;
-}) => {
+export const useRequest = <ObjectType, SuccessResult>(
+  props: UsePostProps & {
+    method: RequestMethod;
+    options?: FetchOptions;
+    enabled?: boolean;
+  }
+) => {
+  const { path, method, options = {}, enabled = true } = props;
   const { apiBaseUrl } = useAuthData();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -188,6 +174,8 @@ export const useRequest = <ObjectType, SuccessResult>({
 
   return { loading, error, submit };
 };
+
+// Hooks
 
 export const usePost = <ObjectType, SuccessResult>({
   path,
