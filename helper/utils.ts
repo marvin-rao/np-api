@@ -61,21 +61,19 @@ export const isTokenExpired = (token: string): boolean => {
 
 export const useHeaders = () => {
 
-    const getHeaders = async (includeContentType: boolean = true): Promise<Record<string, string>> => {
+    const getHeaders = async (): Promise<Record<string, string>> => {
         const token = getBToken();
-        if (!token) {
+        if (!token || isTokenExpired(token)) {
             console.log('did not find bearer_token',);
-            return includeContentType ? {
+            return {
                 "Content-Type": "application/json",
-            } : {};
+            };
         }
 
         const headers: Record<string, string> = {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
         };
-        if (includeContentType) {
-            headers["Content-Type"] = "application/json";
-        }
         return headers;
     };
 
