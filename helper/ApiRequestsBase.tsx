@@ -113,12 +113,15 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   onLoadingChange(true);
   onError(null);
 
+  const token = getBToken();
+  const hasValidToken = token && !isTokenExpired(token);
+
   try {
     const response = await fetch(url, {
       method,
       headers,
       body: JSON.stringify(body),
-      credentials: "include",
+      credentials: hasValidToken ? "omit" : "include",
     });
 
     if (!response.ok) {
