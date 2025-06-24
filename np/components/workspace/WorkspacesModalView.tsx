@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Workspace } from "../../types";
+import { useCreateWorkspace } from "../../projects";
+import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
 import { style } from "./styles";
 
 type Props = {
@@ -8,6 +10,7 @@ type Props = {
   workspaces: Workspace[];
   loading: boolean;
   currentWorkspaceId?: string | null;
+  onWorkspaceCreated?: () => void;
 };
 
 export const WorkspacesModalView = ({
@@ -16,10 +19,14 @@ export const WorkspacesModalView = ({
   onSelect,
   loading,
   currentWorkspaceId,
+  onWorkspaceCreated,
 }: Props) => {
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const { submit: createWorkspace, loading: createLoading } = useCreateWorkspace();
 
   const filteredWorkspaces = workspaces.filter(
     (workspace) =>
@@ -31,6 +38,26 @@ export const WorkspacesModalView = ({
   const handleClearSearch = () => {
     setFilter("");
   };
+
+  const handleCreateWorkspace = (data: { name: string; description: string }) => {
+    createWorkspace(data, (response) => {
+      if (response.data) {
+        onSelect(response.data);
+        setShowCreateForm(false);
+        onWorkspaceCreated?.();
+      }
+    });
+  };
+
+  if (showCreateForm) {
+    return (
+      <CreateWorkspaceForm
+        onSubmit={handleCreateWorkspace}
+        onCancel={() => setShowCreateForm(false)}
+        loading={createLoading}
+      />
+    );
+  }
 
   return (
     // @ts-ignore
@@ -126,7 +153,33 @@ export const WorkspacesModalView = ({
                       </button>
                     </>
                   ) : (
-                    "No workspaces available"
+                    <>
+                      <div style={{ marginBottom: "1rem" }}>
+                        No workspaces available
+                      </div>
+                      <button
+                        onClick={() => setShowCreateForm(true)}
+                        style={{
+                          ...style.createButton,
+                          backgroundColor: "#2563eb",
+                          color: "white",
+                          border: "none",
+                          padding: "0.75rem 1.5rem",
+                        }}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M12 5v14m-7-7h14" />
+                        </svg>
+                        Create Your First Workspace
+                      </button>
+                    </>
                   )}
                 </div>
               ) : (
@@ -231,6 +284,29 @@ export const WorkspacesModalView = ({
             </div>
 
             <div style={style.footer}>
+              <button
+                style={{
+                  ...style.createButton,
+                  backgroundColor: hoveredId === "create" ? "#f0f7ff" : "transparent",
+                  borderColor: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
+                  color: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
+                }}
+                onClick={() => setShowCreateForm(true)}
+                onMouseEnter={() => setHoveredId("create")}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 5v14m-7-7h14" />
+                </svg>
+                Create New Workspace
+              </button>
               <button
                 style={{
                   ...style.cancelButton,

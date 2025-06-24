@@ -11,7 +11,7 @@ type Props = {
 
 export const WorkspaceSelector = (props: Props) => {
   const { open, onSelect, onClose } = props;
-  const { data, loading } = useProjects();
+  const { data, loading, refetch } = useProjects();
   const { projectId } = useProjectId();
   const workspaceData = data ?? [];
 
@@ -24,6 +24,9 @@ export const WorkspaceSelector = (props: Props) => {
       onClose={onClose}
       loading={loading}
       currentWorkspaceId={projectId}
+      onWorkspaceCreated={() => {
+        refetch();
+      }}
     />
   );
 };
