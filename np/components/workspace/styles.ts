@@ -33,6 +33,7 @@ export const style = {
     subtitle: {
         fontSize: "0.875rem",
         color: "#6b7280",
+        marginTop: "4px",
     },
     search: {
         padding: "1rem",
