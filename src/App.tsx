@@ -6,6 +6,7 @@ import { AppContent } from "./AppContent";
 function App() {
   return (
     <NewPaperProvider
+      callerProduct={"recruit"}
       apiBaseUrl={"https://newpaper.app/api/"}
       loginPageUrl={"https://newpaper.app/account/login"}
     >
