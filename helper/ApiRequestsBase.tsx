@@ -42,7 +42,7 @@ export const useGet = <T,>({
       headers: { ...(Object.keys(headers).length > 0 && { headers }) },
       method: options.method || "GET",
       url,
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      body: options.body,
     });
 
     if (!response.ok) {
