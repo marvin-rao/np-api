@@ -13,7 +13,7 @@ export const appFetch = async ({
     body: any;
     method: RequestMethod;
     url: string;
-    headers: {};
+    headers?: any;
 }) => {
     const token = getBToken();
     const hasValidToken = token && !isTokenExpired(token);

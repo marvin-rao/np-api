@@ -1,6 +1,5 @@
 import { useGet } from "./helper/ApiRequestsBase";
 import { useProjectGetBase } from "./np/projects";
-import { RefreshTokenResult } from "./np/types";
 
 type Avatar = {
   original?: string;
@@ -23,11 +22,6 @@ export const useAccountProfile = () => {
     path: "account/profile",
     options: {},
   });
-};
-
-type SuccessResult = {
-  data: RefreshTokenResult;
-  message: string;
 };
 
 // export const useRefreshToken = () => {

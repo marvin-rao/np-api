@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { appFetch, RequestMethod } from "./fetchUtils";
 import { useAuthData } from "./provider";
-import { getBToken, isTokenExpired, useHeaders } from "./utils";
+import { getBToken, isTokenExpired } from "./utils";
 
 type FetchOptions = {
   method?: RequestMethod;
@@ -149,7 +149,6 @@ export const useRequest = <ObjectType, SuccessResult>(
   const { apiBaseUrl } = useAuthData();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const { getHeaders } = useHeaders();
 
   const submit = async (
     body: ObjectType,
