@@ -46,8 +46,8 @@ export const WorkspacesModalView = ({
         {!loading && (
           <>
             <div style={style.header}>
-              <h2 style={style.title}>Select Workspace</h2>
-              <p style={style.subtitle}>Choose a workspace to continue</p>
+              <div style={style.title}>Select Workspace</div>
+              <div style={style.subtitle}>Choose a workspace to continue</div>
             </div>
 
             <div style={style.search}>

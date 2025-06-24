@@ -28,9 +28,9 @@ export const style = {
         fontSize: "1.25rem",
         fontWeight: 600,
         color: "#111827",
+        marginTop: "4px"
     },
     subtitle: {
-        marginTop: "8px",
         fontSize: "0.875rem",
         color: "#6b7280",
     },
