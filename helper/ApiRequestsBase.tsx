@@ -174,7 +174,6 @@ export const useRequest = <ObjectType, SuccessResult>(
       },
       onLoadingChange: setLoading,
       method,
-      headers: await getHeaders(),
       enabled,
     });
   };
