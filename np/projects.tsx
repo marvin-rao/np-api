@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { RequestMethod, useGet, useRequest } from "../helper/ApiRequestsBase";
+import { useGet, useRequest } from "../helper/ApiRequestsBase";
+import { RequestMethod } from "../helper/fetchUtils";
 import { getBToken } from "../helper/utils";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { ProjectCompany, ServerResult, Workspace } from "./types";
