@@ -42,6 +42,14 @@ export const WorkspacesModalView = ({
     setFilter("");
   };
 
+  const handleEditWorkspace = (workspace: Workspace, e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.open(
+      `https://www.newpaper.app/project/${workspace.id}/settings/general`,
+      "_blank"
+    );
+  };
+
   const handleCreateWorkspace = (data: {
     name: string;
     description: string;
@@ -306,6 +314,41 @@ export const WorkspacesModalView = ({
                         {workspace.members} members
                       </div>
                     </div>
+                    {workspace.sessionRights?.level === "admin" && (
+                      <button
+                        style={{
+                          ...style.editIcon,
+                          color:
+                            hoveredId === workspace.id ? "#2563eb" : "#6b7280",
+                          backgroundColor:
+                            hoveredId === workspace.id
+                              ? "rgba(59, 130, 246, 0.1)"
+                              : "transparent",
+                        }}
+                        onClick={(e) => handleEditWorkspace(workspace, e)}
+                        onMouseEnter={(e) => {
+                          e.stopPropagation();
+                          setHoveredId(`edit-${workspace.id}`);
+                        }}
+                        onMouseLeave={(e) => {
+                          e.stopPropagation();
+                          setHoveredId(workspace.id);
+                        }}
+                        title="Edit workspace settings"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                    )}
                   </button>
                 ))
               )}

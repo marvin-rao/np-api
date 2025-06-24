@@ -78,6 +78,11 @@ export type Note = {
     fromServer?: boolean | undefined;
 }
 
+export type AccessRights = {
+    objectId: "project";
+    level: "admin" | "user";
+};
+
 export type Workspace = {
     name: string,
     id: string,
@@ -86,7 +91,8 @@ export type Workspace = {
     members: number,
     lastActive: string,
     activePlanId: "free" | "business" | "enterprise",
-    productSettings?: ProductSettings
+    productSettings?: ProductSettings,
+    sessionRights: AccessRights,
 }
 
 export type RefreshTokenResult = {
