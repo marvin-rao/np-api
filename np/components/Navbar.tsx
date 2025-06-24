@@ -8,7 +8,7 @@ import {
 } from "../projects";
 import { openWorkspace } from "./NewPaperProvider";
 import { ProfileImage } from "./ProfileImage";
-import { WorkspaceSelector } from "./WorkspaceSelector";
+import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
 import { navbarStyles as styles } from "./Navbar.styles";
 
 interface NavbarProps {

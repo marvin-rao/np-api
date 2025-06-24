@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NPMainActionBar } from "../np/components/Navbar";
 import { openWorkspace } from "../np/components/NewPaperProvider";
-import { WorkspaceSelector } from "../np/components/WorkspaceSelector";
+import { WorkspaceSelector } from "../np/components/workspace/WorkspaceSelector";
 import { useAuthSession } from "../helper/provider";
 import { LoginButton } from "../helper/AuthHelper";
 import "./AppContent.css";

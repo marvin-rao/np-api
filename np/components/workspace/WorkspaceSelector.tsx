@@ -1,6 +1,6 @@
-import { useProjects } from "../..";
-import { useProjectId } from "../projects";
-import { Workspace } from "../types";
+import { useProjects } from "../../..";
+import { useProjectId } from "../../projects";
+import { Workspace } from "../../types";
 import { WorkspacesModalView } from "./WorkspacesModalView";
 
 type Props = {

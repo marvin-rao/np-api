@@ -1,5 +1,5 @@
 import { NewPaperProvider } from "./np/components/NewPaperProvider";
-import { WorkspaceSelector } from "./np/components/WorkspaceSelector";
+import { WorkspaceSelector } from "./np/components/workspace/WorkspaceSelector";
 import { NPMainActionBar } from "./np/components/Navbar";
 
 export { LoginButton } from "./helper/AuthHelper";

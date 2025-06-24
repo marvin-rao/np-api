@@ -5,7 +5,7 @@ import {
   useAuthSession,
 } from "../../helper/provider";
 import { useProjectId } from "../projects";
-import { WorkspaceSelector } from "./WorkspaceSelector";
+import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
 
 export const openWorkspace = ({ id }: { id: string }) => {
   window.location.href = `../../../../workspace/${id}/`;
