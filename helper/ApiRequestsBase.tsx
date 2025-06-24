@@ -114,12 +114,7 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   }
 
   try {
-    const response = await appFetch({
-      headers: { ...(Object.keys(headers).length > 0 && { headers }) },
-      method,
-      url,
-      body: JSON.stringify(body),
-    });
+    const response = await appFetch({ headers, method, url, body });
 
     if (!response.ok) {
       const result = await response.json();
