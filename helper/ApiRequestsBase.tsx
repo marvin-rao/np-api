@@ -104,7 +104,9 @@ export const apiRequest = async <ObjectType, SuccessResult>(
   onError(null);
 
   const token = getBToken();
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   const hasValidToken = token && !isTokenExpired(token);
   if (hasValidToken) {
     headers.Authorization = `Bearer ${token}`;
