@@ -5,9 +5,15 @@ type Props = {
   onSubmit: (data: { name: string; description: string }) => void;
   onCancel: () => void;
   loading: boolean;
+  error: string;
 };
 
-export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
+export const CreateWorkspaceForm = ({
+  onSubmit,
+  onCancel,
+  loading,
+  error,
+}: Props) => {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
 
@@ -59,6 +65,23 @@ export const CreateWorkspaceForm = ({ onSubmit, onCancel, loading }: Props) => {
 
         <form onSubmit={handleSubmit}>
           <div style={{ padding: "1.5rem" }}>
+            {/* Error Display */}
+            {error && (
+              <div
+                style={{
+                  marginBottom: "1.5rem",
+                  padding: "0.75rem",
+                  backgroundColor: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "0.375rem",
+                  color: "#dc2626",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {error}
+              </div>
+            )}
+
             {/* Workspace Name Field */}
             <div style={{ marginBottom: "1.5rem" }}>
               <label

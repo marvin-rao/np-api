@@ -27,7 +27,7 @@ export const WorkspacesModalView = ({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const { submit, loading: createLoading } = useCreateWorkspace();
+  const { submit, loading: createLoading, error } = useCreateWorkspace();
 
   const filteredWorkspaces = workspaces
     .filter(
@@ -85,6 +85,7 @@ export const WorkspacesModalView = ({
         onSubmit={handleCreateWorkspace}
         onCancel={() => setShowCreateForm(false)}
         loading={createLoading}
+        error={error?.message ?? ""}
       />
     );
   }
