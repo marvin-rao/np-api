@@ -1,9 +1,8 @@
 import { useProjectGetBase, useProjectRequest, useProjectId } from "../../projects";
 import { Notification } from "../types";
 
-export function useNotifications(projectIdProp?: string) {
-  const { projectId: projectIdCtx } = useProjectId();
-  const projectId = projectIdProp ?? projectIdCtx;
+export function useNotifications() {
+  useProjectId();
 
   const {
     data: listData,
@@ -20,7 +19,7 @@ export function useNotifications(projectIdProp?: string) {
     method: "post",
   });
 
-  const { submit: submitMarkAllRead } = useProjectRequest<{}>({
+  const { submit: submitMarkAllRead } = useProjectRequest<object>({
     path: "notifications/markallasread",
     method: "post",
   });
