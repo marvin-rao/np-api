@@ -184,6 +184,15 @@ export type JobPost = {
     }
     industry?: string,
     applied?: boolean,
+    questions?: FilteringQuestion[];
+}
+
+export interface FilteringQuestion {
+    id: string;
+    question: string;
+    type: 'text' | 'boolean' | 'multiple-choice';
+    options?: string[]; // For multiple choice questions
+    required: boolean;
 }
 
 export type JobApplication = {
