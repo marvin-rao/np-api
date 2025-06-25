@@ -98,7 +98,10 @@ export const NotificationItem = ({
         )}
       </div>
       <div style={styles.content}>
-        <div style={styles.message}>{notification.text}</div>
+        <div
+          style={styles.message}
+          dangerouslySetInnerHTML={{ __html: notification.text }}
+        />
         <div style={styles.date}>{relativeTime(notification.created)}</div>
       </div>
       {!notification.read && (
