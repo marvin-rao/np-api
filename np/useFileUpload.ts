@@ -135,12 +135,28 @@ export const useFileUpload = () => {
       id,
       file,
       callback,
+      `files/upload_any?projectId=${projectId}`
+    );
+  };
+
+  const uploadAnyPublicProjectFile = (props: {
+    id: string,
+    file: File | Blob,
+    projectId: string,
+    callback: (result: { id: string, url: string }) => void,
+  }) => {
+    const { id, file, projectId, callback } = props;
+    uploadFile<{ id: string, url: string }>(
+      id,
+      file,
+      callback,
       `files_public/upload_any?projectId=${projectId}`
     );
   };
 
   return {
     uploadAnyProjectFile,
+    uploadAnyPublicProjectFile,
     uploadImages,
     loading,
     performUpload,
