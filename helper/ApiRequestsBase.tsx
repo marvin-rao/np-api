@@ -43,8 +43,8 @@ export const apiRequest = async <ObjectType, SuccessResult>(
     alert("Dev:Provide url in Auth Context");
     return;
   }
-  onLoadingChange(true);
   onError(null);
+  onLoadingChange(true);
 
   try {
     const response = await appFetch({ method, url, body });
@@ -89,6 +89,7 @@ export const useRequest = <ObjectType, SuccessResult>(
       return;
     }
 
+    console.log("Starting load");
     setLoading(true);
 
     apiRequest<ObjectType, SuccessResult>({
