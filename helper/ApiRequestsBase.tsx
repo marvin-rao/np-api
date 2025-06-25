@@ -89,6 +89,8 @@ export const useRequest = <ObjectType, SuccessResult>(
       return;
     }
 
+    setLoading(true);
+
     apiRequest<ObjectType, SuccessResult>({
       onSuccess: (data) => {
         onSuccess?.(data);
