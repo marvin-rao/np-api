@@ -72,7 +72,6 @@ export const WorkspacesModalView = ({
 
     submit(payload, (response) => {
       if (response.data) {
-        onSelect(response.data);
         setShowCreateForm(false);
         onWorkspaceCreated?.();
       }
