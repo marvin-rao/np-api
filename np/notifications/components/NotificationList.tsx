@@ -43,13 +43,12 @@ const styles = {
 };
 
 type Props = {
-  projectId?: string;
   onNotificationClick?: (n: Notification) => void;
 };
 
-export const NotificationList = ({ projectId, onNotificationClick }: Props) => {
+export const NotificationList = ({ onNotificationClick }: Props) => {
   const { notifications, loading, error, onMarkAllAsRead, onMarkAsRead } =
-    useNotifications(projectId);
+    useNotifications();
 
   if (loading) {
     return <div style={styles.loading}>Loading notifications…</div>;
