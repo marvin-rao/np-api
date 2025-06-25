@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useAuthData } from "../helper/provider";
+import { getBToken } from "../helper/utils";
 import { Image, SystemAudio } from "./types";
 
 export const ApiImagesPath = (projectId: string) => {
@@ -48,10 +49,13 @@ export const useFileUpload = () => {
       [id]: true,
     });
 
+    const token = getBToken();
+
     try {
       const result = await axios.post(apiBaseUrl + path, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       });
