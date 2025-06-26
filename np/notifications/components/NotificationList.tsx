@@ -68,8 +68,11 @@ type Props = {
 
 export const NotificationList = ({
   onNotificationClick,
-  showBackdrop = false,
-  onBackdropClick,
+  showBackdrop = true,
+  onBackdropClick = () =>
+    console.log(
+      "NotificationList: backdrop clicked - provide onBackdropClick handler to close"
+    ),
 }: Props) => {
   const { notifications, loading, error, onMarkAllAsRead, onMarkAsRead } =
     useNotifications();
