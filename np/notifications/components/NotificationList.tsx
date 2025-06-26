@@ -1,4 +1,3 @@
-import React from "react";
 import { Notification } from "../types";
 import { useNotifications } from "../hooks/useNotifications";
 import { NotificationItem } from "./NotificationItem";
@@ -25,6 +24,16 @@ const styles = {
     fontSize: "14px",
     color: "#2563eb",
     cursor: "pointer",
+  },
+  markAllButton: {
+    backgroundColor: "#2563eb",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "4px",
+    padding: "6px 12px",
+    fontSize: "12px",
+    cursor: "pointer",
+    transition: "background-color 0.2s ease",
   },
   list: {
     maxHeight: "calc(100vh - 200px)",
@@ -69,9 +78,18 @@ export const NotificationList = ({ onNotificationClick }: Props) => {
       <div style={styles.header}>
         <span style={styles.title}>Notifications</span>
         {unread.length > 0 && (
-          <span style={styles.markAll} onClick={onMarkAllAsRead}>
+          <button
+            style={styles.markAllButton}
+            onClick={onMarkAllAsRead}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#1d4ed8";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#2563eb";
+            }}
+          >
             Mark all ({unread.length})
-          </span>
+          </button>
         )}
       </div>
       <div style={styles.list}>
