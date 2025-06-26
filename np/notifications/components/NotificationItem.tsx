@@ -10,6 +10,9 @@ const styles = {
     marginBottom: "8px",
     backgroundColor: "#ffffff",
     transition: "background-color 0.2s ease, box-shadow 0.2s ease",
+    minWidth: 0, // Allows flex item to shrink
+    width: "100%",
+    boxSizing: "border-box" as const,
   },
   unread: {
     backgroundColor: "#f8fafc",
@@ -28,10 +31,15 @@ const styles = {
   },
   content: {
     flex: 1,
+    minWidth: 0, // Allows flex item to shrink below content width
+    overflow: "hidden",
   },
   message: {
     fontSize: "14px",
     color: "#111827",
+    wordWrap: "break-word" as const,
+    overflowWrap: "break-word" as const,
+    lineHeight: "1.4",
   },
   date: {
     fontSize: "12px",
