@@ -14,8 +14,13 @@ const styles = {
     display: "flex",
     flexDirection: "column" as const,
     width: "100%",
+    maxWidth: "500px",
     position: "relative" as const,
     zIndex: 50,
+    backgroundColor: "#ffffff",
+    borderRadius: "8px",
+    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+    overflow: "hidden",
   },
   header: {
     display: "flex",
@@ -45,8 +50,9 @@ const styles = {
     transition: "background-color 0.2s ease",
   },
   list: {
-    maxHeight: "calc(100vh - 200px)",
+    maxHeight: "400px",
     overflowY: "auto" as const,
+    overflowX: "hidden" as const,
     padding: "8px",
   },
   loading: {
