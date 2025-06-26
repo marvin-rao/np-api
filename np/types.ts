@@ -228,7 +228,8 @@ export type JobApplication = {
         type: string;
         size: number;
     }[];
-    jobPost?: JobPost
+    jobPost?: JobPost,
+    questionResponses?: Record<string, string>;
 }
 
 export type EventGuest = {
