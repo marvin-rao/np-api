@@ -3,10 +3,19 @@ import { useNotifications } from "../hooks/useNotifications";
 import { NotificationItem } from "./NotificationItem";
 
 const styles = {
+  backdrop: {
+    position: "fixed" as const,
+    inset: "0",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backdropFilter: "blur(4px)",
+    zIndex: 40,
+  },
   container: {
     display: "flex",
     flexDirection: "column" as const,
     width: "100%",
+    position: "relative" as const,
+    zIndex: 50,
   },
   header: {
     display: "flex",
@@ -53,9 +62,15 @@ const styles = {
 
 type Props = {
   onNotificationClick?: (n: Notification) => void;
+  showBackdrop?: boolean;
+  onBackdropClick?: () => void;
 };
 
-export const NotificationList = ({ onNotificationClick }: Props) => {
+export const NotificationList = ({
+  onNotificationClick,
+  showBackdrop = false,
+  onBackdropClick,
+}: Props) => {
   const { notifications, loading, error, onMarkAllAsRead, onMarkAsRead } =
     useNotifications();
 
@@ -74,38 +89,43 @@ export const NotificationList = ({ onNotificationClick }: Props) => {
   const unread = notifications.filter((n) => !n.read);
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <span style={styles.title}>Notifications</span>
-        {unread.length > 0 && (
-          <button
-            style={styles.markAllButton}
-            onClick={onMarkAllAsRead}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#1d4ed8";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#2563eb";
-            }}
-          >
-            Mark all ({unread.length})
-          </button>
-        )}
+    <>
+      {showBackdrop && (
+        <div style={styles.backdrop} onClick={onBackdropClick} />
+      )}
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <span style={styles.title}>Notifications</span>
+          {unread.length > 0 && (
+            <button
+              style={styles.markAllButton}
+              onClick={onMarkAllAsRead}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#1d4ed8";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#2563eb";
+              }}
+            >
+              Mark all ({unread.length})
+            </button>
+          )}
+        </div>
+        <div style={styles.list}>
+          {notifications.length === 0 && (
+            <div style={styles.empty}>No notifications</div>
+          )}
+          {notifications.map((n) => (
+            <NotificationItem
+              key={n.id}
+              notification={n}
+              onClick={onNotificationClick ?? (() => {})}
+              onMarkAsRead={onMarkAsRead}
+            />
+          ))}
+        </div>
       </div>
-      <div style={styles.list}>
-        {notifications.length === 0 && (
-          <div style={styles.empty}>No notifications</div>
-        )}
-        {notifications.map((n) => (
-          <NotificationItem
-            key={n.id}
-            notification={n}
-            onClick={onNotificationClick ?? (() => {})}
-            onMarkAsRead={onMarkAsRead}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 
