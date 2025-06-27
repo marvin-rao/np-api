@@ -41,7 +41,7 @@ export const { useAddCustomer, useUpdateCustomer, useDeleteCustomer } =
     path: "customers",
   });
 
-export const useCustomers = (type?: CustomerType) => {
+export const useCustomers = (type?: CustomerTypeFilterEnum) => {
   const { projectId } = useProjectId();
 
   // Build query string with projectId and optional type
