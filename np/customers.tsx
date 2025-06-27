@@ -1,4 +1,6 @@
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
+import { useProjectId } from "./projects";
+import { useGet } from "../helper/ApiRequestsBase";
 import { Creator } from "./types";
 
 export enum CustomerTypeFilterEnum {
@@ -33,12 +35,24 @@ export type Customer = {
   province: string;
 };
 
-export const {
-  useCustomers,
-  useAddCustomer,
-  useUpdateCustomer,
-  useDeleteCustomer,
-} = generateEntityHooks<"customer", Customer>({
-  entityName: "customer",
-  path: "customers",
-});
+export const { useAddCustomer, useUpdateCustomer, useDeleteCustomer } =
+  generateEntityHooks<"customer", Customer>({
+    entityName: "customer",
+    path: "customers",
+  });
+
+export const useCustomers = (type?: CustomerType) => {
+  const { projectId } = useProjectId();
+
+  // Build query string with projectId and optional type
+  let queryString = `?projectId=${projectId}`;
+  if (type) {
+    queryString += `&type=${type}`;
+  }
+
+  return useGet<Customer>({
+    path: "customers",
+    options: { queryString },
+    deps: [projectId, type],
+  });
+};
