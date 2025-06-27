@@ -50,7 +50,7 @@ export const useCustomers = (type?: CustomerType) => {
     queryString += `&type=${type}`;
   }
 
-  return useGet<Customer>({
+  return useGet<Customer[]>({
     path: "customers",
     options: { queryString },
     deps: [projectId, type],
