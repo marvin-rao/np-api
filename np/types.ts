@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ProductSettings } from "./components/workspace/types";
+import { Customer } from "./customers";
 
 // Zod Schemas
 export const CreatorSchema = z.object({
@@ -185,6 +186,8 @@ export type JobPost = {
     industry?: string,
     applied?: boolean,
     questions?: FilteringQuestion[];
+    customerId?: string;
+    customer?: Customer;
 }
 
 export interface FilteringQuestion {
