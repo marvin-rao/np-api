@@ -12,6 +12,11 @@ export enum CustomerTypeFilterEnum {
 
 export type CustomerType = "Prospect" | "Lead" | "Full";
 
+export enum CustomerSaleType {
+  Recurring = "Recurring",
+  OnceOff = "Once Off",
+}
+
 export type Customer = {
   businessName: string;
   firstname: string;
@@ -30,7 +35,7 @@ export type Customer = {
   contactFirstName: string;
   contactLastName: string;
   entityType: "Individual" | "Business";
-  saleType: any;
+  saleType: CustomerSaleType.Recurring | CustomerSaleType.OnceOff;
   address?: any;
   province: string;
 };
