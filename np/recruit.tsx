@@ -196,8 +196,13 @@ export type ProfileSectionPayload =
       data: CareerProfile["references"];
     };
 
+type ApiResult = {
+  data: any;
+  message: string;
+};
+
 export const useUpdateCareerProfile = () => {
-  return usePatch<ProfileSectionPayload, { data: any; message: string }>({
+  return usePatch<ProfileSectionPayload, ApiResult>({
     path: "recruit/account_users/profile",
   });
 };
@@ -208,4 +213,19 @@ export const useAccountCareerProfile = () => {
     deps: [],
     options: {},
   });
+};
+
+// Settings
+
+export type RecruitSettings = {
+  operatingMode: "agency" | "inHouse";
+  updated?: number | undefined;
+};
+
+export const useRecruitSettings = () => {
+  return useProjectGetBase<RecruitSettings>({ path: "recruit/settings" });
+};
+
+export const useUpdateRecruitSettings = () => {
+  return usePatch<RecruitSettings, ApiResult>({ path: "recruit/settings" });
 };
