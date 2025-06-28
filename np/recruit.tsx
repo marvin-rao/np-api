@@ -219,6 +219,7 @@ export const useAccountCareerProfile = () => {
 
 export type RecruitSettings = {
   operatingMode: "agency" | "inHouse";
+  billingPlan?: "standard" | "enterprise";
   updated?: number | undefined;
 };
 
