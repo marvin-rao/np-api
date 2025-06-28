@@ -227,5 +227,8 @@ export const useRecruitSettings = () => {
 };
 
 export const useUpdateRecruitSettings = () => {
-  return usePatch<RecruitSettings, ApiResult>({ path: "recruit/settings" });
+  return useProjectRequest<RecruitSettings>({
+    path: "recruit/settings",
+    method: "PATCH",
+  });
 };
