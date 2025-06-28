@@ -125,7 +125,20 @@ export const NPMainActionBar = ({
               }
             }}
           >
-            {currentWorkspace?.name || "Select Workspace"}
+            <span
+              style={{
+                maxWidth: "40vw",
+                display: "inline-block",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                flexShrink: 1,
+                minWidth: 0,
+                verticalAlign: "middle",
+              }}
+            >
+              {currentWorkspace?.name || "Select Workspace"}
+            </span>
             <svg
               width="12"
               height="12"
