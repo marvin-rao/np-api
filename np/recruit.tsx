@@ -221,6 +221,11 @@ export type RecruitSettings = {
   operatingMode: "agency" | "inHouse";
   billingPlan: "standard" | "enterprise" | "trial" | "free";
   updated?: number | undefined;
+  permissions?: {
+    canCreateJobPosts?: {
+      projectUserId: string;
+    }[];
+  };
 };
 
 export const useRecruitSettings = () => {
