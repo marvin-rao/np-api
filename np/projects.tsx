@@ -78,6 +78,14 @@ export const useCreateWorkspace = () => {
   });
 };
 
+export const useWorkspace = ({ projectId }: { projectId: string }) => {
+  return useRequest<Workspace, ServerResult<Workspace>>({
+    path: `project/${projectId}/meta`,
+    method: "post",
+    options: {},
+  });
+};
+
 export const useProjectRequest = <ObjectType,>({
   method,
   path,
