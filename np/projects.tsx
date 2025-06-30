@@ -62,11 +62,9 @@ export const useProjectId = () => {
 };
 
 export const useProjects = () => {
-  const token = getBToken();
   return useGet<Workspace[]>({
     path: "projects/list",
     options: {},
-    enabled: !!token,
   });
 };
 
