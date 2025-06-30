@@ -94,6 +94,9 @@ export type Workspace = {
     activePlanId: "free" | "business" | "enterprise",
     productSettings?: ProductSettings,
     sessionRights: AccessRights,
+    session?: {
+        projectUid: string
+    }
 }
 
 export type RefreshTokenResult = {
