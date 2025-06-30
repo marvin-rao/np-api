@@ -223,7 +223,7 @@ export type RecruitSettings = {
   updated?: number | undefined;
   permissions?: {
     canCreateJobPosts?: {
-      projectUserId: string;
+      projectUserId: boolean;
     }[];
   };
 };
