@@ -191,6 +191,11 @@ export type JobPost = {
     questions?: FilteringQuestion[];
     customerId?: string;
     customer?: Customer;
+    analytics: {
+        totalViews: number,
+        uniqueViews: number,
+        lastViewedAt: string,
+    }
 }
 
 export interface FilteringQuestion {
