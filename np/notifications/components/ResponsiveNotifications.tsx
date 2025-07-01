@@ -1,4 +1,3 @@
-import React from "react";
 import { Notification } from "../types";
 import { NotificationList } from "./NotificationList";
 import { NotificationsPage } from "./NotificationsPage";
