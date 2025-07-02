@@ -29,7 +29,7 @@ export const ResponsiveNotifications = ({
           position: "fixed",
           inset: 0,
           zIndex: 9999,
-          backgroundColor: "#f8fafc",
+          backgroundColor: "#ffffff",
           overflowY: "auto" as const,
         }}
       >

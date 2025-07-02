@@ -6,7 +6,7 @@ const styles = {
   page: {
     width: "100%",
     height: "100vh",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column" as const,
     overflowY: "auto" as const,
