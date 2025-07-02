@@ -30,6 +30,7 @@ export const ResponsiveNotifications = ({
           inset: 0,
           zIndex: 9999,
           backgroundColor: "#f8fafc",
+          overflowY: "auto" as const,
         }}
       >
         <NotificationsPage
