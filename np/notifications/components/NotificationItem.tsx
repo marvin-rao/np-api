@@ -5,9 +5,8 @@ const styles = {
     display: "flex",
     alignItems: "flex-start",
     padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #e5e7eb",
-    marginBottom: "8px",
+    borderRadius: 0,
+    borderBottom: "1px solid #e5e7eb",
     backgroundColor: "#ffffff",
     transition: "background-color 0.2s ease, box-shadow 0.2s ease",
     minWidth: 0, // Allows flex item to shrink
