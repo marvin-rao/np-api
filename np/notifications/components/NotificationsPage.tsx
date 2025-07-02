@@ -5,7 +5,7 @@ import { NotificationItem } from "./NotificationItem";
 const styles = {
   page: {
     width: "100%",
-    minHeight: "100vh",
+    height: "100vh",
     backgroundColor: "#f8fafc",
     display: "flex",
     flexDirection: "column" as const,
