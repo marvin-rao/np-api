@@ -61,8 +61,8 @@ const styles = {
   },
   content: {
     flex: 1,
-    maxWidth: "1200px",
-    margin: "0 auto",
+    maxWidth: "100%",
+    margin: 0,
     width: "100%",
     padding: "16px 16px 16px 0",
     overflowY: "auto" as const,
