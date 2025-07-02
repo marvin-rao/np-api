@@ -149,6 +149,14 @@ export const useAddPublicJobApplication = ({
   });
 };
 
+export const usePublicCompany = ({ projectId }: { projectId: string }) => {
+  return useGet<JobPost>({
+    path: `recruit_public/company/${projectId}`,
+    deps: [projectId],
+    options: {},
+  });
+};
+
 export const useAddJobApplication = ({ projectId }: { projectId: string }) => {
   return usePost({
     path: `recruit/job_applications`,
