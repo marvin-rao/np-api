@@ -64,7 +64,7 @@ const styles = {
     maxWidth: "1200px",
     margin: "0 auto",
     width: "100%",
-    padding: "16px",
+    padding: "16px 16px 16px 0",
     overflowY: "auto" as const,
   },
   loading: {

@@ -46,7 +46,6 @@ export const ResponsiveNotifications = ({
     );
   }
 
-  // Desktop: Modal view
   return (
     <div
       style={{
