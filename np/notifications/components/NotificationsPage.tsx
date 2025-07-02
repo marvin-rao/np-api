@@ -1,49 +1,53 @@
 import { Notification } from "../types";
 import { useNotifications } from "../hooks/useNotifications";
 import { NotificationItem } from "./NotificationItem";
+import React from "react";
 
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
+  // A full-screen, isolated container. This is the ONLY scrollable element.
   page: {
-    width: "100%",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
     height: "100vh",
     backgroundColor: "#ffffff",
-    display: "flex",
-    flexDirection: "column" as const,
-    overflowY: "auto" as const,
+    overflowY: "auto",
+    zIndex: 9999,
+    boxSizing: "border-box",
   },
+  // A sticky header that stays at the top during scroll.
   header: {
-    backgroundColor: "#ffffff",
-    padding: "16px",
-    borderBottom: "1px solid #e5e7eb",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    position: "sticky" as const,
+    position: "sticky",
     top: 0,
-    zIndex: 10,
-  },
-  headerContent: {
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+    borderBottom: "1px solid #e5e7eb",
+    padding: "12px 16px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    maxWidth: "1200px",
-    margin: "0 auto",
-    width: "100%",
+    zIndex: 10,
   },
+  // Centered title and side buttons for a balanced look.
+  headerLeft: { flex: 1, display: "flex", justifyContent: "flex-start" },
+  headerCenter: { flex: 2, textAlign: "center" },
+  headerRight: { flex: 1, display: "flex", justifyContent: "flex-end" },
   backButton: {
-    backgroundColor: "transparent",
+    background: "transparent",
     border: "none",
     cursor: "pointer",
-    padding: "8px",
-    borderRadius: "4px",
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "6px",
     color: "#2563eb",
     fontWeight: 500,
-    fontSize: "14px",
-    transition: "background-color 0.2s ease",
+    fontSize: "16px",
+    padding: "8px",
   },
   title: {
-    fontSize: "20px",
+    fontSize: "18px",
     fontWeight: 600,
     color: "#111827",
     margin: 0,
@@ -59,61 +63,39 @@ const styles = {
     cursor: "pointer",
     transition: "background-color 0.2s ease",
   },
+  // The main content area that holds the list.
   content: {
-    flex: 1,
-    maxWidth: "100%",
-    margin: 0,
-    width: "100%",
-    padding: "16px 16px 16px 0",
-    overflowY: "auto" as const,
+    padding: "16px",
   },
-  loading: {
-    textAlign: "center" as const,
-    padding: "64px 16px",
-    fontSize: "16px",
+  // A wrapper for each notification to give it a clean, card-like appearance.
+  notificationCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+    marginBottom: "12px",
+    overflow: "hidden", // Important for clipping child borders
+  },
+  // Styles for loading, error, and empty states.
+  statusContainer: {
+    textAlign: "center",
+    padding: "80px 16px",
     color: "#6b7280",
   },
-  error: {
-    textAlign: "center" as const,
-    padding: "64px 16px",
-    color: "#dc2626",
-    fontSize: "16px",
-  },
-  empty: {
-    textAlign: "center" as const,
-    padding: "64px 16px",
-    color: "#6b7280",
-  },
-  emptyIcon: {
-    width: "64px",
-    height: "64px",
+  statusIcon: {
+    width: "56px",
+    height: "56px",
     margin: "0 auto 16px",
     opacity: 0.5,
   },
-  emptyTitle: {
+  statusTitle: {
     fontSize: "18px",
     fontWeight: 600,
     color: "#111827",
     marginBottom: "8px",
   },
-  emptyDescription: {
+  statusDescription: {
     fontSize: "14px",
     color: "#6b7280",
-    lineHeight: "1.5",
-  },
-  notificationsList: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "8px",
-  },
-  mobileNotificationItem: {
-    border: "none",
-    borderRadius: "12px",
-    marginBottom: "12px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#ffffff",
-    overflow: "hidden",
-    width: "100%",
   },
 };
 
@@ -131,72 +113,78 @@ export const NotificationsPage = ({
   const { notifications, loading, error, onMarkAllAsRead, onMarkAsRead } =
     useNotifications();
 
-  if (loading) {
-    return (
-      <div style={styles.page}>
-        <div style={styles.header}>
-          <div style={styles.headerContent}>
-            {onBack && (
-              <button style={styles.backButton} onClick={onBack}>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z" />
-                </svg>
-                {backButtonText}
-              </button>
-            )}
-            <h1 style={styles.title}>Notifications</h1>
-            <div style={{ width: "80px" }} />{" "}
-            {/* Spacer for center alignment */}
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div style={styles.statusContainer}>
+          <div style={styles.statusTitle}>Loading...</div>
+          <div style={styles.statusDescription}>
+            Fetching your notifications.
           </div>
         </div>
-        <div style={styles.loading}>Loading notifications...</div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (error) {
-    return (
-      <div style={styles.page}>
-        <div style={styles.header}>
-          <div style={styles.headerContent}>
-            {onBack && (
-              <button style={styles.backButton} onClick={onBack}>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z" />
-                </svg>
-                {backButtonText}
-              </button>
-            )}
-            <h1 style={styles.title}>Notifications</h1>
-            <div style={{ width: "80px" }} />
+    if (error) {
+      return (
+        <div style={styles.statusContainer}>
+          <div style={{ ...styles.statusTitle, color: "#dc2626" }}>
+            Loading Failed
+          </div>
+          <div style={styles.statusDescription}>
+            We couldn't retrieve your notifications. Please try again.
           </div>
         </div>
-        <div style={styles.error}>Failed to load notifications</div>
+      );
+    }
+
+    if (notifications.length === 0) {
+      return (
+        <div style={styles.statusContainer}>
+          <svg
+            style={styles.statusIcon}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <div style={styles.statusTitle}>No notifications yet</div>
+          <div style={styles.statusDescription}>
+            When you have notifications, they'll show up here.
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {notifications.map((n) => (
+          <div key={n.id} style={styles.notificationCard}>
+            <NotificationItem
+              notification={n}
+              onClick={onNotificationClick ?? (() => {})}
+              onMarkAsRead={onMarkAsRead}
+            />
+          </div>
+        ))}
       </div>
     );
-  }
-
-  const unread = notifications.filter((n) => !n.read);
+  };
 
   return (
     <div style={styles.page}>
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
+      <header style={styles.header}>
+        <div style={styles.headerLeft}>
           {onBack && (
             <button style={styles.backButton} onClick={onBack}>
               <svg
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -205,56 +193,25 @@ export const NotificationsPage = ({
               {backButtonText}
             </button>
           )}
+        </div>
+        <div style={styles.headerCenter}>
           <h1 style={styles.title}>Notifications</h1>
-          {unread.length > 0 && (
+        </div>
+        <div style={styles.headerRight}>
+          {unreadCount > 0 && (
             <button
               style={styles.markAllButton}
               onClick={onMarkAllAsRead}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#1d4ed8";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#2563eb";
-              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              Mark all ({unread.length})
+              Mark all ({unreadCount})
             </button>
           )}
         </div>
-      </div>
+      </header>
 
-      <div style={styles.content}>
-        {notifications.length === 0 ? (
-          <div style={styles.empty}>
-            <svg
-              style={styles.emptyIcon}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <div style={styles.emptyTitle}>No notifications yet</div>
-            <div style={styles.emptyDescription}>
-              When you have notifications, they'll appear here.
-            </div>
-          </div>
-        ) : (
-          <div style={styles.notificationsList}>
-            {notifications.map((n) => (
-              <div key={n.id} style={styles.mobileNotificationItem}>
-                <NotificationItem
-                  notification={n}
-                  onClick={onNotificationClick ?? (() => {})}
-                  onMarkAsRead={onMarkAsRead}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <main style={styles.content}>{renderContent()}</main>
     </div>
   );
 };
