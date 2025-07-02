@@ -9,6 +9,7 @@ const styles = {
     backgroundColor: "#f8fafc",
     display: "flex",
     flexDirection: "column" as const,
+    overflowY: "auto" as const,
   },
   header: {
     backgroundColor: "#ffffff",
@@ -64,6 +65,7 @@ const styles = {
     margin: "0 auto",
     width: "100%",
     padding: "16px",
+    overflowY: "auto" as const,
   },
   loading: {
     textAlign: "center" as const,
@@ -110,6 +112,7 @@ const styles = {
     marginBottom: "12px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     backgroundColor: "#ffffff",
+    overflow: "hidden",
   },
 };
 
