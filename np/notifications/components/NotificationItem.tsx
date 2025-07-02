@@ -4,7 +4,7 @@ const styles = {
   card: {
     display: "flex",
     alignItems: "flex-start",
-    padding: "12px",
+    padding: "12px 12px 12px 0",
     borderRadius: 0,
     borderBottom: "1px solid #e5e7eb",
     backgroundColor: "#ffffff",
