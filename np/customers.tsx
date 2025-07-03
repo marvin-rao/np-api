@@ -1,6 +1,6 @@
+import { useGet } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectId } from "./projects";
-import { useGet } from "../helper/ApiRequestsBase";
 import { Creator } from "./types";
 
 export enum CustomerTypeFilterEnum {
@@ -45,6 +45,16 @@ export const { useAddCustomer, useUpdateCustomer, useDeleteCustomer } =
     entityName: "customer",
     path: "customers",
   });
+
+export const {
+  useAddContact,
+  useUpdateContact,
+  useDeleteContact,
+  useContacts,
+} = generateEntityHooks<"contact", Customer>({
+  entityName: "contact",
+  path: "contacts",
+});
 
 export const useCustomers = (type?: CustomerTypeFilterEnum) => {
   const { projectId } = useProjectId();
