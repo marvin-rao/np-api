@@ -196,7 +196,8 @@ export type JobPost = {
         uniqueViews: number,
         totalShared?: number,
         lastViewedAt: string,
-    }
+    },
+    numberOfPositions?: number;
 }
 
 export interface FilteringQuestion {
