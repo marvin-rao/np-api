@@ -194,6 +194,7 @@ export type JobPost = {
     analytics: {
         totalViews: number,
         uniqueViews: number,
+        totalShared?: number,
         lastViewedAt: string,
     }
 }
