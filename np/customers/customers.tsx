@@ -1,7 +1,7 @@
 import { useGet } from "../../helper/ApiRequestsBase";
-import { Contact, Customer, CustomerTypeFilterEnum } from "./types";
 import { generateEntityHooks } from "../hooks/generateEntityHooks";
 import { useProjectId } from "../projects";
+import { Contact, Customer, CustomerTypeFilterEnum } from "./types";
 
 export const { useAddCustomer, useUpdateCustomer, useDeleteCustomer } =
   generateEntityHooks<"customer", Customer>({

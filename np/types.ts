@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ProductSettings } from "./components/workspace/types";
-import { Customer } from "./customers/customers";
+import { Customer } from "./customers";
 
 // Zod Schemas
 export const CreatorSchema = z.object({
