@@ -1,7 +1,7 @@
 import { useGet, usePatch, usePost } from "../helper/ApiRequestsBase";
 import { CareerProfile } from "./career_types";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { useProjectGetBase, useProjectRequest } from "./projects";
+import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import {
   JobApplication,
   JobPost,
@@ -74,15 +74,21 @@ export const useDeleteSkillCategory = () => {
   return useProjectRequest<ObjectId>({ path: c_path, method: "delete" });
 };
 
-export const {
-  useJobPosts,
-  useDeleteJobPost,
-  useUpdateJobPost,
-  useAddJobPost,
-} = generateEntityHooks<"jobPost", JobPost>({
-  entityName: "jobPost",
-  path: "recruit/job_posts",
-});
+export const { useDeleteJobPost, useUpdateJobPost, useAddJobPost } =
+  generateEntityHooks<"jobPost", JobPost>({
+    entityName: "jobPost",
+    path: "recruit/job_posts",
+  });
+
+export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
+  const { projectId } = useProjectId();
+  return useGet<JobPost[]>({
+    path: `recruit/job_posts`,
+    options: {
+      queryString: "?projectId=" + projectId + "&folder=" + folder,
+    },
+  });
+};
 
 export const useGenerateAIPostDetails = () => {
   return useProjectRequest<{ jobTitle: string }>({
