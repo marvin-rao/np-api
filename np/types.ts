@@ -208,6 +208,14 @@ export interface FilteringQuestion {
     required: boolean;
 }
 
+export type ApplicationFile = {
+    id: string;
+    name: string;
+    url: string;
+    type: string;
+    size: number;
+}
+
 export type JobApplication = {
     id: string;
     jobId: string;
@@ -234,13 +242,9 @@ export type JobApplication = {
     skills: RecruitSkill[],
     jobTitle?: string;
     applicantAvatar?: Image,
-    files?: {
-        id: string;
-        name: string;
-        url: string;
-        type: string;
-        size: number;
-    }[];
+    files?: ApplicationFile[];
+    resumeFile?: ApplicationFile;
+    coverLetterFile?: ApplicationFile;
     jobPost?: JobPost,
     questionResponses?: Record<string, string>;
 }
