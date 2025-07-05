@@ -87,6 +87,7 @@ export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
     options: {
       queryString: "?projectId=" + projectId + "&folder=" + folder,
     },
+    deps: [projectId, folder],
   });
 };
 
