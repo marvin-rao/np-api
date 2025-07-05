@@ -22,6 +22,7 @@ export * from "./np/notifications/types";
 export * from "./np/projects";
 export * from "./np/recruit";
 export * from "./np/useFileUpload";
+export * from "./np/messages";
 
 export { NewPaperProvider, NPMainActionBar, WorkspaceSelector };
 
