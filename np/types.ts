@@ -299,6 +299,13 @@ export type ProjectCompany = {
     website?: string; // URL format
     description?: string;
     size?: string;
+    brand?: {
+        themeColors?: {
+            primary: string;
+            secondary: string;
+            accent: string;
+        };
+    };
 }
 
 export type ApiValidatorResult = {
