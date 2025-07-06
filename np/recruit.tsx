@@ -6,6 +6,7 @@ import {
   JobApplication,
   JobPost,
   ObjectId,
+  ProjectCompany,
   RecruitProfile,
   RecruitSkill,
   SkillCategory,
@@ -157,7 +158,7 @@ export const useAddPublicJobApplication = ({
 };
 
 export const usePublicCompany = ({ projectId }: { projectId: string }) => {
-  return useGet<JobPost>({
+  return useGet<ProjectCompany>({
     path: `recruit_public/company/${projectId}`,
     deps: [projectId],
     options: {},
