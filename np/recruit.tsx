@@ -241,6 +241,13 @@ export type RecruitSettings = {
       projectUserId: string;
     }[];
   };
+  brand?: {
+    theme?: {
+      primary: string;
+      secondary: string;
+      accent: string;
+    };
+  };
 };
 
 export const useRecruitSettings = () => {
