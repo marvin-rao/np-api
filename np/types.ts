@@ -306,6 +306,10 @@ export type ProjectCompany = {
             accent: string;
         };
     };
+    contactDetails?: {
+        email?: string;
+        phoneNumber?: string;
+    }
 }
 
 export type ApiValidatorResult = {
