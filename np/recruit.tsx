@@ -231,6 +231,18 @@ export const useAccountCareerProfile = () => {
   });
 };
 
+export const useRecruitSearchResults = (props: {
+  query: string;
+  type: "user" | "job_post" | "company";
+}) => {
+  const { query, type } = props;
+  return useGet<CareerProfile>({
+    path: `recruit/search/${type}/${query}`,
+    deps: [query, type],
+    options: {},
+  });
+};
+
 // Settings
 
 export type RecruitSettings = {
