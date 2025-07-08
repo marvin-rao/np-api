@@ -231,7 +231,7 @@ export const useAccountCareerProfile = () => {
   });
 };
 
-type SearchResult =
+export type SearchResult =
   | {
       type: "user";
       objectId: string;
