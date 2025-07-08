@@ -231,12 +231,29 @@ export const useAccountCareerProfile = () => {
   });
 };
 
+type SearchResult =
+  | {
+      type: "user";
+      objectId: string;
+      objectData: CareerProfile;
+    }
+  | {
+      type: "job_post";
+      objectId: string;
+      objectData: JobPost;
+    }
+  | {
+      type: "company";
+      objectId: string;
+      objectData: ProjectCompany;
+    };
+
 export const useRecruitSearchResults = (props: {
   query: string;
   type: "user" | "job_post" | "company";
 }) => {
   const { query, type } = props;
-  return useGet<CareerProfile>({
+  return useGet<SearchResult[]>({
     path: `recruit/search/${type}/${query}`,
     deps: [query, type],
     options: {},
