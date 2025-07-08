@@ -195,6 +195,7 @@ export type JobPost = {
         totalViews: number,
         uniqueViews: number,
         totalShared?: number,
+        numberOfApplications?: number,
         lastViewedAt: string,
     },
     numberOfPositions?: number;
