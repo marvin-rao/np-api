@@ -234,7 +234,7 @@ export const useAccountCareerProfile = () => {
 export const usePublicCareerProfile = ({ userId }: { userId: string }) => {
   return useGet<CareerProfile>({
     path: "recruit/account_users/public/profile/" + userId,
-    deps: [],
+    deps: [userId],
     options: {},
   });
 };
