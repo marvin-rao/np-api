@@ -258,7 +258,7 @@ export type SearchResult =
 
 export const useRecruitSearchResults = (props: {
   query: string;
-  type: "user" | "job_post" | "company";
+  type: "user" | "job_post" | "company" | "all";
 }) => {
   const { query, type } = props;
   return useGet<SearchResult[]>({
