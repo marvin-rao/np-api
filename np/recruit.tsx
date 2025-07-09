@@ -231,6 +231,14 @@ export const useAccountCareerProfile = () => {
   });
 };
 
+export const usePublicCareerProfile = ({ userId }: { userId: string }) => {
+  return useGet<CareerProfile>({
+    path: "recruit/account_users/public/profile/" + userId,
+    deps: [],
+    options: {},
+  });
+};
+
 export type SearchResult =
   | {
       type: "user";
