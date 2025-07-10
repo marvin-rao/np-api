@@ -11,7 +11,7 @@ export const openLogin = ({ loginPageUrl }: { loginPageUrl: string }) => {
   const left = window.screenX + (window.innerWidth - width) / 2;
   const top = window.screenY + (window.innerHeight - height) / 2;
 
-  const redirectUrl = window.location.origin;
+  const redirectUrl = window.location.href;
 
   const loginUrl = `${loginPageUrl}?redirectUrl=${encodeURIComponent(
     redirectUrl
