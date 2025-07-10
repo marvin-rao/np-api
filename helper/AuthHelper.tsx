@@ -39,6 +39,7 @@ export const LoginButton = ({ Component }: AuthButtonProps) => {
 
     // Capture current path before login
     const currentPath = window.location.pathname + window.location.search;
+    console.log("makeReturnUrl", currentPath);
     sessionStorage.setItem(AUTH_RETURN_PATH_KEY, currentPath);
 
     openLogin({ loginPageUrl });

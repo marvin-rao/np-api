@@ -59,10 +59,14 @@ export const AuthProvider = (props: AuthProviderProps) => {
         const storedPath = sessionStorage.getItem(AUTH_RETURN_PATH_KEY);
         let cleanUrl = currentUrl.toString();
 
+        console.log("ReturnUrl", storedPath);
+
         if (storedPath) {
           const baseUrl = currentUrl.origin;
           cleanUrl = baseUrl + storedPath;
-          sessionStorage.removeItem(AUTH_RETURN_PATH_KEY); // Clean up
+          sessionStorage.removeItem(AUTH_RETURN_PATH_KEY);
+          window.location.href = cleanUrl;
+          return;
         }
 
         if (window.location.href !== cleanUrl) {
