@@ -1,6 +1,6 @@
 // @ts-ignore
 import React, { ReactNode } from "react";
-import { useAuthData } from "./provider";
+import { useAuthData, AUTH_RETURN_PATH_KEY } from "./provider";
 
 // Opening the Popup Window
 
@@ -36,6 +36,11 @@ export const LoginButton = ({ Component }: AuthButtonProps) => {
       alert("Dev:Provide loginPageUrl in Auth Context");
       return;
     }
+
+    // Capture current path before login
+    const currentPath = window.location.pathname + window.location.search;
+    sessionStorage.setItem(AUTH_RETURN_PATH_KEY, currentPath);
+
     openLogin({ loginPageUrl });
   };
 

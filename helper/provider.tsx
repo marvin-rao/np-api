@@ -9,6 +9,10 @@ import {
   setRefreshToken,
 } from "./utils";
 
+const AUTH_RETURN_PATH_KEY = "np_auth_return_path";
+
+export { AUTH_RETURN_PATH_KEY };
+
 const AuthContext = createContext({
   loginPageUrl: "",
   apiBaseUrl: "",
@@ -50,7 +54,17 @@ export const AuthProvider = (props: AuthProviderProps) => {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete("bearer_token");
         currentUrl.searchParams.delete("refresh_token");
-        const cleanUrl = currentUrl.toString();
+
+        // Check if there's a stored return path and use it
+        const storedPath = sessionStorage.getItem(AUTH_RETURN_PATH_KEY);
+        let cleanUrl = currentUrl.toString();
+
+        if (storedPath) {
+          const baseUrl = currentUrl.origin;
+          cleanUrl = baseUrl + storedPath;
+          sessionStorage.removeItem(AUTH_RETURN_PATH_KEY); // Clean up
+        }
+
         if (window.location.href !== cleanUrl) {
           window.location.href = cleanUrl;
         }
