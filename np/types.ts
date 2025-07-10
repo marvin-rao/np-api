@@ -82,6 +82,7 @@ export type Note = {
 export type AccessRights = {
     objectId: "project";
     level: "admin" | "user";
+    accountId: string
 };
 
 export type Workspace = {
@@ -248,6 +249,7 @@ export type JobApplication = {
     coverLetterFile?: ApplicationFile;
     jobPost?: JobPost,
     questionResponses?: Record<string, string>;
+    sessionUid?: string;
 }
 
 export type EventGuest = {
