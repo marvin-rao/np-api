@@ -1,3 +1,4 @@
+import { ProjectUser } from "newpaper-api";
 import { z } from "zod";
 import { ProductSettings } from "./components/workspace/types";
 import { Customer } from "./customers";
@@ -97,6 +98,7 @@ export type Workspace = {
     session?: {
         projectUid: string
     }
+    projectUser?: ProjectUser
 }
 
 export type RefreshTokenResult = {
