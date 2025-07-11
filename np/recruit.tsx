@@ -119,7 +119,7 @@ export const {
 });
 
 export const useJobApplication = (id: string) => {
-  return useProjectGetBase<JobPost>({
+  return useProjectGetBase<JobApplication>({
     path: `recruit/job_applications/get_one/${id}`,
   });
 };
