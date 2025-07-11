@@ -11,6 +11,8 @@ export interface ProjectUser {
   lastname: string;
   avatar?: Avatar;
   id: string;
+  accountId?: string;
+  role?: "admin" | "user";
 }
 
 export const useUsers = () => {
