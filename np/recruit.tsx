@@ -107,6 +107,8 @@ export const { useJobBoardPosts } = generateEntityHooks<
   path: "recruit/job_board/posts",
 });
 
+// Applications
+
 export const {
   useDeleteJobApplication,
   useJobApplications,
@@ -115,6 +117,14 @@ export const {
   entityName: "jobApplication",
   path: "recruit/job_applications",
 });
+
+export const useJobApplication = (id: string) => {
+  return useProjectGetBase<JobPost>({
+    path: `recruit/job_applications/get_one/${id}`,
+  });
+};
+
+// End Application
 
 export const useJobPost = (id: string) => {
   return useProjectGetBase<JobPost>({
