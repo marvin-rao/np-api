@@ -82,7 +82,6 @@ export type Note = {
 export type AccessRights = {
     objectId: "project";
     level: "admin" | "user";
-    accountId: string
 };
 
 export type Workspace = {
