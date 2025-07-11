@@ -94,11 +94,12 @@ export type Workspace = {
     lastActive: string,
     activePlanId: "free" | "business" | "enterprise",
     productSettings?: ProductSettings,
-    sessionRights: AccessRights,
+    sessionRights: AccessRights & {
+        projectUser?: ProjectUser
+    },
     session?: {
         projectUid: string
     }
-    projectUser?: ProjectUser
 }
 
 export type RefreshTokenResult = {
