@@ -25,34 +25,3 @@ export const useAccountProfile = () => {
     options: {},
   });
 };
-
-// export const useRefreshToken = () => {
-//   const apiBaseUrl = "https://newpaper.app/api/";
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [error, setError] = useState<Error | null>(null);
-
-//   const submit = async (
-//     { refresh_token }: { refresh_token: string },
-//     onSuccess?: (data: SuccessResult) => void
-//   ): Promise<SuccessResult | undefined> => {
-//     if (!apiBaseUrl) {
-//       alert("Dev:Provide apiBaseUrl in Auth Context");
-//       return;
-//     }
-
-//     return apiRequest<{ refresh_token: string }, SuccessResult>({
-//       url: "https://newpaper.app/api/account/refresh_token",
-//       onSuccess: (data) => onSuccess?.(data),
-//       body: { refresh_token },
-//       onError: setError,
-//       onLoadingChange: setLoading,
-//       method: "post",
-//       headers: {
-//         Authorization: `Bearer ${getBToken()}`,
-//         "Content-Type": "application/json",
-//       },
-//     });
-//   };
-
-//   return { submit, error, loading };
-// };
