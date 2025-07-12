@@ -5,6 +5,8 @@ import { WorkspaceSelector } from "../np/components/workspace/WorkspaceSelector"
 import { useAuthSession } from "../helper/provider";
 import { LoginButton } from "../helper/AuthHelper";
 import "./AppContent.css";
+import FileAppExample from "./components/FileAppExample";
+import ProjectFilesList from "./components/ProjectFilesList";
 // Import your components from the np directory
 // Example: import { YourComponent } from '@np/components/YourComponent';
 
@@ -59,6 +61,8 @@ export function AppContent() {
             Your components will appear here for testing and development
           </p>
           {/* Add your components here for testing */}
+          <FileAppExample />
+          <ProjectFilesList />
           {/* Example: <YourComponent /> */}
         </div>
       </div>
