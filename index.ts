@@ -12,6 +12,23 @@ export * from "./np/career_types";
 export * from "./np/customers";
 export * from "./np/developer";
 export * from "./np/filesapp";
+import {
+  useFileAppFiles as useWebFileAppFiles,
+  useAddFilesAppFile as useWebAddFilesAppFile,
+  useUpdateFilesAppFile as useWebUpdateFilesAppFile,
+  useDeleteFilesAppFile as useWebDeleteFilesAppFile,
+  useWebFileUpload,
+  useWebNativeFileUpload,
+} from "./np/webFilesApp";
+
+export {
+  useWebFileAppFiles,
+  useWebAddFilesAppFile,
+  useWebUpdateFilesAppFile,
+  useWebDeleteFilesAppFile,
+  useWebFileUpload,
+  useWebNativeFileUpload,
+};
 export { useIsMobile, useViewport } from "./np/hooks/useResponsive";
 export * from "./np/notes";
 export { NotificationItem, NotificationList } from "./np/notifications/components/NotificationList";
