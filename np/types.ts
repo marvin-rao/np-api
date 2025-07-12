@@ -1,4 +1,4 @@
-import { ProjectUser } from "newpaper-api";
+import { ProjectUser } from "../api";
 import { z } from "zod";
 import { ProductSettings } from "./components/workspace/types";
 import { Customer } from "./customers";
