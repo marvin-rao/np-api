@@ -283,6 +283,7 @@ export const useRecruitSearchResults = (props: {
 export type RecruitSettings = {
   operatingMode: "agency" | "inHouse";
   billingPlan: "standard" | "enterprise" | "trial" | "free";
+  trialStartDate?: string;
   updated?: number | undefined;
   permissions?: {
     canCreateJobPosts?: {
