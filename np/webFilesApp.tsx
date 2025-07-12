@@ -271,13 +271,14 @@ export const useDeleteFilesAppFile = (projectId?: string) => {
 
       setLoading(true);
 
-      const deletePath = `files_app?id=${data.id}`;
+      const deletePath = `files_app`;
+      const bodyWithProj = { id: data.id, projectId };
       apiRequest<ResultData>(
         "delete",
         deletePath,
         apiBaseUrl,
-        undefined,
-        projectId
+        bodyWithProj,
+        projectId ?? undefined
       )
         .then((result) => {
           setLoading(false);
