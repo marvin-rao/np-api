@@ -229,13 +229,6 @@ const validateAppFile = (file: AppFile): ApiValidatorResult => {
   return { passed: true, message: "" };
 };
 
-const validateFileId = (data: { id: string }): ApiValidatorResult => {
-  if (!data?.id) {
-    return { passed: false, message: "File ID is required" };
-  }
-  return { passed: true, message: "" };
-};
-
 export const useFileAppFiles = (projectId?: string) => {
   return useBaseQuery<AppFile[]>("files_app", projectId);
 };
@@ -259,12 +252,48 @@ export const useUpdateFilesAppFile = (projectId?: string) => {
 };
 
 export const useDeleteFilesAppFile = (projectId?: string) => {
-  return useBaseMutation<{ id: string }>(
-    "files_app",
-    "delete",
-    validateFileId,
-    projectId
+  const { apiBaseUrl } = useAuthData();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const submit = useCallback(
+    <ResultData,>(
+      data: { id: string },
+      onComplete?: (message: string, data?: ResultData) => void
+    ) => {
+      setError("");
+
+      // basic validation
+      if (!data?.id) {
+        setError("File ID is required");
+        return;
+      }
+
+      setLoading(true);
+
+      const deletePath = `files_app?id=${data.id}`;
+      apiRequest<ResultData>(
+        "delete",
+        deletePath,
+        apiBaseUrl,
+        undefined,
+        projectId
+      )
+        .then((result) => {
+          setLoading(false);
+          if (onComplete) {
+            onComplete(result.message, result.data);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          setError(err.message || "Delete failed");
+        });
+    },
+    [apiBaseUrl, projectId]
   );
+
+  return { submit, loading, error, setError } as MutationResult<{ id: string }>;
 };
 
 export type DownloadKeys = { [key: string]: boolean };
