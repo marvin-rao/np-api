@@ -1,8 +1,3 @@
-// ============================================================================
-// STANDALONE DATABASE HOOKS FOR WEB FILES APP
-// ============================================================================
-// These hooks replicate the functionality from the common repo for database communication
-
 import { useState, useCallback, useEffect } from "react";
 import { useAuthData } from "../helper/provider";
 import { getBToken, isTokenExpired } from "../helper/utils";
@@ -58,10 +53,6 @@ export type QueryResult<T> = {
   isRefetchingByUser: boolean;
 };
 
-// ============================================================================
-// BASE API COMMUNICATION
-// ============================================================================
-
 // HTTP methods
 export type ApiVerb = "get" | "post" | "patch" | "delete";
 
@@ -115,11 +106,6 @@ const apiRequest = async <T,>(
   return response.json();
 };
 
-// ============================================================================
-// BASE HOOKS
-// ============================================================================
-
-// Base mutation hook
 const useBaseMutation = <T,>(
   path: string,
   method: ApiVerb,
@@ -250,10 +236,6 @@ const validateFileId = (data: { id: string }): ApiValidatorResult => {
   return { passed: true, message: "" };
 };
 
-// ============================================================================
-// FILE HOOKS (equivalent to useFileAppFiles, useAddFilesAppFile, etc.)
-// ============================================================================
-
 export const useFileAppFiles = (projectId?: string) => {
   return useBaseQuery<AppFile[]>("files_app", projectId);
 };
@@ -284,10 +266,6 @@ export const useDeleteFilesAppFile = (projectId?: string) => {
     projectId
   );
 };
-
-// ============================================================================
-// FILE UPLOAD HOOKS (web-specific implementations)
-// ============================================================================
 
 export type DownloadKeys = { [key: string]: boolean };
 
@@ -378,13 +356,9 @@ export const useWebFileUpload = () => {
     loading,
     uploadFile,
     uploadFileFromBlob,
-    performUpload: uploadFile, // Alias for compatibility
+    performUpload: uploadFile,
   };
 };
-
-// ============================================================================
-// WEB-SPECIFIC FILE UPLOAD HOOK (replaces useNativeFileUpload)
-// ============================================================================
 
 export const useWebNativeFileUpload = ({
   projectId,
@@ -432,43 +406,3 @@ export const useWebNativeFileUpload = ({
     uploadImageFromFile,
   };
 };
-
-// ============================================================================
-// USAGE EXAMPLE
-// ============================================================================
-
-/*
-// In your component:
-
-const MyFilesComponent = () => {
-  const { result: files, loading, refetchByUser } = useFileAppFiles();
-  const { submit: addFile, loading: addingFile } = useAddFilesAppFile();
-  const { uploadFileFromUri } = useWebNativeFileUpload({ projectId: 'your-project-id' });
-
-  const handleFileUpload = async (file: File) => {
-    const uploadId = Date.now().toString();
-    
-    try {
-      const uploadedFile = await uploadFileFromUri({
-        id: uploadId,
-        uri: URL.createObjectURL(file)
-      });
-      
-      addFile(uploadedFile, (message) => {
-        console.log('File added:', message);
-        refetchByUser();
-      });
-    } catch (error) {
-      console.error('Upload failed:', error);
-    }
-  };
-
-  return (
-    <div>
-      {loading ? 'Loading...' : files?.map(file => (
-        <div key={file.id}>{file.name}</div>
-      ))}
-    </div>
-  );
-};
-*/
