@@ -23,9 +23,11 @@ const FileAppExample = () => {
     loading: adding,
     error: addError,
   } = useAddFilesAppFile(projectId ?? undefined);
-  const { submit: deleteFile, loading: deleting } = useDeleteFilesAppFile(
-    projectId ?? undefined
-  );
+  const {
+    submit: deleteFile,
+    loading: deleting,
+    error: deleteError,
+  } = useDeleteFilesAppFile(projectId ?? undefined);
 
   const { uploadFileFromUri, loading: uploadKeys } = useWebNativeFileUpload({
     projectId: projectId ?? "",
@@ -84,6 +86,14 @@ const FileAppExample = () => {
       alert("Failed to save file meta: " + addError);
     }
   }, [addError]);
+
+  // surface server message
+  useEffect(() => {
+    if (deleteError) {
+      console.error("[deleteFile] Error:", deleteError);
+      alert("Delete failed: " + deleteError);
+    }
+  }, [deleteError]);
 
   if (!projectId) {
     return <p>Please select a workspace to load files.</p>;
