@@ -252,6 +252,9 @@ export type JobApplication = {
     jobPost?: JobPost,
     questionResponses?: Record<string, string>;
     sessionUid?: string;
+    user?: {
+        avatar?: Image;
+    }
 }
 
 export type EventGuest = {
