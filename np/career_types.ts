@@ -225,6 +225,9 @@ export const PersonalInfoSchema = z.object({
   linkedinUrl: z.string().max(500, { message: "LinkedIn URL is too long" }).optional(),
   portfolioUrl: z.string().max(500, { message: "Portfolio URL is too long" }).optional(),
   githubUrl: z.string().max(500, { message: "GitHub URL is too long" }).optional(),
+  avatar: z.object({
+    original: z.string().url({ message: "Avatar URL must be a valid URL" }).optional(),
+  }).optional(),
 });
 
 export type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
