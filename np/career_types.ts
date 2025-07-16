@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiValidatorResult, processValidation } from './types';
+import { ApiValidatorResult, Creator, processValidation, RecruitSkill } from './types';
 
 // Experience Schema
 export const ExperienceSchema = z.object({
@@ -268,4 +268,11 @@ export type TalentUser = {
   name: string;
   email: string;
   careerProfile?: CareerProfile;
+  phone?: string;
+  created?: number;
+  updated?: number;
+  creator: Creator;
+  notes?: string;
+  isManualTalent?: boolean;
+  skills?: RecruitSkill[]; // Optional skills array
 };
