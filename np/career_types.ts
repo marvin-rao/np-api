@@ -267,4 +267,5 @@ export type TalentUser = {
   sessionUid: string;
   name: string;
   email: string;
+  careerProfile?: CareerProfile;
 };
