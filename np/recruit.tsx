@@ -118,12 +118,15 @@ export const {
   path: "recruit/job_applications",
 });
 
-export const { useTalentUsers } = generateEntityHooks<"talentUser", TalentUser>(
-  {
-    entityName: "talentUser",
-    path: "recruit/talent/users",
-  }
-);
+export const {
+  useTalentUsers,
+  useAddTalentUser,
+  useUpdateTalentUser,
+  useDeleteTalentUser,
+} = generateEntityHooks<"talentUser", TalentUser>({
+  entityName: "talentUser",
+  path: "recruit/talent/users",
+});
 
 export const useJobApplication = (id: string) => {
   return useProjectGetBase<JobApplication>({
