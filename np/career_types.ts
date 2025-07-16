@@ -273,6 +273,7 @@ export type TalentUser = {
   updated?: number;
   creator: Creator;
   notes?: string;
+  location?: string;
   isManualTalent?: boolean;
   skills?: RecruitSkill[]; // Optional skills array
 };
