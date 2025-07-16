@@ -263,3 +263,11 @@ export const validateCareerProfile = (
     ProfileDataSchema
   );
 };
+
+export type TalentUser = {
+  // Same as session user
+  id: string;
+  sessionUid: string;
+  name: string;
+  email: string;
+};
