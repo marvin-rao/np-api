@@ -271,7 +271,7 @@ export type TalentUser = {
   phone?: string;
   created?: number;
   updated?: number;
-  creator: Creator;
+  creator?: Creator;
   notes?: string;
   location?: string;
   isManualTalent?: boolean;
