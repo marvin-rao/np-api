@@ -276,4 +276,12 @@ export type TalentUser = {
   location?: string;
   isManualTalent?: boolean;
   skills?: RecruitSkill[]; // Optional skills array
+  resumeUrl?: string; // Optional resume URL
+  files?: {
+    id: string;
+    name: string;
+    url: string;
+    type: string;
+    size: number;
+  }[];
 };
