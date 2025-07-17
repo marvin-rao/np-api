@@ -81,6 +81,23 @@ export const { useDeleteJobPost, useUpdateJobPost, useAddJobPost } =
     path: "recruit/job_posts",
   });
 
+export type JobPostNotification = {
+  jobPostId: string;
+  recipients: {
+    sessionUid?: string;
+    email: string;
+    name: string;
+  };
+};
+
+export const { useAddJobPostNotification } = generateEntityHooks<
+  "jobPostNotification",
+  JobPost
+>({
+  entityName: "jobPostNotification",
+  path: "recruit/job_posts",
+});
+
 export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
   const { projectId } = useProjectId();
   return useGet<JobPost[]>({
