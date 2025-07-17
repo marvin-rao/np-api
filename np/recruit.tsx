@@ -87,7 +87,7 @@ export type JobPostNotification = {
     sessionUid?: string;
     email: string;
     name: string;
-  };
+  }[];
 };
 
 export const { useAddJobPostNotification } = generateEntityHooks<
