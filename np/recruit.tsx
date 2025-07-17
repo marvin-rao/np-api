@@ -83,6 +83,8 @@ export const { useDeleteJobPost, useUpdateJobPost, useAddJobPost } =
 
 export type JobPostNotification = {
   jobPostId: string;
+  // Id of the job post, yes.
+  id: string;
   recipients: {
     sessionUid?: string;
     email: string;
@@ -92,7 +94,7 @@ export type JobPostNotification = {
 
 export const { useAddJobPostNotification } = generateEntityHooks<
   "jobPostNotification",
-  JobPost
+  JobPostNotification
 >({
   entityName: "jobPostNotification",
   path: "recruit/job_posts",
