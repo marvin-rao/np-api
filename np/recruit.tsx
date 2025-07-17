@@ -97,7 +97,7 @@ export const { useAddJobPostNotification } = generateEntityHooks<
   JobPostNotification
 >({
   entityName: "jobPostNotification",
-  path: "recruit/job_posts",
+  path: "recruit/job_posts/notify",
 });
 
 export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
