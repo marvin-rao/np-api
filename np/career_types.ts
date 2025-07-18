@@ -256,9 +256,9 @@ export type CareerProfile = z.infer<typeof ProfileDataSchema>;
 
 
 export const validateCareerProfile = (
-  jobApplication: CareerProfile
+  data: CareerProfile
 ): ApiValidatorResult => {
-  return processValidation(jobApplication, ProfileDataSchema);
+  return processValidation(data, ProfileDataSchema);
 };
 
 export type TalentUser = {
