@@ -233,7 +233,7 @@ export type JobApplication = {
     email: string;
     resumeUrl: string;
     coverLetter: string;
-    status: "pending" | "reviewed" | "interviewed" | "accepted" | "rejected";
+    status: "pending" | "reviewed" | "interviewed" | "accepted" | "hired" | "rejected";
     appliedAt: number;
     tags: string[];
     creator: Creator; // This comes from ObjectCreatorSchema
