@@ -284,4 +284,5 @@ export type TalentUser = {
     type: string;
     size: number;
   }[];
+  coverLetterUrl: string; // Optional cover letter URL
 };
