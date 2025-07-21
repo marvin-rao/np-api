@@ -284,5 +284,20 @@ export type TalentUser = {
     type: string;
     size: number;
   }[];
-  coverLetterUrl: string; // Optional cover letter URL
+  coverLetterUrl: string;
+  jobNotificationsByEmail: {
+    [x: string]: {
+      created: number;
+      jobPostId: string;
+      creator?: {
+        sessionUid: string;
+        projectUid: string;
+        name?: string;
+        avatar?: {
+          original?: string;
+        };
+        created?: number;
+      };
+    };
+  }
 };
