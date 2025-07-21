@@ -89,6 +89,7 @@ export type JobPostNotification = {
     sessionUid?: string;
     email: string;
     name: string;
+    id: string;
   }[];
 };
 
