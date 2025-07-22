@@ -207,6 +207,7 @@ export type JobPost = {
         lastViewedAt: string,
     },
     numberOfPositions?: number;
+    deleted?: boolean;
 }
 
 export interface FilteringQuestion {
