@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiValidatorResult, Creator, processValidation, RecruitSkill } from './types';
+import { ApiValidatorResult, Creator, JobApplication, processValidation, RecruitSkill } from './types';
 
 // Experience Schema
 export const ExperienceSchema = z.object({
@@ -300,4 +300,10 @@ export type TalentUser = {
       };
     };
   }
+  applicationsList: {
+    jobId: string;
+    status: JobApplication["status"];
+    updated: number;
+    jobName?: string | undefined;
+  }[];
 };
