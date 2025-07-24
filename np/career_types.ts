@@ -300,7 +300,7 @@ export type TalentUser = {
       };
     };
   }
-  applicationsList: {
+  applicationsList?: {
     jobId: string;
     status: JobApplication["status"];
     updated: number;
