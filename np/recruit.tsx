@@ -119,6 +119,13 @@ export const useGenerateAIPostDetails = () => {
   });
 };
 
+export const useGenerateRebrandedCV = () => {
+  return useProjectRequest<{ applicationId: string }>({
+    path: "recruit/tools/rebrand_cv",
+    method: "post",
+  });
+};
+
 export const { useJobBoardPosts } = generateEntityHooks<
   "jobBoardPost",
   JobPost
