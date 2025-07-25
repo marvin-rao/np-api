@@ -224,6 +224,7 @@ export type ApplicationFile = {
     url: string;
     type: string;
     size: number;
+    creator?: Creator;
 }
 
 export type JobApplication = {
