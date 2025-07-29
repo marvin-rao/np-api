@@ -102,7 +102,7 @@ export const { useAddJobPostNotification } = generateEntityHooks<
 });
 
 export type ContactRecipient = {
-  email: string;
+  id: string;
 };
 
 export type ClientSubmission = {
