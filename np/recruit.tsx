@@ -101,6 +101,26 @@ export const { useAddJobPostNotification } = generateEntityHooks<
   path: "recruit/job_posts/notify",
 });
 
+export type ContactRecipient = {
+  email: string;
+};
+
+export type ClientSubmission = {
+  recipients: ContactRecipient[];
+  message: string;
+  subject: string;
+  attachments: { url: string }[];
+  id: string;
+};
+
+export const { useAddClientSubmission } = generateEntityHooks<
+  "clientSubmission",
+  ClientSubmission
+>({
+  entityName: "clientSubmission",
+  path: "/submissions/send_with_attachments",
+});
+
 export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
   const { projectId } = useProjectId();
   return useGet<JobPost[]>({
