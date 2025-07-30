@@ -111,6 +111,7 @@ export type ClientSubmission = {
   subject: string;
   attachments: { url: string }[];
   id: string;
+  jobPostId: string;
 };
 
 export const { useAddClientSubmission } = generateEntityHooks<
