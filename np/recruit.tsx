@@ -118,7 +118,7 @@ export const { useAddClientSubmission } = generateEntityHooks<
   ClientSubmission
 >({
   entityName: "clientSubmission",
-  path: "/submissions/send_with_attachments",
+  path: "recruit/submissions/send_with_attachments",
 });
 
 export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
