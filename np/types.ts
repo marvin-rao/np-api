@@ -261,7 +261,8 @@ export type JobApplication = {
     sessionUid?: string;
     user?: {
         avatar?: Image;
-    }
+    },
+    type: "manual" | "associated",
 }
 
 export type EventGuest = {
