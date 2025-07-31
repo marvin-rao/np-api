@@ -179,7 +179,7 @@ export const {
 
 export const { useAddTalentUserAssociation } = generateEntityHooks<
   "talentUserAssociation",
-  TalentUser
+  { id: string; talentUserId: string; jobPostIds: string[] }
 >({
   entityName: "talentUserAssociation",
   path: "recruit/talent/associations",
