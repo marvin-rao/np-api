@@ -306,4 +306,7 @@ export type TalentUser = {
     updated: number;
     jobName?: string | undefined;
   }[];
+  associatedJobs?: {
+    [jobId: string]: boolean;
+  }
 };
