@@ -3,6 +3,7 @@ import { CareerProfile, TalentUser } from "./career_types";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import {
+  Creator,
   JobApplication,
   JobPost,
   ObjectId,
@@ -113,6 +114,7 @@ export type ClientSubmission = {
   attachments: { url: string }[];
   id: string;
   jobPostId: string;
+  applicationId: string;
 };
 
 export const { useAddClientSubmission } = generateEntityHooks<
@@ -131,6 +133,30 @@ export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
       queryString: "?projectId=" + projectId + "&folder=" + folder,
     },
     deps: [projectId, folder],
+  });
+};
+
+export type ClientSubmissionItem = {
+  created: number;
+  contact: {
+    id: string;
+    name?: string;
+    email?: string;
+  };
+  client: {
+    id: string;
+    name?: string;
+  };
+  message: string;
+  attachmentCount: number;
+  creator: Creator;
+  applicationId: string;
+  jobPostId: string;
+};
+
+export const useClientSubmissions = () => {
+  return useProjectGetBase<ClientSubmissionItem[]>({
+    path: `recruit/submissions`,
   });
 };
 
