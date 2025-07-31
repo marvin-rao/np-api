@@ -177,6 +177,14 @@ export const {
   path: "recruit/talent/users",
 });
 
+export const { useAddTalentUserAssociation } = generateEntityHooks<
+  "talentUserAssociation",
+  TalentUser
+>({
+  entityName: "talentUserAssociation",
+  path: "recruit/talent/users",
+});
+
 export const useJobApplication = (id: string) => {
   return useProjectGetBase<JobApplication>({
     path: `recruit/job_applications/get_one/${id}`,
