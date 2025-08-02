@@ -155,7 +155,7 @@ export type ClientSubmissionItem = {
 };
 
 export const useClientSubmissions = () => {
-  return useProjectGetBase<ClientSubmissionItem[]>({
+  return useProjectGetBase<{ submissions: ClientSubmissionItem[] }>({
     path: `recruit/submissions`,
   });
 };
