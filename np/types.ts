@@ -239,6 +239,8 @@ export type JobApplicationHistory = {
         } | undefined;
     };
     action: "updated" | "updatedStatus";
+    previousValue?: string;
+    newValue?: string;
 }
 
 export type JobApplication = {
