@@ -227,6 +227,20 @@ export type ApplicationFile = {
     creator?: Creator;
 }
 
+export type JobApplicationHistory = {
+    created: number;
+    creator: {
+        sessionUid: string;
+        projectUid: string;
+        name?: string | undefined;
+        created?: number | undefined;
+        avatar?: {
+            original?: string | undefined;
+        } | undefined;
+    };
+    action: "updated" | "updatedStatus";
+}
+
 export type JobApplication = {
     id: string;
     jobId: string;
@@ -263,6 +277,7 @@ export type JobApplication = {
         avatar?: Image;
     },
     type: "manual" | "associated",
+    historyList?: JobApplicationHistory[],
 }
 
 export type EventGuest = {
