@@ -208,6 +208,7 @@ export type JobPost = {
     },
     numberOfPositions?: number;
     deleted?: boolean;
+    published?: boolean;
 }
 
 export interface FilteringQuestion {
