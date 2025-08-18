@@ -210,6 +210,7 @@ export type JobPost = {
     deleted?: boolean;
     published?: boolean;
     closingDate?: string;
+    saved?: boolean
 }
 
 export interface FilteringQuestion {

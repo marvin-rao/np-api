@@ -2,7 +2,7 @@ import { usePost } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { JobPost } from "./types";
 
-export const { useDeleteSavedJobPost, useAddSavedJobPost } =
+export const { useDeleteSavedJobPost, useAddSavedJobPost, useSavedJobPosts } =
   generateEntityHooks<"savedJobPost", JobPost>({
     entityName: "savedJobPost",
     path: "career/jobs/saves",
