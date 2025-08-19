@@ -1,6 +1,6 @@
 import { useDelete, usePost } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { JobPost } from "./types";
+import { JobPost, ServerResult } from "./types";
 
 export const { useSavedJobPosts } = generateEntityHooks<
   "savedJobPost",
@@ -10,12 +10,23 @@ export const { useSavedJobPosts } = generateEntityHooks<
   path: "career/jobs/saves",
 });
 
+export type SaveJobProps = {
+  jobPostId: string;
+  projectId: string;
+};
+
 export const useAddSavedJobPost = () => {
-  return usePost({ path: `career/jobs/saves`, options: {} });
+  return usePost<SaveJobProps, ServerResult>({
+    path: `career/jobs/saves`,
+    options: {},
+  });
 };
 
 export const useDeleteSavedJobPost = () => {
-  return useDelete({ path: `career/jobs/saves`, options: {} });
+  return useDelete<SaveJobProps, ServerResult>({
+    path: `career/jobs/saves`,
+    options: {},
+  });
 };
 
 export interface CareerAiChatMessage {
