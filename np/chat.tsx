@@ -23,6 +23,18 @@ export interface PersonalChatMessage {
   };
 }
 
+export type PersonalChatAppType = "career";
+
+export interface PersonalChatSession {
+  id: string;
+  title: string;
+  appType: PersonalChatAppType;
+  created: number;
+  updated: number;
+  messageCount: number;
+  lastMessage?: string;
+}
+
 export const useCreatePersonalChatSession = ({
   appType,
 }: {
@@ -37,12 +49,12 @@ export const useCreatePersonalChatSession = ({
   });
 };
 
-export const useGetPersonalChatSession = ({
+export const useGetPersonalChatSessions = ({
   appType,
 }: {
   appType: "career";
 }) => {
-  return useGet<ServerResult[]>({
+  return useGet<PersonalChatSession[]>({
     path: `chat/personal/${appType}/sessions`,
     options: {},
   });
