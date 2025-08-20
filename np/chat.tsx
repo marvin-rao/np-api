@@ -18,9 +18,6 @@ export interface PersonalChatMessage {
   created: number;
   sessionId: string;
   appType: "career";
-  metadata?: {
-    [key: string]: any; // For app-specific metadata like user profile context
-  };
 }
 
 export type PersonalChatAppType = "career";
