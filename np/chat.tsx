@@ -56,7 +56,7 @@ export const useGetPersonalChatSessionHistory = ({
   sessionId: string;
 }) => {
   return useGet<PersonalChatMessage[]>({
-    path: `chat/personal/${appType}/sessions/history/${sessionId}`,
+    path: `chat/personal/${appType}/sessions/${sessionId}/history`,
     options: {},
   });
 };
