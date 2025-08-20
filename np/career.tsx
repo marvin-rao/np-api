@@ -28,15 +28,3 @@ export const useDeleteSavedJobPost = () => {
     options: {},
   });
 };
-
-export interface CareerAiChatMessage {
-  role: "user" | "assistant";
-  content: string;
-}
-
-export const useCareerAiChat = () => {
-  return usePost<{ messages: CareerAiChatMessage[] }, any>({
-    path: `career/ai/chat`,
-    options: {},
-  });
-};
