@@ -22,6 +22,7 @@ export * from "./np/developer";
 export * from "./np/filesapp";
 
 export * from "./np/career";
+export * from "./np/chat";
 export { useIsMobile, useViewport } from "./np/hooks/useResponsive";
 export * from "./np/messages";
 export * from "./np/notes";
