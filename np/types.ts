@@ -230,7 +230,7 @@ export type ApplicationFile = {
     creator?: Creator;
 }
 
-export type JobApplicationHistory = {
+export type RecruitHistory = {
     created: number;
     creator: {
         sessionUid: string;
@@ -241,7 +241,7 @@ export type JobApplicationHistory = {
             original?: string | undefined;
         } | undefined;
     };
-    action: "updated" | "updatedStatus";
+    action: "updatedStatus" | "updated" | "created" | "applied_for_job" | "submitted_to_client" | "deleted";
     previousValue?: string;
     newValue?: string;
 }
@@ -282,7 +282,7 @@ export type JobApplication = {
         avatar?: Image;
     },
     type: "manual" | "associated",
-    historyList?: JobApplicationHistory[],
+    historyList?: RecruitHistory[],
 }
 
 export type EventGuest = {

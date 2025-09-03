@@ -8,6 +8,7 @@ import {
   JobPost,
   ObjectId,
   ProjectCompany,
+  RecruitHistory,
   RecruitProfile,
   RecruitSkill,
   SkillCategory,
@@ -81,6 +82,12 @@ export const { useDeleteJobPost, useUpdateJobPost, useAddJobPost } =
     entityName: "jobPost",
     path: "recruit/job_posts",
   });
+
+export const useRecruitJobHistory = ({ jobPostId }: { jobPostId: string }) => {
+  return useProjectGetBase<RecruitHistory[]>({
+    path: "recruit/job_posts/history/" + jobPostId,
+  });
+};
 
 export type JobPostNotification = {
   jobPostId: string;
