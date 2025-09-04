@@ -169,8 +169,8 @@ export type ProjectUsageSummary = {
       >;
     };
     recentUsage: AiUsage[];
-    storage: StorageResult;
   };
+  storage: StorageResult;
 };
 
 export const useProjectUsage = () => {
