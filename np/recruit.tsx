@@ -168,14 +168,14 @@ export const useClientSubmissions = () => {
 };
 
 export const useGenerateAIPostDetails = () => {
-  return useProjectRequest<{ pdfUrl: string }>({
+  return useProjectRequest<{ jobTitle: string }>({
     path: "recruit/job_posts/ai/generate_post_details",
     method: "post",
   });
 };
 
 export const useAnalyzePDF = () => {
-  return useProjectRequest<{ jobTitle: string }>({
+  return useProjectRequest<{ pdfUrl: string }>({
     path: "recruit/job_posts/ai/parse-cv",
     method: "post",
   });
