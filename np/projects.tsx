@@ -122,3 +122,9 @@ export const { useUpdateProjectCompany } = generateEntityHooks<
 export const useProjectCompany = () => {
   return useProjectGetBase<ProjectCompany>({ path: "project/company" });
 };
+
+export const useProjectUsage = () => {
+  return useProjectGetBase<ProjectCompany>({
+    path: "projects/usage",
+  });
+};
