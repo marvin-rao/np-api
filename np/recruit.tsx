@@ -174,6 +174,13 @@ export const useGenerateAIPostDetails = () => {
   });
 };
 
+export const useAnalyzePDF = () => {
+  return useProjectRequest<{ jobTitle: string }>({
+    path: "recruit/job_posts/ai/parse-cv",
+    method: "post",
+  });
+};
+
 export const useGenerateRebrandedCV = () => {
   return useProjectRequest<{ applicationId: string }>({
     path: "recruit/tools/rebrand_cv",
