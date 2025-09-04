@@ -142,6 +142,15 @@ export type AiUsage = {
   creator: Creator;
 } & AIModelUsageData;
 
+export type StorageResult = {
+  recruit: {
+    applications: {
+      totalSize: number;
+      fileCount: number;
+    };
+  };
+};
+
 export type ProjectUsageSummary = {
   ai: {
     summary: {
@@ -160,6 +169,7 @@ export type ProjectUsageSummary = {
       >;
     };
     recentUsage: AiUsage[];
+    storage: StorageResult;
   };
 };
 
