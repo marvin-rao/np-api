@@ -17,6 +17,7 @@ const AuthContext = createContext({
   loginPageUrl: "",
   apiBaseUrl: "",
   callerProduct: "",
+  onSessionExpired: () => {},
 });
 
 export const useAuthData = () => {
@@ -29,6 +30,7 @@ export type AuthProviderProps = {
   apiBaseUrl: string;
   ignoreWorkspace?: boolean;
   callerProduct: "recruit" | "career" | "filesapp";
+  onSessionExpired: () => void;
 };
 
 const queryClient = new QueryClient({
@@ -41,7 +43,13 @@ const queryClient = new QueryClient({
 });
 
 export const AuthProvider = (props: AuthProviderProps) => {
-  const { children, loginPageUrl, apiBaseUrl, callerProduct } = props;
+  const {
+    children,
+    loginPageUrl,
+    apiBaseUrl,
+    callerProduct,
+    onSessionExpired,
+  } = props;
 
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
@@ -78,7 +86,9 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={{ loginPageUrl, apiBaseUrl, callerProduct }}>
+      <AuthContext.Provider
+        value={{ loginPageUrl, apiBaseUrl, callerProduct, onSessionExpired }}
+      >
         {children}
       </AuthContext.Provider>
     </QueryClientProvider>
