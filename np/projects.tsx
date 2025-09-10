@@ -151,6 +151,27 @@ export type StorageResult = {
   };
 };
 
+export type EmailUsage = {
+  projectId: string;
+  usage: {
+    recipientEmail: string;
+    templateAlias: string;
+  };
+  created: number;
+  creator: Creator;
+  app: "Recruit" | "Leave" | "WorkspaceManager" | "Calendar";
+  service:
+    | "NotifyPreviousApplicantOfNewJobPost"
+    | "SubmitToClientEmail"
+    | "JobApplicationStatusUpdate"
+    | "JobApplicationReceivedEmail"
+    | "NewJobApplicationEmailToAdmin"
+    | "LeaveRequestEmail"
+    | "LeaveApprovedEmail"
+    | "WorkSpaceInvitationEmail"
+    | "CalendarEventInvitationEmail";
+};
+
 export type ProjectUsageSummary = {
   ai: {
     summary: {
@@ -171,6 +192,10 @@ export type ProjectUsageSummary = {
     recentUsage: AiUsage[];
   };
   storage: StorageResult;
+  email: {
+    totalEmailUsage: number;
+    recentUsage: EmailUsage[];
+  };
 };
 
 export const useProjectUsage = () => {
