@@ -73,8 +73,25 @@ const FileAppExample = () => {
   };
 
   const handleDelete = (fileId: string) => {
-    if (!projectId) return;
-    deleteFile({ id: fileId }, () => {
+    console.log("🚨 [DEMO] Delete button clicked", {
+      fileId,
+      projectId,
+      timestamp: new Date().toISOString(),
+    });
+
+    if (!projectId) {
+      console.error("🚨 [DEMO] No projectId available");
+      return;
+    }
+
+    console.log("🚨 [DEMO] Calling deleteFile hook");
+    deleteFile({ id: fileId }, (message, data) => {
+      console.log("🚨 [DEMO] Delete completed successfully", {
+        message,
+        data,
+        fileId,
+      });
+      console.log("🚨 [DEMO] Refetching files list");
       refetchByUser();
     });
   };
@@ -87,11 +104,11 @@ const FileAppExample = () => {
     }
   }, [addError]);
 
-  // surface server message
+  // Log and surface deleteError
   useEffect(() => {
     if (deleteError) {
-      console.error("[deleteFile] Error:", deleteError);
-      alert("Delete failed: " + deleteError);
+      console.error("🚨 [DEMO] Delete error:", deleteError);
+      alert("Failed to delete file: " + deleteError);
     }
   }, [deleteError]);
 

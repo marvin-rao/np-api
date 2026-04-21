@@ -72,11 +72,26 @@ const apiRequest = async <T,>(
   data?: any,
   projectId?: string
 ): Promise<{ data: T; message: string }> => {
+  console.log("🌐 [API_REQUEST] Starting request", {
+    method: method.toUpperCase(),
+    path,
+    apiBaseUrl,
+    data,
+    projectId,
+    timestamp: new Date().toISOString(),
+  });
+
   const url =
     joinUrl(apiBaseUrl, path) + (projectId ? `?projectId=${projectId}` : "");
 
   const token = getBToken();
   const hasValidToken = token && !isTokenExpired(token);
+
+  console.log("🔐 [API_REQUEST] Token info", {
+    hasToken: !!token,
+    hasValidToken,
+    tokenLength: token?.length,
+  });
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -94,16 +109,58 @@ const apiRequest = async <T,>(
 
   if (data && method !== "get") {
     options.body = JSON.stringify(data);
+    console.log("📦 [API_REQUEST] Request body", {
+      rawData: data,
+      stringifiedBody: JSON.stringify(data),
+    });
   }
 
-  const response = await fetch(url, options);
+  console.log("🔗 [API_REQUEST] Final request details", {
+    url,
+    method: options.method,
+    headers: { ...headers },
+    body: options.body,
+    credentials: options.credentials,
+  });
 
-  if (!response.ok) {
-    const errorData = await response.text();
-    throw new Error(errorData || `HTTP ${response.status}`);
+  try {
+    const response = await fetch(url, options);
+
+    console.log("📡 [API_REQUEST] Response received", {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      headers: Array.from(response.headers.entries()),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("❌ [API_REQUEST] Error response", {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+        url,
+      });
+      throw new Error(errorData || `HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("✅ [API_REQUEST] Success response", {
+      result,
+      url,
+    });
+    return result;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("💥 [API_REQUEST] Network or parsing error", {
+      error,
+      message: errorMessage,
+      stack: errorStack,
+      url,
+    });
+    throw error;
   }
-
-  return response.json();
 };
 
 const useBaseMutation = <T,>(
@@ -223,7 +280,8 @@ const validateAppFile = (file: AppFile): ApiValidatorResult => {
   if (!file.name) {
     return { passed: false, message: "File name is required" };
   }
-  if (!file.url && !file.id.startsWith("temp_")) {
+  const isFolder = file.type === "folder";
+  if (!isFolder && !file.url && !file.id.startsWith("temp_")) {
     return { passed: false, message: "File URL is required" };
   }
   return { passed: true, message: "" };
@@ -261,18 +319,36 @@ export const useDeleteFilesAppFile = (projectId?: string) => {
       data: { id: string },
       onComplete?: (message: string, data?: ResultData) => void
     ) => {
+      console.log("🗑️ [DELETE] Starting delete operation", {
+        fileId: data?.id,
+        projectId,
+        apiBaseUrl,
+        timestamp: new Date().toISOString(),
+      });
+
       setError("");
 
       // basic validation
       if (!data?.id) {
-        setError("File ID is required");
+        const errorMsg = "File ID is required";
+        console.error("🗑️ [DELETE] Validation failed:", errorMsg);
+        setError(errorMsg);
         return;
       }
 
       setLoading(true);
+      console.log("🗑️ [DELETE] Setting loading state to true");
 
       const deletePath = `files_app`;
       const bodyWithProj = { id: data.id, projectId };
+
+      console.log("🗑️ [DELETE] Request details:", {
+        method: "DELETE",
+        path: deletePath,
+        body: bodyWithProj,
+        fullUrl: `${apiBaseUrl}/${deletePath}`,
+      });
+
       apiRequest<ResultData>(
         "delete",
         deletePath,
@@ -281,12 +357,26 @@ export const useDeleteFilesAppFile = (projectId?: string) => {
         projectId ?? undefined
       )
         .then((result) => {
+          console.log("🗑️ [DELETE] Success response:", {
+            result,
+            message: result.message,
+            data: result.data,
+          });
           setLoading(false);
           if (onComplete) {
+            console.log("🗑️ [DELETE] Calling onComplete callback");
             onComplete(result.message, result.data);
           }
         })
         .catch((err) => {
+          console.error("🗑️ [DELETE] Error occurred:", {
+            error: err,
+            message: err.message,
+            status: err.status,
+            statusText: err.statusText,
+            response: err.response,
+            stack: err.stack,
+          });
           setLoading(false);
           setError(err.message || "Delete failed");
         });
