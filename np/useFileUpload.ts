@@ -18,6 +18,8 @@ export type UploadDef = {
 
 type DownloadKeys = { [key: string]: boolean };
 
+export type File_UploadPath = "files/upload" | "files_public/upload" | "files/upload_any_user";
+
 export const useFileUpload = () => {
   const [loading, setLoading] = useState<DownloadKeys>({});
   const { apiBaseUrl } = useAuthData();
@@ -26,7 +28,7 @@ export const useFileUpload = () => {
     id: string,
     file: Blob,
     onComplete: (result: T) => void,
-    url: string
+    url: File_UploadPath
   ) => {
     if (!file) {
       throw new Error("Provide blob");
@@ -75,7 +77,7 @@ export const useFileUpload = () => {
   const uploadImage = (
     id: string,
     file: File | Blob,
-    url: string
+    url: File_UploadPath
   ): Promise<{ image: Image; uploadId: string }> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, _reject) => {
@@ -93,7 +95,7 @@ export const useFileUpload = () => {
   const uploadAudio = (
     id: string,
     file: File | Blob,
-    url: string
+    url: File_UploadPath
   ): Promise<{ audio: SystemAudio; uploadId: string }> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, _reject) => {
@@ -110,7 +112,7 @@ export const useFileUpload = () => {
 
   const uploadImages = async (
     defs: Array<UploadDef>,
-    url: string
+    url: File_UploadPath
   ): Promise<{ uploadId: string; newId: string, image: Image }[]> => {
     const uploaded: { uploadId: string; newId: string; image: Image }[] = [];
 
@@ -139,7 +141,7 @@ export const useFileUpload = () => {
       id,
       file,
       callback,
-      `files/upload_any?projectId=${projectId}`
+      `files/upload_any?projectId=${projectId}` as File_UploadPath
     );
   };
 
@@ -154,7 +156,7 @@ export const useFileUpload = () => {
       id,
       file,
       callback,
-      `files_public/upload_any?projectId=${projectId}`
+      `files_public/upload_any?projectId=${projectId}` as File_UploadPath
     );
   };
 

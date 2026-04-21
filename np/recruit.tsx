@@ -1,12 +1,14 @@
 import { useGet, usePatch, usePost } from "../helper/ApiRequestsBase";
-import { CareerProfile } from "./career_types";
+import { CareerProfile, TalentUser } from "./career_types";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import {
+  Creator,
   JobApplication,
   JobPost,
   ObjectId,
   ProjectCompany,
+  RecruitHistory,
   RecruitProfile,
   RecruitSkill,
   SkillCategory,
@@ -81,6 +83,55 @@ export const { useDeleteJobPost, useUpdateJobPost, useAddJobPost } =
     path: "recruit/job_posts",
   });
 
+export const useRecruitJobHistory = ({ jobPostId }: { jobPostId: string }) => {
+  return useProjectGetBase<RecruitHistory[]>({
+    path: "recruit/job_posts/history/" + jobPostId,
+  });
+};
+
+export type JobPostNotification = {
+  jobPostId: string;
+  // Id of the job post, yes.
+  id: string;
+  recipients: {
+    sessionUid?: string;
+    email: string;
+    name: string;
+    id: string;
+  }[];
+};
+
+export const { useAddJobPostNotification } = generateEntityHooks<
+  "jobPostNotification",
+  JobPostNotification
+>({
+  entityName: "jobPostNotification",
+  path: "recruit/job_posts/notify",
+});
+
+export type ContactRecipient = {
+  id: string;
+  email: string;
+};
+
+export type ClientSubmission = {
+  recipients: ContactRecipient[];
+  message: string;
+  subject: string;
+  attachments: { url: string }[];
+  id: string;
+  jobPostId: string;
+  applicationId: string;
+};
+
+export const { useAddClientSubmission } = generateEntityHooks<
+  "clientSubmission",
+  ClientSubmission
+>({
+  entityName: "clientSubmission",
+  path: "recruit/submissions/send_with_attachments",
+});
+
 export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
   const { projectId } = useProjectId();
   return useGet<JobPost[]>({
@@ -92,9 +143,47 @@ export const useJobPosts = ({ folder }: { folder: "primary" | "trash" }) => {
   });
 };
 
+export type ClientSubmissionItem = {
+  created: number;
+  contact: {
+    id: string;
+    name?: string;
+    email?: string;
+  };
+  client: {
+    id: string;
+    name?: string;
+  };
+  message: string;
+  attachmentCount: number;
+  creator: Creator;
+  applicationId: string;
+  jobPostId: string;
+};
+
+export const useClientSubmissions = () => {
+  return useProjectGetBase<ClientSubmissionItem[]>({
+    path: `recruit/submissions`,
+  });
+};
+
 export const useGenerateAIPostDetails = () => {
   return useProjectRequest<{ jobTitle: string }>({
     path: "recruit/job_posts/ai/generate_post_details",
+    method: "post",
+  });
+};
+
+export const useAnalyzePDF = () => {
+  return useProjectRequest<{ pdfUrl: string }>({
+    path: "recruit/job_posts/ai/parse-cv",
+    method: "post",
+  });
+};
+
+export const useGenerateRebrandedCV = () => {
+  return useProjectRequest<{ applicationId: string }>({
+    path: "recruit/tools/rebrand_cv",
     method: "post",
   });
 };
@@ -116,6 +205,24 @@ export const {
 } = generateEntityHooks<"jobApplication", JobApplication>({
   entityName: "jobApplication",
   path: "recruit/job_applications",
+});
+
+export const {
+  useTalentUsers,
+  useAddTalentUser,
+  useUpdateTalentUser,
+  useDeleteTalentUser,
+} = generateEntityHooks<"talentUser", TalentUser>({
+  entityName: "talentUser",
+  path: "recruit/talent/users",
+});
+
+export const { useAddTalentUserAssociation } = generateEntityHooks<
+  "talentUserAssociation",
+  { id: string; talentUserId: string; jobPostIds: string[] }
+>({
+  entityName: "talentUserAssociation",
+  path: "recruit/talent/associations",
 });
 
 export const useJobApplication = (id: string) => {

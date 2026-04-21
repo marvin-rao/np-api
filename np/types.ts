@@ -1,7 +1,6 @@
-import { ProjectUser } from "../api";
 import { z } from "zod";
+import { ProjectUser } from "../api";
 import { ProductSettings } from "./components/workspace/types";
-import { Customer } from "./customers";
 
 // Zod Schemas
 export const CreatorSchema = z.object({
@@ -193,7 +192,13 @@ export type JobPost = {
     applied?: boolean,
     questions?: FilteringQuestion[];
     customerId?: string;
-    customer?: Customer;
+    customer?: {
+        id?: string,
+        name?: string,
+        website?: string,
+        logoUrl?: string,
+        industry?: string,
+    };
     analytics: {
         totalViews: number,
         uniqueViews: number,
@@ -202,6 +207,10 @@ export type JobPost = {
         lastViewedAt: string,
     },
     numberOfPositions?: number;
+    deleted?: boolean;
+    published?: boolean;
+    closingDate?: string;
+    saved?: boolean
 }
 
 export interface FilteringQuestion {
@@ -218,6 +227,23 @@ export type ApplicationFile = {
     url: string;
     type: string;
     size: number;
+    creator?: Creator;
+}
+
+export type RecruitHistory = {
+    created: number;
+    creator: {
+        sessionUid: string;
+        projectUid: string;
+        name?: string | undefined;
+        created?: number | undefined;
+        avatar?: {
+            original?: string | undefined;
+        } | undefined;
+    };
+    action: "updatedStatus" | "updated" | "created" | "applied_for_job" | "submitted_to_client" | "deleted";
+    previousValue?: string;
+    newValue?: string;
 }
 
 export type JobApplication = {
@@ -228,7 +254,7 @@ export type JobApplication = {
     email: string;
     resumeUrl: string;
     coverLetter: string;
-    status: "pending" | "reviewed" | "interviewed" | "accepted" | "rejected";
+    status: "pending" | "reviewed" | "interviewed" | "accepted" | "hired" | "rejected";
     appliedAt: number;
     tags: string[];
     creator: Creator; // This comes from ObjectCreatorSchema
@@ -252,6 +278,11 @@ export type JobApplication = {
     jobPost?: JobPost,
     questionResponses?: Record<string, string>;
     sessionUid?: string;
+    user?: {
+        avatar?: Image;
+    },
+    type: "manual" | "associated",
+    historyList?: RecruitHistory[],
 }
 
 export type EventGuest = {

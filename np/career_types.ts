@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiValidatorResult, processValidation } from './types';
+import { ApiValidatorResult, Creator, JobApplication, processValidation, RecruitSkill } from './types';
 
 // Experience Schema
 export const ExperienceSchema = z.object({
@@ -225,6 +225,9 @@ export const PersonalInfoSchema = z.object({
   linkedinUrl: z.string().max(500, { message: "LinkedIn URL is too long" }).optional(),
   portfolioUrl: z.string().max(500, { message: "Portfolio URL is too long" }).optional(),
   githubUrl: z.string().max(500, { message: "GitHub URL is too long" }).optional(),
+  avatar: z.object({
+    original: z.string().url({ message: "Avatar URL must be a valid URL" }).optional(),
+  }).optional(),
 });
 
 export type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
@@ -253,10 +256,57 @@ export type CareerProfile = z.infer<typeof ProfileDataSchema>;
 
 
 export const validateCareerProfile = (
-  jobApplication: CareerProfile
+  data: CareerProfile
 ): ApiValidatorResult => {
-  return processValidation(
-    jobApplication,
-    ProfileDataSchema
-  );
+  return processValidation(data, ProfileDataSchema);
+};
+
+export type TalentUser = {
+  // Same as session user
+  id: string;
+  sessionUid: string;
+  name: string;
+  email: string;
+  careerProfile?: CareerProfile;
+  phone?: string;
+  created?: number;
+  updated?: number;
+  creator?: Creator;
+  notes?: string;
+  location?: string;
+  isManualTalent?: boolean;
+  skills?: RecruitSkill[]; // Optional skills array
+  resumeUrl?: string; // Optional resume URL
+  files?: {
+    id: string;
+    name: string;
+    url: string;
+    type: string;
+    size: number;
+  }[];
+  coverLetterUrl: string;
+  jobNotificationsByEmail: {
+    [x: string]: {
+      created: number;
+      jobPostId: string;
+      creator?: {
+        sessionUid: string;
+        projectUid: string;
+        name?: string;
+        avatar?: {
+          original?: string;
+        };
+        created?: number;
+      };
+    };
+  }
+  applicationsList?: {
+    jobId: string;
+    status: JobApplication["status"];
+    updated: number;
+    jobName?: string | undefined;
+  }[];
+  associatedJobs?: {
+    [jobId: string]: boolean;
+  }
 };

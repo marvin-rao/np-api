@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useGet, useRequest } from "../helper/ApiRequestsBase";
 import { RequestMethod } from "../helper/fetchUtils";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { ProjectCompany, ServerResult, Workspace } from "./types";
+import { Creator, ProjectCompany, ServerResult, Workspace } from "./types";
 
 function getWorkspaceIdFromUrl(): string | null {
   const match = window.location.pathname.match(/\/workspace\/([^/]+)/);
@@ -121,4 +121,85 @@ export const { useUpdateProjectCompany } = generateEntityHooks<
 
 export const useProjectCompany = () => {
   return useProjectGetBase<ProjectCompany>({ path: "project/company" });
+};
+
+export interface AIModelUsageData {
+  service: "AnalyzeCV";
+  model: "gpt-5";
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+    total_tokens: number;
+  };
+  metadata?: {
+    [key: string]: any;
+  };
+}
+
+export type AiUsage = {
+  projectId: string;
+  created: number;
+  creator: Creator;
+} & AIModelUsageData;
+
+export type StorageResult = {
+  recruit: {
+    applications: {
+      totalSize: number;
+      fileCount: number;
+    };
+  };
+};
+
+export type EmailUsage = {
+  projectId: string;
+  usage: {
+    recipientEmail: string;
+    templateAlias: string;
+  };
+  created: number;
+  creator: Creator;
+  app: "Recruit" | "Leave" | "WorkspaceManager" | "Calendar";
+  service:
+    | "NotifyPreviousApplicantOfNewJobPost"
+    | "SubmitToClientEmail"
+    | "JobApplicationStatusUpdate"
+    | "JobApplicationReceivedEmail"
+    | "NewJobApplicationEmailToAdmin"
+    | "LeaveRequestEmail"
+    | "LeaveApprovedEmail"
+    | "WorkSpaceInvitationEmail"
+    | "CalendarEventInvitationEmail";
+};
+
+export type ProjectUsageSummary = {
+  ai: {
+    summary: {
+      totalCalls: number;
+      totalInputTokens: number;
+      totalOutputTokens: number;
+      totalTokens: number;
+      byService: Record<
+        string,
+        {
+          calls: number;
+          inputTokens: number;
+          outputTokens: number;
+          totalTokens: number;
+        }
+      >;
+    };
+    recentUsage: AiUsage[];
+  };
+  storage: StorageResult;
+  email: {
+    totalEmailUsage: number;
+    recentUsage: EmailUsage[];
+  };
+};
+
+export const useProjectUsage = () => {
+  return useProjectGetBase<ProjectUsageSummary>({
+    path: "projects/usage",
+  });
 };

@@ -123,7 +123,7 @@ type UseFetchWithTokenProps = {
 };
 
 export const useGet = <T,>(props: UseFetchWithTokenProps) => {
-  const { apiBaseUrl } = useAuthData();
+  const { apiBaseUrl, onSessionExpired } = useAuthData();
   const { path, options = {}, deps = [], enabled } = props;
 
   const fetchData = async (): Promise<T | undefined> => {
@@ -132,6 +132,15 @@ export const useGet = <T,>(props: UseFetchWithTokenProps) => {
       url: apiBaseUrl + path + (options?.queryString ?? ""),
       body: options.body,
     });
+
+    if (
+      response.status === 403 &&
+      (await response?.text
+        ?.toString()
+        .includes("Unauthorized : Provide bearer or cookie"))
+    ) {
+      onSessionExpired();
+    }
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
