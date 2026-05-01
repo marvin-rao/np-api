@@ -149,6 +149,26 @@ export type AppFile = {
     };
 }
 
+export type FileShareLinkAccessLevel = "view" | "download";
+
+export type FileShareLink = {
+    token: string;
+    fileId?: string;
+    folderId?: string;
+    creator: Creator;
+    created: number;
+    expiresAt?: number;
+    accessLevel: FileShareLinkAccessLevel;
+    revoked?: boolean;
+    revokedAt?: number;
+}
+
+export type CreateFileShareLinkInput = {
+    fileId?: string;
+    folderId?: string;
+    accessLevel?: FileShareLinkAccessLevel;
+    expiresAt?: number;
+}
 
 export type SystemAudio = {
     id: string;
