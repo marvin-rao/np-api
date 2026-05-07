@@ -20,6 +20,7 @@ export * from "./np/career_types";
 export * from "./np/customers";
 export * from "./np/developer";
 export * from "./np/filesapp";
+export * from "./np/bookings";
 
 export * from "./np/career";
 export * from "./np/chat";

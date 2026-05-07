@@ -394,3 +394,47 @@ export const processValidation = <T>(value: T, schema: z.ZodUnion<any> | z.ZodOb
         return { passed: false, message, path };
     }
 }
+
+// Bookings
+
+export type BookingStatus = "confirmed" | "pending" | "cancelled";
+
+export type Booking = {
+    id: string;
+    creator: Creator;
+    created: number;
+    updated?: number;
+    title: string;
+    resourceType?: string;
+    resource: string;
+    attendee?: string;
+    attendeeEmail?: string;
+    location?: string;
+    status: BookingStatus;
+    start: number;
+    end: number;
+    notes?: string;
+    fromServer?: boolean;
+};
+
+export type BookingResource = {
+    id: string;
+    creator: Creator;
+    created: number;
+    updated?: number;
+    name: string;
+    type: string;
+    fromServer?: boolean;
+};
+
+export type BookingResourceGroup = {
+    id: string;
+    creator: Creator;
+    created: number;
+    updated?: number;
+    label: string;
+    iconKey?: string;
+    builtin?: boolean;
+    active?: boolean;
+    fromServer?: boolean;
+};
