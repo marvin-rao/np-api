@@ -5,6 +5,13 @@ import {
     BookingResourceGroup,
 } from "./types";
 
+export type {
+    Booking,
+    BookingStatus,
+    BookingResource,
+    BookingResourceGroup,
+} from "./types";
+
 export const {
     useBookings,
     useAddBooking,
