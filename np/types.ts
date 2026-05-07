@@ -79,6 +79,17 @@ export type Note = {
     fromServer?: boolean | undefined;
 }
 
+export type NotesFolder = {
+    id: string;
+    name: string;
+    created: number;
+    creator: Creator;
+    sharedWith: string[];
+    parentFolderId?: string | undefined;
+    updated?: number | undefined;
+    fromServer?: boolean | undefined;
+}
+
 export type AccessRights = {
     objectId: "project";
     level: "admin" | "user";
