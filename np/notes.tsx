@@ -1,6 +1,7 @@
+import { useRequest } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { useProjectRequest } from "./projects";
-import { Note, NotesFolder } from "./types";
+import { useProjectId } from "./projects";
+import { Note, NotesFolder, ServerResult } from "./types";
 
 export const { useNotes, useAddNote, useUpdateNote, useDeleteNote } =
   generateEntityHooks<"note", Note>({
@@ -26,7 +27,7 @@ export const {
  * Backend contract:
  *   POST /notes/generate?projectId=<id>
  *   Body: { prompt: string, model?: string }
- *   Response: { title: string, contentHtml: string }
+ *   Response: ServerResult<{ title: string, contentHtml: string }>
  */
 export interface GenerateNoteRequest {
   prompt: string;
@@ -39,8 +40,11 @@ export interface GeneratedNotePayload {
 }
 
 export const useGenerateNote = () => {
-  return useProjectRequest<GenerateNoteRequest>({
+  const { projectId } = useProjectId();
+  return useRequest<GenerateNoteRequest, ServerResult<GeneratedNotePayload>>({
     path: "notes/generate",
     method: "post",
+    options: { queryString: `?projectId=${projectId}` },
+    enabled: !!projectId,
   });
 };
