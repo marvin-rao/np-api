@@ -27,6 +27,7 @@ export * from "./np/chat";
 export { useIsMobile, useViewport } from "./np/hooks/useResponsive";
 export * from "./np/messages";
 export * from "./np/notes";
+export * from "./np/osBridge";
 export { NotificationItem, NotificationList } from "./np/notifications/components/NotificationList";
 export { NotificationsPage } from "./np/notifications/components/NotificationsPage";
 export { ResponsiveNotifications } from "./np/notifications/components/ResponsiveNotifications";
