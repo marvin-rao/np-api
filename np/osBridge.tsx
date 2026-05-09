@@ -99,9 +99,12 @@ export const ActionsProvider = <TMessage extends OsAppMessageBase>({
       const match = actionsRef.current.find((a) => a.type === env.type);
       if (!match) return;
 
-      const { source: _src, appId: _appId, type: _type, ...payload } =
-        env as Record<string, unknown>;
-      (match.function as (p: unknown) => void)(payload);
+      // Strip envelope fields; pass the rest to the action's function.
+      const rest: Record<string, unknown> = { ...(env as Record<string, unknown>) };
+      delete rest.source;
+      delete rest.appId;
+      delete rest.type;
+      (match.function as (p: unknown) => void)(rest);
     };
 
     window.addEventListener("message", onMessage);
