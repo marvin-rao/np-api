@@ -54,14 +54,22 @@ export const AuthProvider = (props: AuthProviderProps) => {
   useEffect(() => {
     const bearer_token = getUrlBearerToken();
     const refresh_token = getUrlRefreshToken();
-    if (bearer_token && refresh_token) {
+    // Embedded SpaceOS apps only get `b_token` injected (no refresh token,
+    // since the parent shell handles refresh). Accept the bearer alone in
+    // that case so we don't fall through to the (third-party-blocked)
+    // cookie session check and flash the login UI.
+    if (bearer_token) {
       setBToken({ bearer_token });
-      setRefreshToken({ refresh_token });
+      if (refresh_token) {
+        setRefreshToken({ refresh_token });
+      }
 
       setTimeout(() => {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete("bearer_token");
+        currentUrl.searchParams.delete("b_token");
         currentUrl.searchParams.delete("refresh_token");
+        currentUrl.searchParams.delete("c_token");
 
         // Check if there's a stored return path and use it
         const storedPath = sessionStorage.getItem(AUTH_RETURN_PATH_KEY);

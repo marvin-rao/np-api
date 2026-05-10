@@ -4,7 +4,9 @@ const RefreshTokenKey = "RefreshTokenKey1"
 
 export const getUrlBearerToken = () => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("bearer_token");
+    // Accept either `bearer_token` (standalone login redirect) or `b_token`
+    // (injected by the SpaceOS shell when embedding a captive-mode iframe).
+    return params.get("bearer_token") ?? params.get("b_token");
 };
 
 export const getUrlRefreshToken = () => {
