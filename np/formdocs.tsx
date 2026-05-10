@@ -108,7 +108,7 @@ export const usePublicFormDoc = (formId?: string) => {
 };
 
 /**
- * PUBLIC \u2014 submit a response to a form anonymously. No project / workspace
+ * PUBLIC — submit a response to a form anonymously. No project / workspace
  * membership required; the server resolves the owning project via the public
  * form lookup.
  */
@@ -118,3 +118,31 @@ export const useSubmitPublicFormDocResponse = () => {
     method: "post",
   });
 };
+
+/**
+ * Soft-deleted forms ("trash"). Same access rules as the regular list; only
+ * the form's owner / project admins can see them.
+ */
+export const useDeletedFormDocs = () => {
+  const { projectId } = useProjectId();
+  return useGet<FormDoc[]>({
+    path: "formdocs/trash",
+    options: { queryString: `?projectId=${projectId}` },
+    deps: [projectId],
+    enabled: !!projectId,
+  });
+};
+
+/**
+ * Restore a soft-deleted form by clearing its `deleted` timestamp.
+ */
+export const useRestoreFormDoc = () => {
+  const { projectId } = useProjectId();
+  return useRequest<{ id: string }, ServerResult<FormDoc>>({
+    path: "formdocs/restore",
+    method: "post",
+    options: { queryString: `?projectId=${projectId}` },
+    enabled: !!projectId,
+  });
+};
+
