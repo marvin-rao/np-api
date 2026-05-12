@@ -77,6 +77,12 @@ export type Note = {
     updated?: number | undefined;
     content?: string | undefined;
     fromServer?: boolean | undefined;
+    /** Soft-delete flag. When true, the note is in the trash. */
+    trashed?: boolean | undefined;
+    /** Server timestamp the note was moved to trash. */
+    trashedAt?: number | undefined;
+    /** Folder the note will be restored to. */
+    trashedFromFolderId?: string | undefined;
 }
 
 export type NotesFolder = {
