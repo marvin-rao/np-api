@@ -25,6 +25,7 @@ export * from "./np/bookings";
 export * from "./np/career";
 export * from "./np/chat";
 export * from "./np/npai";
+export * from "./np/npai-workspace";
 export { useIsMobile, useViewport } from "./np/hooks/useResponsive";
 export * from "./np/messages";
 export * from "./np/notes";
