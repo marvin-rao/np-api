@@ -64,6 +64,8 @@ export const useGetNpAiSessionHistory = ({
   return useGet<NpAiChatMessage[]>({
     path: `chat/personal/${APP_TYPE}/sessions/${sessionId}/history`,
     options: {},
+    enabled: !!sessionId,
+    deps: [sessionId],
   });
 };
 

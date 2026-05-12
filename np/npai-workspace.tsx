@@ -9,7 +9,11 @@
 //   DELETE /chat/workspace/sessions/:sessionId
 //   POST   /chat/workspace/ai/chat              { message, sessionId }
 
-import { useProjectGetBase, useProjectRequest } from "./projects";
+import axios from "axios";
+import { useState } from "react";
+import { useAuthData } from "../helper/provider";
+import { getBToken } from "../helper/utils";
+import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import { ServerResult } from "./types";
 
 export interface NpAiWorkspaceChatMessage {
@@ -94,3 +98,114 @@ export const useNpAiWorkspaceChat = () => {
 };
 
 export type NpAiWorkspaceChatServerResponse = ServerResult<NpAiWorkspaceChatResponse>;
+
+// ---------- Knowledge ----------
+//
+// Backend endpoints (all auto-injected with ?projectId=<currentProject>):
+//   GET    /chat/workspace/knowledge/meta
+//   PATCH  /chat/workspace/knowledge/meta              { instructions }
+//   GET    /chat/workspace/knowledge/documents
+//   POST   /chat/workspace/knowledge/documents         multipart "file"
+//   PATCH  /chat/workspace/knowledge/documents/:docId  { name }
+//   DELETE /chat/workspace/knowledge/documents/:docId
+
+export interface NpAiWorkspaceKnowledgeMeta {
+  instructions: string;
+  updated: number;
+  updatedBy: string;
+}
+
+export type NpAiWorkspaceKnowledgeDocStatus = "ingesting" | "ready" | "failed";
+
+export interface NpAiWorkspaceKnowledgeDocument {
+  id: string;
+  name: string;
+  mime: string;
+  size: number;
+  storagePath: string;
+  url: string;
+  tokenCount: number;
+  status: NpAiWorkspaceKnowledgeDocStatus;
+  error?: string;
+  uploadedBy: string;
+  created: number;
+  updated: number;
+}
+
+export const useGetNpAiWorkspaceKnowledgeMeta = (props?: { enabled?: boolean }) => {
+  return useProjectGetBase<NpAiWorkspaceKnowledgeMeta>({
+    path: "chat/workspace/knowledge/meta",
+    enabled: props?.enabled,
+  });
+};
+
+export const useUpdateNpAiWorkspaceKnowledgeMeta = () => {
+  return useProjectRequest<{ instructions: string }>({
+    path: "chat/workspace/knowledge/meta",
+    method: "PATCH",
+  });
+};
+
+export const useGetNpAiWorkspaceKnowledgeDocuments = (props?: { enabled?: boolean }) => {
+  return useProjectGetBase<NpAiWorkspaceKnowledgeDocument[]>({
+    path: "chat/workspace/knowledge/documents",
+    enabled: props?.enabled,
+  });
+};
+
+export const useUpdateNpAiWorkspaceKnowledgeDocument = ({ docId }: { docId: string }) => {
+  return useProjectRequest<{ name?: string }>({
+    path: `chat/workspace/knowledge/documents/${docId}`,
+    method: "PATCH",
+  });
+};
+
+export const useDeleteNpAiWorkspaceKnowledgeDocument = ({ docId }: { docId: string }) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/knowledge/documents/${docId}`,
+    method: "delete",
+  });
+};
+
+export const useUploadNpAiWorkspaceKnowledgeDocument = () => {
+  const { apiBaseUrl } = useAuthData();
+  const { projectId } = useProjectId();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (
+    file: File,
+    onSuccess?: (result: ServerResult<NpAiWorkspaceKnowledgeDocument>) => void
+  ) => {
+    if (!projectId) {
+      setError("No project selected");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const token = getBToken();
+      const res = await axios.post(
+        `${apiBaseUrl}chat/workspace/knowledge/documents?projectId=${projectId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      onSuccess?.(res.data);
+      return res.data as ServerResult<NpAiWorkspaceKnowledgeDocument>;
+    } catch (e: any) {
+      setError(e?.message ?? "Upload failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { submit, isLoading, error };
+};
