@@ -96,6 +96,27 @@ export type NotesFolder = {
     fromServer?: boolean | undefined;
 }
 
+export type NoteVersionSource =
+    | "auto"
+    | "manual"
+    | "trash"
+    | "restore"
+    | "restore-version";
+
+export type NoteVersion = {
+    id: string;
+    noteId: string;
+    projectId?: string;
+    title?: string;
+    content?: string;
+    folderId?: string;
+    savedAt: number;
+    savedBy?: string;
+    source: NoteVersionSource;
+    label?: string;
+    pinned?: boolean;
+}
+
 export type AccessRights = {
     objectId: "project";
     level: "admin" | "user";

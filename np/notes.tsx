@@ -1,7 +1,7 @@
 import { useRequest } from "../helper/ApiRequestsBase";
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { useProjectId, useProjectRequest } from "./projects";
-import { Note, NotesFolder, ObjectId, ServerResult } from "./types";
+import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
+import { Note, NotesFolder, NoteVersion, ObjectId, ServerResult } from "./types";
 
 export const { useNotes, useAddNote, useUpdateNote, useDeleteNote } =
   generateEntityHooks<"note", Note>({
@@ -27,6 +27,32 @@ export const useTrashNote = () =>
  */
 export const useRestoreNote = () =>
   useProjectRequest<ObjectId>({ path: "notes/restore", method: "post" });
+
+/**
+ * Fetch the version history for a note (newest-first). Versions are
+ * snapshotted by the backend on every write — see `useRestoreNoteVersion`
+ * to roll a note back to one of them.
+ *
+ * Backend: GET /notes/versions/:id?projectId=<id>
+ */
+export const useNoteVersions = (noteId: string | undefined) =>
+  useProjectGetBase<{ versions: NoteVersion[] }>({
+    path: `notes/versions/${noteId ?? ""}`,
+    enabled: !!noteId,
+  });
+
+/**
+ * Roll a note back to the state captured by `versionId`. The current
+ * state is snapshotted first so the restore is itself reversible.
+ *
+ * Backend: POST /notes/versions/restore?projectId=<id>
+ *   body: { id, versionId }
+ */
+export const useRestoreNoteVersion = () =>
+  useProjectRequest<{ id: string; versionId: string }>({
+    path: "notes/versions/restore",
+    method: "post",
+  });
 
 export const {
   useNotesFolders,
