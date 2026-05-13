@@ -35,6 +35,7 @@ export interface NpAiWorkspaceChatSession {
   updated: number;
   messageCount: number;
   lastMessage?: string;
+  aiProjectId?: string;
 }
 
 export interface NpAiWorkspaceChatResponse {
@@ -42,7 +43,7 @@ export interface NpAiWorkspaceChatResponse {
 }
 
 export const useCreateNpAiWorkspaceSession = () => {
-  return useProjectRequest<{ title?: string }>({
+  return useProjectRequest<{ title?: string; aiProjectId?: string }>({
     path: "chat/workspace/sessions",
     method: "post",
   });
@@ -189,6 +190,206 @@ export const useUploadNpAiWorkspaceKnowledgeDocument = () => {
       const token = getBToken();
       const res = await axios.post(
         `${apiBaseUrl}chat/workspace/knowledge/documents?projectId=${projectId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      onSuccess?.(res.data);
+      return res.data as ServerResult<NpAiWorkspaceKnowledgeDocument>;
+    } catch (e: any) {
+      setError(e?.message ?? "Upload failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { submit, isLoading, error };
+};
+
+// ---------- AI Projects (per-user) ----------
+//
+// Backend endpoints (all auto-injected with ?projectId=<currentProject>):
+//   GET    /chat/workspace/aiProjects
+//   POST   /chat/workspace/aiProjects                                 { title?, summary?, instructions? }
+//   GET    /chat/workspace/aiProjects/:aiProjectId
+//   PATCH  /chat/workspace/aiProjects/:aiProjectId                    { title?, summary?, instructions? }
+//   DELETE /chat/workspace/aiProjects/:aiProjectId
+//
+//   GET    /chat/workspace/aiProjects/:aiProjectId/knowledge/meta
+//   PATCH  /chat/workspace/aiProjects/:aiProjectId/knowledge/meta     { instructions }
+//   GET    /chat/workspace/aiProjects/:aiProjectId/knowledge/documents
+//   POST   /chat/workspace/aiProjects/:aiProjectId/knowledge/documents  multipart "file"
+//   PATCH  /chat/workspace/aiProjects/:aiProjectId/knowledge/documents/:docId  { name }
+//   DELETE /chat/workspace/aiProjects/:aiProjectId/knowledge/documents/:docId
+
+export interface NpAiWorkspaceAiProject {
+  id: string;
+  title: string;
+  summary: string;
+  instructions: string;
+  projectId: string;
+  sessionUid: string;
+  created: number;
+  updated: number;
+}
+
+export const useGetNpAiWorkspaceAiProjects = (props?: { enabled?: boolean }) => {
+  return useProjectGetBase<NpAiWorkspaceAiProject[]>({
+    path: "chat/workspace/aiProjects",
+    enabled: props?.enabled,
+  });
+};
+
+export const useGetNpAiWorkspaceAiProject = ({
+  aiProjectId,
+  enabled,
+}: {
+  aiProjectId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceAiProject>({
+    path: `chat/workspace/aiProjects/${aiProjectId}`,
+    enabled: enabled !== undefined ? enabled : !!aiProjectId,
+  });
+};
+
+export const useCreateNpAiWorkspaceAiProject = () => {
+  return useProjectRequest<{
+    title?: string;
+    summary?: string;
+    instructions?: string;
+  }>({
+    path: "chat/workspace/aiProjects",
+    method: "post",
+  });
+};
+
+export const useUpdateNpAiWorkspaceAiProject = ({
+  aiProjectId,
+}: {
+  aiProjectId: string;
+}) => {
+  return useProjectRequest<{
+    title?: string;
+    summary?: string;
+    instructions?: string;
+  }>({
+    path: `chat/workspace/aiProjects/${aiProjectId}`,
+    method: "PATCH",
+  });
+};
+
+export const useDeleteNpAiWorkspaceAiProject = ({
+  aiProjectId,
+}: {
+  aiProjectId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/aiProjects/${aiProjectId}`,
+    method: "delete",
+  });
+};
+
+// Per-project knowledge: identical shape to workspace knowledge, scoped to one AI project.
+
+export const useGetNpAiWorkspaceAiProjectKnowledgeMeta = ({
+  aiProjectId,
+  enabled,
+}: {
+  aiProjectId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceKnowledgeMeta>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/meta`,
+    enabled: enabled !== undefined ? enabled : !!aiProjectId,
+  });
+};
+
+export const useUpdateNpAiWorkspaceAiProjectKnowledgeMeta = ({
+  aiProjectId,
+}: {
+  aiProjectId: string;
+}) => {
+  return useProjectRequest<{ instructions: string }>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/meta`,
+    method: "PATCH",
+  });
+};
+
+export const useGetNpAiWorkspaceAiProjectKnowledgeDocuments = ({
+  aiProjectId,
+  enabled,
+}: {
+  aiProjectId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceKnowledgeDocument[]>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/documents`,
+    enabled: enabled !== undefined ? enabled : !!aiProjectId,
+  });
+};
+
+export const useUpdateNpAiWorkspaceAiProjectKnowledgeDocument = ({
+  aiProjectId,
+  docId,
+}: {
+  aiProjectId: string;
+  docId: string;
+}) => {
+  return useProjectRequest<{ name?: string }>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/documents/${docId}`,
+    method: "PATCH",
+  });
+};
+
+export const useDeleteNpAiWorkspaceAiProjectKnowledgeDocument = ({
+  aiProjectId,
+  docId,
+}: {
+  aiProjectId: string;
+  docId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/documents/${docId}`,
+    method: "delete",
+  });
+};
+
+export const useUploadNpAiWorkspaceAiProjectKnowledgeDocument = ({
+  aiProjectId,
+}: {
+  aiProjectId: string;
+}) => {
+  const { apiBaseUrl } = useAuthData();
+  const { projectId } = useProjectId();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (
+    file: File,
+    onSuccess?: (result: ServerResult<NpAiWorkspaceKnowledgeDocument>) => void
+  ) => {
+    if (!projectId) {
+      setError("No project selected");
+      return;
+    }
+    if (!aiProjectId) {
+      setError("No AI project selected");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const token = getBToken();
+      const res = await axios.post(
+        `${apiBaseUrl}chat/workspace/aiProjects/${aiProjectId}/knowledge/documents?projectId=${projectId}`,
         formData,
         {
           headers: {
