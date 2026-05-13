@@ -232,6 +232,7 @@ export interface NpAiWorkspaceAiProject {
   title: string;
   summary: string;
   instructions: string;
+  color?: string;
   projectId: string;
   sessionUid: string;
   created: number;
@@ -263,6 +264,7 @@ export const useCreateNpAiWorkspaceAiProject = () => {
     title?: string;
     summary?: string;
     instructions?: string;
+    color?: string;
   }>({
     path: "chat/workspace/aiProjects",
     method: "post",
@@ -278,6 +280,7 @@ export const useUpdateNpAiWorkspaceAiProject = ({
     title?: string;
     summary?: string;
     instructions?: string;
+    color?: string;
   }>({
     path: `chat/workspace/aiProjects/${aiProjectId}`,
     method: "PATCH",
