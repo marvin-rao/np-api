@@ -12,6 +12,17 @@ import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
 import { navbarStyles as styles, osWorkspaceButton, osWorkspaceButtonHover, legacyWorkspaceButton, legacyWorkspaceButtonHover } from "./Navbar.styles";
 import { useOsDesign } from "../design/OsDesignContext";
 
+const NP_NAVBAR_STYLE_ID = "np-navbar-responsive-styles";
+if (typeof document !== "undefined" && !document.getElementById(NP_NAVBAR_STYLE_ID)) {
+  const s = document.createElement("style");
+  s.id = NP_NAVBAR_STYLE_ID;
+  s.textContent = `
+    .np-workspace-label { max-width: 40vw; }
+    @media (max-width: 640px) { .np-workspace-label { max-width: 80px; } }
+  `;
+  document.head.appendChild(s);
+}
+
 interface NavbarProps {
   children: any;
   userImage?: string;
@@ -137,8 +148,8 @@ export const NPMainActionBar = ({
             }}
           >
             <span
+              className="np-workspace-label"
               style={{
-                maxWidth: "40vw",
                 display: "inline-block",
                 overflow: "hidden",
                 textOverflow: "ellipsis",

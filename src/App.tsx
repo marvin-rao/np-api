@@ -9,6 +9,7 @@ function App() {
       callerProduct={"recruit"}
       apiBaseUrl={"https://newpaper.app/api/"}
       loginPageUrl={"https://newpaper.app/account/login"}
+      osDesign
       onSessionExpired={() => {
         // Handle session expiration (e.g., redirect to login page)
         alert("Session expired. Please log in again.");
