@@ -208,3 +208,32 @@ export const navbarStyles: Styles = {
         fill: "currentColor",
     },
 };
+
+import type { CSSProperties } from "react";
+
+/** Legacy chrome (default for existing consumers). */
+export const legacyWorkspaceButton: CSSProperties = navbarStyles.workspaceButton;
+export const legacyWorkspaceButtonHover: CSSProperties =
+    navbarStyles.workspaceButtonHover;
+
+/** macOS / iPad-style flush button (opt-in via OsDesignProvider). */
+export const osWorkspaceButton: CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    height: "36px",
+    padding: "0 12px",
+    backgroundColor: "rgba(0,0,0,0.04)",
+    border: "none",
+    borderRadius: "18px",
+    boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+    cursor: "pointer",
+    transition: "background-color 0.15s ease",
+    color: "#1f2937",
+    fontSize: "13px",
+    fontWeight: 500,
+};
+
+export const osWorkspaceButtonHover: CSSProperties = {
+    backgroundColor: "rgba(0,0,0,0.07)",
+};

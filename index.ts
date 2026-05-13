@@ -45,5 +45,6 @@ export {
 };
 
 export { NewPaperProvider, NPMainActionBar, WorkspaceSelector };
+export { OsDesignProvider, useOsDesign } from "./np/design/OsDesignContext";
 
 

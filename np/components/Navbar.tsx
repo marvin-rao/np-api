@@ -9,7 +9,8 @@ import {
 import { openWorkspace } from "./NewPaperProvider";
 import { ProfileImage } from "./ProfileImage";
 import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
-import { navbarStyles as styles } from "./Navbar.styles";
+import { navbarStyles as styles, osWorkspaceButton, osWorkspaceButtonHover, legacyWorkspaceButton, legacyWorkspaceButtonHover } from "./Navbar.styles";
+import { useOsDesign } from "../design/OsDesignContext";
 
 interface NavbarProps {
   children: any;
@@ -43,6 +44,9 @@ export const NPMainActionBar = ({
   const { data: Workspaces } = useProjects();
   const currentWorkspace = Workspaces?.find((w) => w.id == projectId);
   const captiveMode = getCaptiveModeFromQuery();
+  const osDesign = useOsDesign();
+  const wsBtn = osDesign ? osWorkspaceButton : legacyWorkspaceButton;
+  const wsBtnHover = osDesign ? osWorkspaceButtonHover : legacyWorkspaceButtonHover;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -101,27 +105,34 @@ export const NPMainActionBar = ({
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <button
             style={{
-              ...styles.workspaceButton,
-              ...(showWorkspaceDropdown && styles.workspaceButtonHover),
-              transition: "all 0.2s ease",
-              transform: showWorkspaceDropdown ? "scale(1.02)" : "scale(1)",
-              boxShadow: showWorkspaceDropdown
-                ? "0 4px 12px rgba(0,0,0,0.1)"
-                : "0 2px 4px rgba(0,0,0,0.05)",
+              ...wsBtn,
+              ...(showWorkspaceDropdown && wsBtnHover),
+              ...(osDesign
+                ? {}
+                : {
+                    transform: showWorkspaceDropdown ? "scale(1.02)" : "scale(1)",
+                    boxShadow: showWorkspaceDropdown
+                      ? "0 4px 12px rgba(0,0,0,0.1)"
+                      : "0 2px 4px rgba(0,0,0,0.05)",
+                  }),
             }}
             onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor =
-                styles.workspaceButtonHover.backgroundColor || "#e9ecef";
-              e.currentTarget.style.transform = "scale(1.02)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+                wsBtnHover.backgroundColor || "";
+              if (!osDesign) {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+              }
             }}
             onMouseLeave={(e) => {
               if (!showWorkspaceDropdown) {
                 e.currentTarget.style.backgroundColor =
-                  styles.workspaceButton.backgroundColor || "#f8f9fa";
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.05)";
+                  wsBtn.backgroundColor || "";
+                if (!osDesign) {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.05)";
+                }
               }
             }}
           >
