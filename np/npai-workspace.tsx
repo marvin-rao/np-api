@@ -131,6 +131,12 @@ export interface NpAiWorkspaceKnowledgeDocument {
   uploadedBy: string;
   created: number;
   updated: number;
+  /** "file" (default) when uploaded; "url" when added as a web link. */
+  sourceType?: "file" | "url";
+  /** Original URL for sourceType === "url". */
+  sourceUrl?: string;
+  /** Last successful crawl timestamp for sourceType === "url". */
+  lastCrawled?: number;
 }
 
 export const useGetNpAiWorkspaceKnowledgeMeta = (props?: { enabled?: boolean }) => {
@@ -404,6 +410,144 @@ export const useUploadNpAiWorkspaceAiProjectKnowledgeDocument = ({
       );
       onSuccess?.(res.data);
       return res.data as ServerResult<NpAiWorkspaceKnowledgeDocument>;
+    } catch (e: any) {
+      setError(e?.message ?? "Upload failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { submit, isLoading, error };
+};
+
+// ---------- Knowledge URL (crawl & re-crawl) ----------
+
+export const useAddNpAiWorkspaceKnowledgeUrl = () => {
+  return useProjectRequest<{ url: string }>({
+    path: "chat/workspace/knowledge/urls",
+    method: "post",
+  });
+};
+
+export const useRecrawlNpAiWorkspaceKnowledgeUrl = ({ docId }: { docId: string }) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/knowledge/documents/${docId}/recrawl`,
+    method: "post",
+  });
+};
+
+export const useAddNpAiWorkspaceAiProjectKnowledgeUrl = ({
+  aiProjectId,
+}: {
+  aiProjectId: string;
+}) => {
+  return useProjectRequest<{ url: string }>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/urls`,
+    method: "post",
+  });
+};
+
+export const useRecrawlNpAiWorkspaceAiProjectKnowledgeUrl = ({
+  aiProjectId,
+  docId,
+}: {
+  aiProjectId: string;
+  docId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/aiProjects/${aiProjectId}/knowledge/documents/${docId}/recrawl`,
+    method: "post",
+  });
+};
+
+// ---------- Session attachments (per-chat) ----------
+
+export type NpAiWorkspaceSessionAttachmentKind = "file" | "image";
+export type NpAiWorkspaceSessionAttachmentStatus = "ingesting" | "ready" | "failed";
+
+export interface NpAiWorkspaceSessionAttachment {
+  id: string;
+  sessionId: string;
+  name: string;
+  mime: string;
+  size: number;
+  kind: NpAiWorkspaceSessionAttachmentKind;
+  storagePath: string;
+  url: string;
+  tokenCount?: number;
+  status: NpAiWorkspaceSessionAttachmentStatus;
+  error?: string;
+  created: number;
+  updated: number;
+}
+
+export const useGetNpAiWorkspaceSessionAttachments = ({
+  sessionId,
+  enabled,
+}: {
+  sessionId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceSessionAttachment[]>({
+    path: `chat/workspace/sessions/${sessionId}/attachments`,
+    enabled: enabled !== undefined ? enabled : !!sessionId,
+  });
+};
+
+export const useDeleteNpAiWorkspaceSessionAttachment = ({
+  sessionId,
+  attachmentId,
+}: {
+  sessionId: string;
+  attachmentId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/sessions/${sessionId}/attachments/${attachmentId}`,
+    method: "delete",
+  });
+};
+
+export const useUploadNpAiWorkspaceSessionAttachment = ({
+  sessionId,
+}: {
+  sessionId: string;
+}) => {
+  const { apiBaseUrl } = useAuthData();
+  const { projectId } = useProjectId();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (
+    file: File,
+    onSuccess?: (result: ServerResult<NpAiWorkspaceSessionAttachment>) => void
+  ) => {
+    if (!projectId) {
+      setError("No project selected");
+      return;
+    }
+    if (!sessionId) {
+      setError("No session selected");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const token = getBToken();
+      const res = await axios.post(
+        `${apiBaseUrl}chat/workspace/sessions/${sessionId}/attachments?projectId=${projectId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      onSuccess?.(res.data);
+      return res.data as ServerResult<NpAiWorkspaceSessionAttachment>;
     } catch (e: any) {
       setError(e?.message ?? "Upload failed");
     } finally {
