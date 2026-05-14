@@ -136,6 +136,39 @@ export const useGetNpAiWorkspaceSessionHistory = ({
   });
 };
 
+export interface NpAiWorkspaceChatProgress {
+  stage:
+    | "starting"
+    | "thinking"
+    | "tool_running"
+    | "tool_done"
+    | "saving"
+    | "done"
+    | "error";
+  message: string;
+  round?: number;
+  tool?: string;
+  updated: number;
+}
+
+/**
+ * Live progress of an in-flight chat round (server writes "Thinking…",
+ * "Creating note…", etc to RTDB; this fetches the current value). Returns
+ * null when nothing is in flight. Poll from the consumer via `refetch`.
+ */
+export const useGetNpAiWorkspaceSessionProgress = ({
+  sessionId,
+  enabled,
+}: {
+  sessionId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceChatProgress | null>({
+    path: `chat/workspace/sessions/${sessionId}/progress`,
+    enabled: enabled !== undefined ? enabled : !!sessionId,
+  });
+};
+
 export const useUpdateNpAiWorkspaceSession = ({
   sessionId,
 }: {
