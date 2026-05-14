@@ -1,5 +1,5 @@
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { useProjectGetBase, useProjectRequest } from "./projects";
+import { useProjectGetBase, useProjectRequest, useProjectId } from "./projects";
 import { useGet } from "../helper/ApiRequestsBase";
 import {
   AppFile,
@@ -35,15 +35,16 @@ export const useFilesAppShareLinks = (options?: {
   fileId?: string;
   folderId?: string;
 }) => {
+  const { projectId } = useProjectId();
   const params: string[] = [];
+  if (projectId) params.push(`projectId=${encodeURIComponent(projectId)}`);
   if (options?.fileId) params.push(`fileId=${encodeURIComponent(options.fileId)}`);
   if (options?.folderId) params.push(`folderId=${encodeURIComponent(options.folderId)}`);
-  const path = params.length
-    ? `files_app/share_links?${params.join("&")}`
-    : "files_app/share_links";
-  return useProjectGetBase<FileShareLink[]>({
-    path,
-    enabled: options?.enabled,
+  return useGet<FileShareLink[]>({
+    path: "files_app/share_links",
+    options: { queryString: params.length ? `?${params.join("&")}` : "" },
+    deps: [projectId, options?.fileId, options?.folderId],
+    enabled: options?.enabled !== false && !!projectId,
   });
 };
 
