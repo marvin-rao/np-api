@@ -24,7 +24,19 @@ export interface NpAiWorkspaceChatMessage {
   sessionId: string;
   projectId: string;
   sessionUid: string;
+  /** Inline cards the AI attached to this message (e.g. a memory it just saved). */
+  cards?: NpAiWorkspaceChatCard[];
 }
+
+/**
+ * Discriminated union of cards the AI can render inline in a chat message.
+ * Add new variants here as more tools are introduced.
+ */
+export type NpAiWorkspaceChatCard = {
+  kind: "memory";
+  memoryId: string;
+  content: string;
+};
 
 export interface NpAiWorkspaceChatSession {
   id: string;
