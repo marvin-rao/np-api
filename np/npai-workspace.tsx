@@ -46,6 +46,27 @@ export type NpAiWorkspaceChatCard =
       items?: { label: string; value?: string }[];
       links?: { label: string; url: string }[];
       accent?: "neutral" | "blue" | "purple" | "green" | "amber" | "pink";
+    }
+  | {
+      kind: "link";
+      url: string;
+      title: string;
+      description?: string;
+      imageUrl?: string;
+      source?: string;
+    }
+  | {
+      kind: "image";
+      imageUrl: string;
+      alt?: string;
+      title?: string;
+      caption?: string;
+      url?: string;
+    }
+  | {
+      kind: "gallery";
+      title?: string;
+      images: { imageUrl: string; alt?: string; caption?: string; url?: string }[];
     };
 
 export interface NpAiWorkspaceChatSession {
