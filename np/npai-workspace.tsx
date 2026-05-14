@@ -557,3 +557,63 @@ export const useUploadNpAiWorkspaceSessionAttachment = ({
 
   return { submit, isLoading, error };
 };
+
+// ---------- Memories ----------
+//
+// Per-user, durable facts the AI has remembered (or the user added) for
+// this workspace. Sent in the system prompt of every chat in the workspace.
+//
+// Backend endpoints (all auto-injected with ?projectId=<currentProject>):
+//   GET    /chat/workspace/memories
+//   POST   /chat/workspace/memories                { content }
+//   PATCH  /chat/workspace/memories/:memoryId      { content }
+//   DELETE /chat/workspace/memories/:memoryId
+
+export type NpAiWorkspaceMemorySource = "ai" | "user";
+
+export interface NpAiWorkspaceMemory {
+  id: string;
+  content: string;
+  source: NpAiWorkspaceMemorySource;
+  projectId: string;
+  sessionUid: string;
+  sessionId?: string;
+  created: number;
+  updated: number;
+}
+
+export const useGetNpAiWorkspaceMemories = (props?: { enabled?: boolean }) => {
+  return useProjectGetBase<NpAiWorkspaceMemory[]>({
+    path: "chat/workspace/memories",
+    enabled: props?.enabled,
+  });
+};
+
+export const useCreateNpAiWorkspaceMemory = () => {
+  return useProjectRequest<{ content: string }>({
+    path: "chat/workspace/memories",
+    method: "post",
+  });
+};
+
+export const useUpdateNpAiWorkspaceMemory = ({
+  memoryId,
+}: {
+  memoryId: string;
+}) => {
+  return useProjectRequest<{ content: string }>({
+    path: `chat/workspace/memories/${memoryId}`,
+    method: "PATCH",
+  });
+};
+
+export const useDeleteNpAiWorkspaceMemory = ({
+  memoryId,
+}: {
+  memoryId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/memories/${memoryId}`,
+    method: "delete",
+  });
+};
