@@ -32,11 +32,20 @@ export interface NpAiWorkspaceChatMessage {
  * Discriminated union of cards the AI can render inline in a chat message.
  * Add new variants here as more tools are introduced.
  */
-export type NpAiWorkspaceChatCard = {
-  kind: "memory";
-  memoryId: string;
-  content: string;
-};
+export type NpAiWorkspaceChatCard =
+  | {
+      kind: "memory";
+      memoryId: string;
+      content: string;
+    }
+  | {
+      kind: "info";
+      eyebrow?: string;
+      title: string;
+      subtitle?: string;
+      items?: { label: string; value?: string }[];
+      accent?: "neutral" | "blue" | "purple" | "green" | "amber" | "pink";
+    };
 
 export interface NpAiWorkspaceChatSession {
   id: string;
