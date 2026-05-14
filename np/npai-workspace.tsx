@@ -44,6 +44,7 @@ export type NpAiWorkspaceChatCard =
       title: string;
       subtitle?: string;
       items?: { label: string; value?: string }[];
+      links?: { label: string; url: string }[];
       accent?: "neutral" | "blue" | "purple" | "green" | "amber" | "pink";
     };
 
