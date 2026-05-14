@@ -142,6 +142,7 @@ export interface NpAiWorkspaceChatProgress {
     | "thinking"
     | "tool_running"
     | "tool_done"
+    | "tool_error"
     | "saving"
     | "done"
     | "error";
