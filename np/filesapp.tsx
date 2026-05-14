@@ -1,9 +1,11 @@
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectRequest } from "./projects";
+import { useGet } from "../helper/ApiRequestsBase";
 import {
   AppFile,
   CreateFileShareLinkInput,
   FileShareLink,
+  ResolvedFileShareLink,
 } from "./types";
 
 export const {
@@ -56,6 +58,26 @@ export const useRevokeFilesAppShareLink = () => {
   return useProjectRequest<{ token: string }>({
     path: "files_app/share_links",
     method: "delete",
+  });
+};
+
+// Public — resolve a share link by token. No auth required; the token is
+// the credential. Used by the sharing landing page in the SPA to render
+// the shared file/folder for an unauthenticated visitor.
+export const useResolveFilesAppShareLink = ({
+  projectId,
+  token,
+  enabled = true,
+}: {
+  projectId: string;
+  token: string;
+  enabled?: boolean;
+}) => {
+  return useGet<ResolvedFileShareLink>({
+    path: `sharing/files/${projectId}/${token}/info`,
+    options: {},
+    deps: [projectId, token],
+    enabled: enabled && !!projectId && !!token,
   });
 };
 

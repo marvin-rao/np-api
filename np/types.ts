@@ -208,6 +208,10 @@ export type CreateFileShareLinkInput = {
     expiresAt?: number;
 }
 
+export type ResolvedFileShareLink =
+    | { type: "file"; link: FileShareLink; file: AppFile }
+    | { type: "folder"; link: FileShareLink; folder: AppFile };
+
 export type SystemAudio = {
     id: string;
     originUri: string;
