@@ -16,6 +16,15 @@ import { getBToken } from "../helper/utils";
 import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import { ServerResult } from "./types";
 
+export interface NpAiWorkspaceChatMessageAttachment {
+  id: string;
+  name: string;
+  mime: string;
+  kind: "file" | "image";
+  url?: string;
+  size?: number;
+}
+
 export interface NpAiWorkspaceChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -26,6 +35,8 @@ export interface NpAiWorkspaceChatMessage {
   sessionUid: string;
   /** Inline cards the AI attached to this message (e.g. a memory it just saved). */
   cards?: NpAiWorkspaceChatCard[];
+  /** Files/images that were attached to this turn (user messages only). */
+  attachments?: NpAiWorkspaceChatMessageAttachment[];
 }
 
 /**
