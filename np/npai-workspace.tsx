@@ -91,6 +91,19 @@ export type NpAiWorkspaceChatCard =
       excerpt: string;
       /** Full HTML content for the in-card expand view. */
       contentHtml: string;
+    }
+  | {
+      /** An email the AI sent on behalf of the user (to themself). */
+      kind: "email";
+      /** Address the email was delivered to. */
+      to: string;
+      subject: string;
+      /** Plain-text excerpt of the body (≈280 chars) for the collapsed preview. */
+      excerpt: string;
+      /** Full HTML body for the in-card expand view. */
+      bodyHtml: string;
+      /** When the send completed (ms). */
+      sentAt: number;
     };
 
 export interface NpAiWorkspaceChatSession {
