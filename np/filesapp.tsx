@@ -1,5 +1,5 @@
 import { generateEntityHooks } from "./hooks/generateEntityHooks";
-import { useProjectGetBase, useProjectRequest, useProjectId } from "./projects";
+import { useProjectRequest, useProjectId } from "./projects";
 import { useGet } from "../helper/ApiRequestsBase";
 import {
   AppFile,
