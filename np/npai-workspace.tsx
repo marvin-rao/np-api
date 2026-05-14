@@ -67,6 +67,17 @@ export type NpAiWorkspaceChatCard =
       kind: "gallery";
       title?: string;
       images: { imageUrl: string; alt?: string; caption?: string; url?: string }[];
+    }
+  | {
+      /** Downloadable file (PDF, doc, zip, audio, video, etc.). */
+      kind: "file";
+      url: string;
+      name: string;
+      /** Mime type, e.g. "application/pdf". Used to pick an icon. */
+      mime?: string;
+      /** Size in bytes (for display). */
+      size?: number;
+      description?: string;
     };
 
 export interface NpAiWorkspaceChatSession {
