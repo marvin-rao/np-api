@@ -78,6 +78,19 @@ export type NpAiWorkspaceChatCard =
       /** Size in bytes (for display). */
       size?: number;
       description?: string;
+    }
+  | {
+      /** A note the AI created in the user's notes app. */
+      kind: "note";
+      noteId: string;
+      folderId: string;
+      folderName: string;
+      projectId: string;
+      title: string;
+      /** Plain text excerpt for the collapsed preview (~280 chars). */
+      excerpt: string;
+      /** Full HTML content for the in-card expand view. */
+      contentHtml: string;
     };
 
 export interface NpAiWorkspaceChatSession {
