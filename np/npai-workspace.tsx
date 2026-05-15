@@ -37,6 +37,12 @@ export interface NpAiWorkspaceChatMessage {
   cards?: NpAiWorkspaceChatCard[];
   /** Files/images that were attached to this turn (user messages only). */
   attachments?: NpAiWorkspaceChatMessageAttachment[];
+  /**
+   * How this message reached the chat. Default (undefined) = typed in the app.
+   * "email" = posted in via the inbound-email webhook (user replied to an
+   * email the AI sent).
+   */
+  source?: "chat" | "email";
 }
 
 /**
