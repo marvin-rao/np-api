@@ -121,6 +121,33 @@ export type NpAiWorkspaceChatCard =
       bodyHtml: string;
       /** When the send completed (ms). */
       sentAt: number;
+    }
+  | {
+      /** A task the AI created in the project's tasks board. */
+      kind: "task";
+      taskId: string;
+      projectId: string;
+      boardId: string;
+      boardName: string;
+      title: string;
+      description?: string;
+      type: "Task" | "Bug" | "Issue" | "Blocker";
+      priority: 1 | 2 | 3 | 4 | 5;
+      /** YYYY-MM-DD, empty / undefined when not set. */
+      dueDate?: string;
+      assignee: {
+        /** projectUserId. */
+        id: string;
+        name: string;
+        email?: string;
+        avatarUrl?: string;
+        /** True when the assignee is the requesting user. */
+        isSelf: boolean;
+      };
+      /** Lifecycle status for future updates; "open" at creation. */
+      status?: "open" | "done";
+      /** Optional deeplink into the Tasks app. */
+      url?: string;
     };
 
 export interface NpAiWorkspaceChatSession {
