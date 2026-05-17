@@ -775,3 +775,79 @@ export const useDeleteNpAiWorkspaceMemory = ({
     method: "delete",
   });
 };
+
+// ---------- AI follow-up list ----------
+//
+// Generic "things the AI is following up on" — task, customer, deal, note,
+// contact, inbox conversation, or a free-form reminder. Stored per project.
+//
+// Backend endpoints:
+//   GET    /chat/workspace/ai/followups?status=open|done|snoozed|all
+//   POST   /chat/workspace/ai/followups/:followupId/complete
+//   POST   /chat/workspace/ai/followups/:followupId/reopen
+//   DELETE /chat/workspace/ai/followups/:followupId
+
+export type NpAiFollowupStatus = "open" | "done" | "snoozed";
+
+export interface NpAiFollowup {
+  id: string;
+  objectType: string; // "task" | "customer" | "deal" | "note" | "contact" | "inbox" | "manual" | "other"
+  objectId?: string;
+  title: string;
+  note?: string;
+  dueDate?: string;
+  snoozedUntil?: number;
+  status: NpAiFollowupStatus;
+  createdBy: string;
+  created: number;
+  updated: number;
+  completedAt?: number;
+}
+
+export const useNpAiFollowups = ({
+  status,
+  enabled = true,
+}: {
+  status?: NpAiFollowupStatus | "all";
+  enabled?: boolean;
+} = {}) => {
+  const qs = status ? `&status=${status}` : "";
+  return useProjectGetBase<{ items: NpAiFollowup[] }>({
+    path: `chat/workspace/ai/followups${qs ? `?${qs.slice(1)}` : ""}`,
+    enabled,
+  });
+};
+
+export const useCompleteNpAiFollowup = ({
+  followupId,
+}: {
+  followupId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/ai/followups/${followupId}/complete`,
+    method: "post",
+  });
+};
+
+export const useReopenNpAiFollowup = ({
+  followupId,
+}: {
+  followupId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/ai/followups/${followupId}/reopen`,
+    method: "post",
+  });
+};
+
+export const useDeleteNpAiFollowup = ({
+  followupId,
+}: {
+  followupId: string;
+}) => {
+  return useProjectRequest<undefined>({
+    path: `chat/workspace/ai/followups/${followupId}`,
+    method: "delete",
+  });
+};
+
