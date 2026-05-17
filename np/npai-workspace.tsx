@@ -11,6 +11,7 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { useGet } from "../helper/ApiRequestsBase";
 import { useAuthData } from "../helper/provider";
 import { getBToken } from "../helper/utils";
 import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
@@ -811,10 +812,13 @@ export const useNpAiFollowups = ({
   status?: NpAiFollowupStatus | "all";
   enabled?: boolean;
 } = {}) => {
-  const qs = status ? `&status=${status}` : "";
-  return useProjectGetBase<{ items: NpAiFollowup[] }>({
-    path: `chat/workspace/ai/followups${qs ? `?${qs.slice(1)}` : ""}`,
-    enabled,
+  const { projectId } = useProjectId();
+  const query = `?projectId=${projectId}${status ? `&status=${status}` : ""}`;
+  return useGet<{ items: NpAiFollowup[] }>({
+    path: "chat/workspace/ai/followups",
+    options: { queryString: query },
+    deps: [projectId, status],
+    enabled: enabled && !!projectId,
   });
 };
 
