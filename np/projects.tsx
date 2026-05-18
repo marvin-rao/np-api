@@ -190,6 +190,13 @@ export type ProjectUsageSummary = {
       >;
     };
     recentUsage: AiUsage[];
+    limits: {
+      workspaceChat: {
+        monthlyTokenCap: number;
+        monthlyTokensUsed: number;
+        monthResetsAt: number;
+      };
+    };
   };
   storage: StorageResult;
   email: {
