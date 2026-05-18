@@ -3,7 +3,8 @@ import { useAuthData } from "../../../helper/provider";
 import { useCreateWorkspace } from "../../projects";
 import { Workspace } from "../../types";
 import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
-import { style } from "./styles";
+import { makeStyle } from "./styles";
+import { usePrefersDark } from "./useColorScheme";
 
 type Props = {
   onSelect: (workspace: Workspace) => void;
@@ -23,6 +24,9 @@ export const WorkspacesModalView = ({
   onWorkspaceCreated,
 }: Props) => {
   const { callerProduct } = useAuthData();
+  const dark = usePrefersDark();
+  const style = makeStyle(dark);
+  const p = style.palette;
   const [filter, setFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -85,6 +89,7 @@ export const WorkspacesModalView = ({
         onCancel={() => setShowCreateForm(false)}
         loading={createLoading}
         error={error?.message ?? ""}
+        dark={dark}
       />
     );
   }
@@ -95,7 +100,12 @@ export const WorkspacesModalView = ({
       <div style={style.modal}>
         {loading && (
           <div
-            style={{ textAlign: "center", padding: "8px", fontSize: "14px" }}
+            style={{
+              textAlign: "center",
+              padding: "8px",
+              fontSize: "14px",
+              color: p.textPrimary,
+            }}
           >
             Loading Workspaces
           </div>
@@ -125,10 +135,8 @@ export const WorkspacesModalView = ({
                 <input
                   style={{
                     ...style.searchInput,
-                    borderColor: filter ? "#2563eb" : "#d1d5db",
-                    boxShadow: filter
-                      ? "0 0 0 3px rgba(59, 130, 246, 0.1)"
-                      : "none",
+                    borderColor: filter ? p.accent : p.inputBorder,
+                    boxShadow: filter ? `0 0 0 3px ${p.accentSofter}` : "none",
                   }}
                   type="text"
                   placeholder="Search workspaces by name..."
@@ -141,7 +149,7 @@ export const WorkspacesModalView = ({
                     style={{
                       ...style.clearButton,
                       backgroundColor:
-                        hoveredId === "clear" ? "#f3f4f6" : "transparent",
+                        hoveredId === "clear" ? p.hoverSurface : "transparent",
                     }}
                     onClick={handleClearSearch}
                     onMouseEnter={() => setHoveredId("clear")}
@@ -172,7 +180,7 @@ export const WorkspacesModalView = ({
                       <button
                         onClick={handleClearSearch}
                         style={{
-                          color: "#2563eb",
+                          color: p.accent,
                           background: "none",
                           border: "none",
                           cursor: "pointer",
@@ -197,8 +205,8 @@ export const WorkspacesModalView = ({
                         onClick={() => setShowCreateForm(true)}
                         style={{
                           ...style.createButton,
-                          backgroundColor: "#2563eb",
-                          color: "white",
+                          backgroundColor: p.accent,
+                          color: dark ? "#0b1220" : "white",
                           border: "none",
                           padding: "0.75rem 1.5rem",
                         }}
@@ -227,11 +235,11 @@ export const WorkspacesModalView = ({
                       ...style.item,
                       backgroundColor:
                         workspace.id === currentWorkspaceId
-                          ? "rgba(59, 130, 246, 0.15)"
+                          ? p.accentSoft
                           : selectedId === workspace.id
-                          ? "rgba(59, 130, 246, 0.1)"
+                          ? p.accentSofter
                           : hoveredId === workspace.id
-                          ? "rgba(59, 130, 246, 0.05)"
+                          ? p.accentSoftest
                           : "transparent",
                       transform:
                         hoveredId === workspace.id ? "translateX(4px)" : "none",
@@ -241,7 +249,7 @@ export const WorkspacesModalView = ({
                           : "none",
                       borderLeft:
                         workspace.id === currentWorkspaceId
-                          ? "4px solid #2563eb"
+                          ? `4px solid ${p.accent}`
                           : "none",
                     }}
                     onClick={() => {
@@ -256,10 +264,10 @@ export const WorkspacesModalView = ({
                         ...style.avatar,
                         backgroundColor:
                           workspace.id === currentWorkspaceId
-                            ? "rgba(59, 130, 246, 0.3)"
+                            ? p.accentSoft
                             : hoveredId === workspace.id
-                            ? "rgba(59, 130, 246, 0.2)"
-                            : "rgba(59, 130, 246, 0.1)",
+                            ? p.accentSofter
+                            : p.accentSoftest,
                         transform:
                           hoveredId === workspace.id
                             ? "scale(1.1)"
@@ -275,10 +283,10 @@ export const WorkspacesModalView = ({
                             ...style.itemTitle,
                             color:
                               workspace.id === currentWorkspaceId
-                                ? "#2563eb"
+                                ? p.accent
                                 : hoveredId === workspace.id
-                                ? "#2563eb"
-                                : "#111827",
+                                ? p.accent
+                                : p.textPrimary,
                             fontWeight:
                               workspace.id === currentWorkspaceId ? 600 : 500,
                           }}
@@ -289,7 +297,7 @@ export const WorkspacesModalView = ({
                               style={{
                                 marginLeft: "8px",
                                 fontSize: "0.75rem",
-                                color: "#2563eb",
+                                color: p.accent,
                               }}
                             >
                               (Current)
@@ -305,7 +313,9 @@ export const WorkspacesModalView = ({
                         style={{
                           ...style.description,
                           color:
-                            hoveredId === workspace.id ? "#4b5563" : "#6b7280",
+                            hoveredId === workspace.id
+                              ? p.textSecondary
+                              : p.textMuted,
                         }}
                       >
                         {workspace.description}
@@ -319,10 +329,10 @@ export const WorkspacesModalView = ({
                         style={{
                           ...style.editIcon,
                           color:
-                            hoveredId === workspace.id ? "#2563eb" : "#6b7280",
+                            hoveredId === workspace.id ? p.accent : p.textMuted,
                           backgroundColor:
                             hoveredId === workspace.id
-                              ? "rgba(59, 130, 246, 0.1)"
+                              ? p.accentSofter
                               : "transparent",
                         }}
                         onClick={(e) => handleEditWorkspace(workspace, e)}
@@ -359,9 +369,10 @@ export const WorkspacesModalView = ({
                 style={{
                   ...style.createButton,
                   backgroundColor:
-                    hoveredId === "create" ? "#f0f7ff" : "transparent",
-                  borderColor: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
-                  color: hoveredId === "create" ? "#1d4ed8" : "#2563eb",
+                    hoveredId === "create" ? p.accentSoftest : "transparent",
+                  borderColor:
+                    hoveredId === "create" ? p.accentHover : p.accent,
+                  color: hoveredId === "create" ? p.accentHover : p.accent,
                 }}
                 onClick={() => setShowCreateForm(true)}
                 onMouseEnter={() => setHoveredId("create")}
@@ -384,8 +395,8 @@ export const WorkspacesModalView = ({
                   ...style.cancelButton,
                   //   @ts-ignore
                   ":hover": {
-                    color: "#111827",
-                    backgroundColor: "#e5e7eb",
+                    color: p.textPrimary,
+                    backgroundColor: p.hoverSurface,
                   },
                 }}
                 onClick={onClose}

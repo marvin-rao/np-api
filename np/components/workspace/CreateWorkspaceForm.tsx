@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { style } from "./styles";
+import { makeStyle } from "./styles";
 
 type Props = {
   onSubmit: (data: { name: string; description: string }) => void;
   onCancel: () => void;
   loading: boolean;
   error: string;
+  dark?: boolean;
 };
 
 export const CreateWorkspaceForm = ({
@@ -13,7 +14,10 @@ export const CreateWorkspaceForm = ({
   onCancel,
   loading,
   error,
+  dark = false,
 }: Props) => {
+  const style = makeStyle(dark);
+  const p = style.palette;
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
 
@@ -50,7 +54,7 @@ export const CreateWorkspaceForm = ({
         alignItems: "center",
         justifyContent: "center",
         padding: "1rem",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: p.overlay,
         backdropFilter: "blur(4px)",
       }}
     >
@@ -71,10 +75,10 @@ export const CreateWorkspaceForm = ({
                 style={{
                   marginBottom: "1.5rem",
                   padding: "0.75rem",
-                  backgroundColor: "#fef2f2",
-                  border: "1px solid #fecaca",
+                  backgroundColor: p.errorBg,
+                  border: `1px solid ${p.errorBorder}`,
                   borderRadius: "0.375rem",
-                  color: "#dc2626",
+                  color: p.errorText,
                   fontSize: "0.875rem",
                 }}
               >
@@ -89,7 +93,7 @@ export const CreateWorkspaceForm = ({
                   display: "block",
                   fontSize: "0.875rem",
                   fontWeight: 500,
-                  color: "#374151",
+                  color: p.textSecondary,
                   marginBottom: "0.5rem",
                 }}
               >
@@ -102,12 +106,16 @@ export const CreateWorkspaceForm = ({
                 style={{
                   width: "100%",
                   padding: "0.75rem",
-                  border: nameError ? "1px solid #dc2626" : "1px solid #d1d5db",
+                  border: nameError
+                    ? `1px solid ${p.errorText}`
+                    : `1px solid ${p.inputBorder}`,
                   borderRadius: "0.375rem",
                   fontSize: "14px",
                   transition:
                     "box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out",
                   boxSizing: "border-box" as const,
+                  backgroundColor: p.inputBg,
+                  color: p.textPrimary,
                   boxShadow: nameError
                     ? "0 0 0 3px rgba(220, 38, 38, 0.1)"
                     : "none",
@@ -121,7 +129,7 @@ export const CreateWorkspaceForm = ({
                 <p
                   style={{
                     fontSize: "0.75rem",
-                    color: "#dc2626",
+                    color: p.errorText,
                     marginTop: "0.25rem",
                   }}
                 >
@@ -157,9 +165,14 @@ export const CreateWorkspaceForm = ({
                 padding: "0.5rem 1.5rem",
                 fontSize: "0.875rem",
                 fontWeight: 500,
-                color: "white",
+                color:
+                  loading || !name.trim()
+                    ? p.textMuted
+                    : dark
+                    ? "#0b1220"
+                    : "white",
                 backgroundColor:
-                  loading || !name.trim() ? "#9ca3af" : "#2563eb",
+                  loading || !name.trim() ? p.hoverSurface : p.accent,
                 border: "none",
                 borderRadius: "0.375rem",
                 cursor: loading || !name.trim() ? "not-allowed" : "pointer",
