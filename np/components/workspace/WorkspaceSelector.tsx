@@ -7,10 +7,12 @@ type Props = {
   onSelect: (workspace: Workspace) => void;
   onClose: () => void;
   open: boolean;
+  /** Explicit dark-mode override; when omitted the modal follows the host theme. */
+  dark?: boolean;
 };
 
 export const WorkspaceSelector = (props: Props) => {
-  const { open, onSelect, onClose } = props;
+  const { open, onSelect, onClose, dark } = props;
   const { data, loading, refetch } = useProjects();
   const { projectId } = useProjectId();
   const workspaceData = data ?? [];
@@ -25,6 +27,7 @@ export const WorkspaceSelector = (props: Props) => {
       loading={loading}
       currentWorkspaceId={projectId}
       onWorkspaceCreated={refetch}
+      dark={dark}
     />
   );
 };

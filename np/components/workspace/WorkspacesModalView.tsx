@@ -4,7 +4,7 @@ import { useCreateWorkspace } from "../../projects";
 import { Workspace } from "../../types";
 import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
 import { makeStyle } from "./styles";
-import { usePrefersDark } from "./useColorScheme";
+import { useResolvedDarkMode } from "./useColorScheme";
 
 type Props = {
   onSelect: (workspace: Workspace) => void;
@@ -13,6 +13,8 @@ type Props = {
   loading: boolean;
   currentWorkspaceId?: string | null;
   onWorkspaceCreated?: () => void;
+  /** Explicit dark-mode override; when omitted the modal follows the host theme. */
+  dark?: boolean;
 };
 
 export const WorkspacesModalView = ({
@@ -22,9 +24,10 @@ export const WorkspacesModalView = ({
   loading,
   currentWorkspaceId,
   onWorkspaceCreated,
+  dark: darkOverride,
 }: Props) => {
   const { callerProduct } = useAuthData();
-  const dark = usePrefersDark();
+  const dark = useResolvedDarkMode(darkOverride);
   const style = makeStyle(dark);
   const p = style.palette;
   const [filter, setFilter] = useState("");
