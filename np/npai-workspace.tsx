@@ -44,6 +44,14 @@ export interface NpAiWorkspaceChatMessage {
    * email the AI sent).
    */
   source?: "chat" | "email";
+  /** Model that produced this assistant message. Assistant only. */
+  model?: string;
+  /** Token usage reported by the model for this assistant turn. */
+  usage?: {
+    input_tokens: number;
+    output_tokens: number;
+    total_tokens: number;
+  };
 }
 
 /**
