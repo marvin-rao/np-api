@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "version": "8.0.71",
-=======
   "version": "9.0.73",
->>>>>>> 343eaf2d39a4ac4b4714d6728d4e189eb1ce8dc6
   "name": "newpaper-api",
   "type": "module",
   "scripts": {
