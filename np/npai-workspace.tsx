@@ -44,6 +44,14 @@ export interface NpAiWorkspaceChatMessage {
    * email the AI sent).
    */
   source?: "chat" | "email";
+  /** Model that produced this assistant message. Assistant only. */
+  model?: string;
+  /** Token usage reported by the model for this assistant turn. */
+  usage?: {
+    input_tokens: number;
+    output_tokens: number;
+    total_tokens: number;
+  };
 }
 
 /**
@@ -161,6 +169,7 @@ export interface NpAiWorkspaceChatSession {
   messageCount: number;
   lastMessage?: string;
   aiProjectId?: string;
+  activeAgentId?: string;
 }
 
 export interface NpAiWorkspaceChatResponse {
@@ -168,7 +177,7 @@ export interface NpAiWorkspaceChatResponse {
 }
 
 export const useCreateNpAiWorkspaceSession = () => {
-  return useProjectRequest<{ title?: string; aiProjectId?: string }>({
+  return useProjectRequest<{ title?: string; aiProjectId?: string; activeAgentId?: string }>({
     path: "chat/workspace/sessions",
     method: "post",
   });
@@ -233,7 +242,7 @@ export const useUpdateNpAiWorkspaceSession = ({
 }: {
   sessionId: string;
 }) => {
-  return useProjectRequest<{ title?: string }>({
+  return useProjectRequest<{ title?: string; activeAgentId?: string | null }>({
     path: `chat/workspace/sessions/${sessionId}`,
     method: "PATCH",
   });
@@ -855,3 +864,44 @@ export const useDeleteNpAiFollowup = ({
   });
 };
 
+
+// ----------------------------------------------------------------------
+// Agents (premade catalogue)
+//
+// Routes:
+//   GET  /chat/workspace/agents
+//   GET  /chat/workspace/agents/:agentId
+//
+// Agents are reusable personas the user can toggle on for a chat session
+// (see useUpdateNpAiWorkspaceSession with `activeAgentId`). For now the
+// catalogue is built-in and shipped by the backend.
+
+export interface NpAiWorkspaceAgent {
+  id: string;
+  title: string;
+  summary: string;
+  icon: string;
+  color: string;
+  instructions: string;
+  premade: true;
+}
+
+export const useGetNpAiWorkspaceAgents = (props?: { enabled?: boolean }) => {
+  return useProjectGetBase<NpAiWorkspaceAgent[]>({
+    path: "chat/workspace/agents",
+    enabled: props?.enabled,
+  });
+};
+
+export const useGetNpAiWorkspaceAgent = ({
+  agentId,
+  enabled,
+}: {
+  agentId: string;
+  enabled?: boolean;
+}) => {
+  return useProjectGetBase<NpAiWorkspaceAgent>({
+    path: `chat/workspace/agents/${agentId}`,
+    enabled: enabled !== undefined ? enabled : !!agentId,
+  });
+};
