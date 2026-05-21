@@ -9,6 +9,7 @@ import {
 import { openWorkspace } from "./NewPaperProvider";
 import { ProfileImage } from "./ProfileImage";
 import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
+import { AppLauncher } from "./AppLauncher";
 import { navbarStyles as styles, osWorkspaceButton, osWorkspaceButtonHover, legacyWorkspaceButton, legacyWorkspaceButtonHover } from "./Navbar.styles";
 import { useOsDesign } from "../design/OsDesignContext";
 
@@ -181,6 +182,8 @@ export const NPMainActionBar = ({
               />
             </svg>
           </button>
+
+          <AppLauncher />
 
           <div style={styles.profileSection} ref={popoverRef}>
             <ProfileImage

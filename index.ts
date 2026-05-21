@@ -46,5 +46,11 @@ export {
 
 export { NewPaperProvider, NPMainActionBar, WorkspaceSelector };
 export { OsDesignProvider, useOsDesign } from "./np/design/OsDesignContext";
+export { AppLauncher } from "./np/components/AppLauncher";
+export {
+  NEWPAPER_APPS,
+  buildNewpaperAppUrl,
+} from "./np/components/AppLauncher.apps";
+export type { NewpaperAppDef } from "./np/components/AppLauncher.apps";
 
 
