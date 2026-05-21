@@ -8,6 +8,38 @@ import {
     NewpaperAppIcon,
 } from "./AppLauncher.apps";
 
+const NP_APP_LAUNCHER_STYLE_ID = "np-app-launcher-responsive";
+if (
+    typeof document !== "undefined" &&
+    !document.getElementById(NP_APP_LAUNCHER_STYLE_ID)
+) {
+    const s = document.createElement("style");
+    s.id = NP_APP_LAUNCHER_STYLE_ID;
+    s.textContent = `
+    .np-app-launcher-popover {
+      width: min(360px, calc(100vw - 16px));
+      max-width: calc(100vw - 16px);
+    }
+    @media (max-width: 480px) {
+      .np-app-launcher-popover {
+        position: fixed !important;
+        top: 56px !important;
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 10px !important;
+        transform-origin: top center !important;
+      }
+      .np-app-launcher-grid { gap: 2px !important; }
+      .np-app-launcher-tile { padding: 10px 4px !important; }
+      .np-app-launcher-tile img,
+      .np-app-launcher-tile .np-app-launcher-fallback { width: 48px !important; height: 48px !important; border-radius: 12px !important; }
+    }
+  `;
+    document.head.appendChild(s);
+}
+
 interface AppLauncherProps {
     /** Override the dark-mode signal (defaults to the host theme). */
     dark?: boolean;
@@ -102,6 +134,7 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
             </button>
 
             <div
+                className="np-app-launcher-popover"
                 style={{
                     ...styles.popover,
                     background: palette.popoverBg,
@@ -127,10 +160,11 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                 >
                     Newpaper apps
                 </div>
-                <div style={styles.grid}>
+                <div style={styles.grid} className="np-app-launcher-grid">
                     {apps.map((app) => (
                         <a
                             key={app.id}
+                            className="np-app-launcher-tile"
                             href={buildNewpaperAppUrl(app, projectId)}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -243,7 +277,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         position: "absolute",
         top: "calc(100% + 8px)",
         right: 0,
-        width: 360,
         padding: 12,
         borderRadius: 20,
         zIndex: 1000,

@@ -165,6 +165,7 @@ export const NewpaperAppIcon: React.FC<{ app: NewpaperAppDef }> = ({
         return (
             <div
                 aria-hidden="true"
+                className="np-app-launcher-fallback"
                 style={{
                     width: 56,
                     height: 56,
