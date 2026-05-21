@@ -144,8 +144,9 @@ export const navbarStyles: Styles = {
         fontWeight: "500",
     },
     workspaceButtonHover: {
-        backgroundColor: "#e9ecef" as string,
-        borderColor: "#dee2e6",
+        backgroundColor: "rgba(0,122,255,0.10)" as string,
+        borderColor: "rgba(0,122,255,0.25)",
+        color: "#0a66c2",
     },
     subscriptionPromo: {
         background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -235,5 +236,7 @@ export const osWorkspaceButton: CSSProperties = {
 };
 
 export const osWorkspaceButtonHover: CSSProperties = {
-    backgroundColor: "rgba(0,0,0,0.07)",
+    // Apple system-blue tint, subtle on light surfaces.
+    backgroundColor: "rgba(0,122,255,0.12)",
+    color: "#0a66c2",
 };

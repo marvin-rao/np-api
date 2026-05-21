@@ -20,6 +20,9 @@ if (typeof document !== "undefined" && !document.getElementById(NP_NAVBAR_STYLE_
   s.textContent = `
     .np-workspace-label { max-width: 40vw; }
     @media (max-width: 640px) { .np-workspace-label { max-width: 80px; } }
+    .np-workspace-leading-icon { display: inline-flex; align-items: center; margin-right: 2px; opacity: 0.7; transition: opacity 0.15s ease; }
+    button:hover .np-workspace-leading-icon { opacity: 1; }
+    @media (max-width: 640px) { .np-workspace-leading-icon { display: none; } }
   `;
   document.head.appendChild(s);
 }
@@ -148,6 +151,18 @@ export const NPMainActionBar = ({
               }
             }}
           >
+            <span className="np-workspace-leading-icon" aria-hidden="true">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="2" y="3.5" width="12" height="9" rx="1.75" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M6 3.5V2.5C6 2.22 6.22 2 6.5 2H9.5C9.78 2 10 2.22 10 2.5V3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </span>
             <span
               className="np-workspace-label"
               style={{

@@ -60,12 +60,14 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = palette.btnHoverBg;
+                    e.currentTarget.style.backgroundColor = open
+                        ? palette.btnOpenBg
+                        : palette.btnHoverBg;
                     e.currentTarget.style.opacity = "1";
                 }}
                 onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = open
-                        ? palette.btnHoverBg
+                        ? palette.btnOpenBg
                         : "transparent";
                     e.currentTarget.style.opacity = open ? "1" : "0.75";
                     e.currentTarget.style.transform = "scale(1)";
@@ -76,7 +78,9 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                     e.currentTarget.style.transform = "scale(0.92)";
                 }}
                 onMouseUp={(e) => {
-                    e.currentTarget.style.backgroundColor = palette.btnHoverBg;
+                    e.currentTarget.style.backgroundColor = open
+                        ? palette.btnOpenBg
+                        : palette.btnHoverBg;
                     e.currentTarget.style.transform = "scale(1)";
                 }}
                 onBlur={(e) => {
@@ -91,7 +95,7 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                     // the hover/active wash and popover chrome.
                     color: "currentColor",
                     opacity: open ? 1 : 0.75,
-                    backgroundColor: open ? palette.btnHoverBg : "transparent",
+                    backgroundColor: open ? palette.btnOpenBg : "transparent",
                 }}
             >
                 <NineDotIcon />
@@ -107,8 +111,11 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                     visibility: open ? "visible" : "hidden",
                     transform: open
                         ? "translateY(0) scale(1)"
-                        : "translateY(-6px) scale(0.98)",
+                        : "translateY(-10px) scale(0.94)",
                     pointerEvents: open ? "auto" : "none",
+                    transition: open
+                        ? "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 260ms cubic-bezier(0.16, 1, 0.3, 1), visibility 0s"
+                        : "opacity 140ms ease-out, transform 160ms ease-out, visibility 0s linear 160ms",
                 }}
                 role="menu"
             >
@@ -189,6 +196,7 @@ const makePalette = (dark: boolean) =>
               btnIcon: "rgba(255,255,255,0.85)",
               btnHoverBg: "rgba(255,255,255,0.08)",
               btnActiveBg: "rgba(255,255,255,0.14)",
+              btnOpenBg: "rgba(255,255,255,0.16)",
               popoverBg: "rgba(28,28,32,0.85)",
               popoverBorder: "rgba(255,255,255,0.08)",
               popoverShadow:
@@ -202,6 +210,7 @@ const makePalette = (dark: boolean) =>
               btnIcon: "rgba(0,0,0,0.65)",
               btnHoverBg: "rgba(0,0,0,0.06)",
               btnActiveBg: "rgba(0,0,0,0.12)",
+              btnOpenBg: "rgba(0,0,0,0.12)",
               popoverBg: "rgba(250,250,252,0.92)",
               popoverBorder: "rgba(0,0,0,0.06)",
               popoverShadow:
@@ -234,14 +243,14 @@ const styles: { [key: string]: React.CSSProperties } = {
         position: "absolute",
         top: "calc(100% + 8px)",
         right: 0,
-        width: 320,
+        width: 360,
         padding: 12,
         borderRadius: 20,
         zIndex: 1000,
         backdropFilter: "saturate(180%) blur(30px)",
         WebkitBackdropFilter: "saturate(180%) blur(30px)",
-        transition: "opacity 180ms ease, transform 180ms ease",
         transformOrigin: "top right",
+        willChange: "opacity, transform",
     },
     eyebrow: {
         fontSize: 10,
@@ -273,7 +282,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontWeight: 500,
         lineHeight: 1.2,
         textAlign: "center",
-        maxWidth: 80,
+        maxWidth: 96,
         overflow: "hidden",
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",

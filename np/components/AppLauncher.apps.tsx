@@ -166,16 +166,16 @@ export const NewpaperAppIcon: React.FC<{ app: NewpaperAppDef }> = ({
             <div
                 aria-hidden="true"
                 style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 14,
                     background:
                         "linear-gradient(135deg,#94a3b8 0%,#475569 100%)",
                     color: "#fff",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 18,
+                    fontSize: 22,
                     fontWeight: 700,
                     letterSpacing: "-0.01em",
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18)",
@@ -192,9 +192,9 @@ export const NewpaperAppIcon: React.FC<{ app: NewpaperAppDef }> = ({
             alt=""
             onError={() => setErrored(true)}
             style={{
-                width: 44,
-                height: 44,
-                borderRadius: 12,
+                width: 56,
+                height: 56,
+                borderRadius: 14,
                 objectFit: "contain",
                 display: "block",
             }}
