@@ -23,6 +23,7 @@ if (typeof document !== "undefined" && !document.getElementById(NP_NAVBAR_STYLE_
     .np-workspace-leading-icon { display: inline-flex; align-items: center; margin-right: 2px; opacity: 0.7; transition: opacity 0.15s ease; }
     button:hover .np-workspace-leading-icon { opacity: 1; }
     @media (max-width: 640px) { .np-workspace-leading-icon { display: none; } }
+    @media (max-width: 768px) { .np-workspace-trigger { display: none !important; } }
   `;
   document.head.appendChild(s);
 }
@@ -119,6 +120,7 @@ export const NPMainActionBar = ({
       {!captiveMode && (
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <button
+            className="np-workspace-trigger"
             style={{
               ...wsBtn,
               ...(showWorkspaceDropdown && wsBtnHover),
@@ -198,7 +200,10 @@ export const NPMainActionBar = ({
             </svg>
           </button>
 
-          <AppLauncher />
+          <AppLauncher
+            currentWorkspaceName={currentWorkspace?.name}
+            onChooseWorkspace={() => setShowWorkspaceDropdown(true)}
+          />
 
           <div style={styles.profileSection} ref={popoverRef}>
             <ProfileImage

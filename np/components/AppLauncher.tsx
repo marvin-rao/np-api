@@ -20,7 +20,7 @@ if (
       width: min(360px, calc(100vw - 16px));
       max-width: calc(100vw - 16px);
     }
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       .np-app-launcher-popover {
         position: fixed !important;
         top: 56px !important;
@@ -45,6 +45,10 @@ interface AppLauncherProps {
     dark?: boolean;
     /** Optional override list — defaults to `NEWPAPER_APPS`. */
     apps?: NewpaperAppDef[];
+    /** Name of the current workspace, shown in the header row. */
+    currentWorkspaceName?: string;
+    /** Invoked when the user taps the workspace header row. */
+    onChooseWorkspace?: () => void;
 }
 
 /**
@@ -57,6 +61,8 @@ interface AppLauncherProps {
 export const AppLauncher: React.FC<AppLauncherProps> = ({
     dark: darkOverride,
     apps = NEWPAPER_APPS,
+    currentWorkspaceName,
+    onChooseWorkspace,
 }) => {
     const dark = useResolvedDarkMode(darkOverride);
     const { projectId } = useProjectId();
@@ -152,6 +158,76 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                 }}
                 role="menu"
             >
+                {onChooseWorkspace && (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setOpen(false);
+                            onChooseWorkspace();
+                        }}
+                        style={{
+                            ...styles.workspaceRow,
+                            background: palette.workspaceRowBg,
+                            color: palette.tileLabel,
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                                palette.workspaceRowHoverBg;
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background =
+                                palette.workspaceRowBg;
+                        }}
+                    >
+                        <span style={styles.workspaceRowIcon} aria-hidden="true">
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                            >
+                                <rect
+                                    x="2"
+                                    y="3.5"
+                                    width="12"
+                                    height="9"
+                                    rx="1.75"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                />
+                                <path
+                                    d="M6 3.5V2.5C6 2.22 6.22 2 6.5 2H9.5C9.78 2 10 2.22 10 2.5V3.5"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                />
+                            </svg>
+                        </span>
+                        <span style={styles.workspaceRowText}>
+                            <span style={styles.workspaceRowEyebrow}>
+                                Workspace
+                            </span>
+                            <span style={styles.workspaceRowName}>
+                                {currentWorkspaceName || "Select workspace"}
+                            </span>
+                        </span>
+                        <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            style={{ opacity: 0.6, flexShrink: 0 }}
+                        >
+                            <path
+                                d="M4.5 2.5L8 6L4.5 9.5"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </button>
+                )}
                 <div
                     style={{
                         ...styles.eyebrow,
@@ -239,6 +315,8 @@ const makePalette = (dark: boolean) =>
               tileLabel: "rgba(255,255,255,0.9)",
               tileHoverBg: "rgba(255,255,255,0.06)",
               tileActiveBg: "rgba(255,255,255,0.12)",
+              workspaceRowBg: "rgba(255,255,255,0.05)",
+              workspaceRowHoverBg: "rgba(255,255,255,0.1)",
           }
         : {
               btnIcon: "rgba(0,0,0,0.65)",
@@ -253,6 +331,8 @@ const makePalette = (dark: boolean) =>
               tileLabel: "rgba(0,0,0,0.85)",
               tileHoverBg: "rgba(0,0,0,0.04)",
               tileActiveBg: "rgba(0,0,0,0.09)",
+              workspaceRowBg: "rgba(0,0,0,0.04)",
+              workspaceRowHoverBg: "rgba(0,0,0,0.07)",
           };
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -291,6 +371,53 @@ const styles: { [key: string]: React.CSSProperties } = {
         textTransform: "uppercase",
         letterSpacing: "0.12em",
         padding: "4px 8px 10px",
+    },
+    workspaceRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        width: "100%",
+        padding: "10px 12px",
+        marginBottom: 8,
+        border: "none",
+        borderRadius: 12,
+        cursor: "pointer",
+        textAlign: "left",
+        font: "inherit",
+        transition: "background-color 140ms ease",
+    },
+    workspaceRowIcon: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 28,
+        height: 28,
+        borderRadius: 8,
+        background: "rgba(0,122,255,0.12)",
+        color: "#0a66c2",
+        flexShrink: 0,
+    },
+    workspaceRowText: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minWidth: 0,
+    },
+    workspaceRowEyebrow: {
+        fontSize: 10,
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        opacity: 0.55,
+        lineHeight: 1.2,
+    },
+    workspaceRowName: {
+        fontSize: 13,
+        fontWeight: 600,
+        lineHeight: 1.3,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
     },
     grid: {
         display: "grid",
