@@ -4,8 +4,11 @@ import { useGet } from "../helper/ApiRequestsBase";
 import {
   AppFile,
   CreateFileShareLinkInput,
+  CreateSavedSignatureInput,
   FileShareLink,
   ResolvedFileShareLink,
+  SavedSignature,
+  UpdateSavedSignatureInput,
 } from "./types";
 
 export const {
@@ -79,6 +82,42 @@ export const useResolveFilesAppShareLink = ({
     options: {},
     deps: [projectId, token],
     enabled: enabled && !!projectId && !!token,
+  });
+};
+
+// Saved Signatures — personal, per-user reusable signatures the user can
+// pick from the PDF signer instead of drawing/typing one every time.
+
+export const useSavedSignatures = (options?: { enabled?: boolean }) => {
+  const { projectId } = useProjectId();
+  const params: string[] = [];
+  if (projectId) params.push(`projectId=${encodeURIComponent(projectId)}`);
+  return useGet<SavedSignature[]>({
+    path: "files_app/saved_signatures",
+    options: { queryString: params.length ? `?${params.join("&")}` : "" },
+    deps: [projectId],
+    enabled: options?.enabled !== false && !!projectId,
+  });
+};
+
+export const useCreateSavedSignature = () => {
+  return useProjectRequest<CreateSavedSignatureInput>({
+    path: "files_app/saved_signatures",
+    method: "post",
+  });
+};
+
+export const useUpdateSavedSignature = () => {
+  return useProjectRequest<UpdateSavedSignatureInput>({
+    path: "files_app/saved_signatures",
+    method: "PATCH",
+  });
+};
+
+export const useDeleteSavedSignature = () => {
+  return useProjectRequest<{ id: string }>({
+    path: "files_app/saved_signatures",
+    method: "delete",
   });
 };
 

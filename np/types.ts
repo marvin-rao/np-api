@@ -212,6 +212,29 @@ export type ResolvedFileShareLink =
     | { type: "file"; link: FileShareLink; file: AppFile }
     | { type: "folder"; link: FileShareLink; folder: AppFile };
 
+export type SavedSignatureType = "drawn" | "typed";
+
+export type SavedSignature = {
+    id: string;
+    name: string;
+    type: SavedSignatureType;
+    imageDataUrl: string;
+    creator: Creator;
+    created: number;
+    updated?: number;
+}
+
+export type CreateSavedSignatureInput = {
+    name: string;
+    type: SavedSignatureType;
+    imageDataUrl: string;
+}
+
+export type UpdateSavedSignatureInput = {
+    id: string;
+    name?: string;
+}
+
 export type SystemAudio = {
     id: string;
     originUri: string;
