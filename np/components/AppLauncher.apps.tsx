@@ -113,7 +113,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         // `/project/<id>/tasks/boards`.
         buildUrl: (pid) =>
             pid
-                ? `https://spaceos.newpaper.app/project/${pid}/tasks/boards`
+                ? `https://spaceos.newpaper.app/workspace/${pid}/tasks/boards`
                 : "https://spaceos.newpaper.app/",
     },
     {
