@@ -47,10 +47,12 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         label: "SpaceOS",
         iconUrl: spaceosIcon,
         fallbackGlyph: "◆",
-        // SpaceOS is the main Newpaper shell at newpaper.app. The
+        // SpaceOS is the main Newpaper shell. The
         // workspace dashboard lives at `/project/<id>/`.
         buildUrl: (pid) =>
-            pid ? `https://newpaper.app/project/${pid}/` : "https://newpaper.app/",
+            pid
+                ? `https://spaceos.newpaper.app/project/${pid}/`
+                : "https://spaceos.newpaper.app/",
     },
     {
         id: "spaceai",
@@ -107,12 +109,12 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         label: "Tasks",
         iconUrl: tasksIcon,
         fallbackGlyph: "T",
-        // Tasks lives inside the Newpaper main app at
-        // `/project/<id>/tasks/boards` (per SpaceOS routing).
+        // Tasks lives inside the SpaceOS shell at
+        // `/project/<id>/tasks/boards`.
         buildUrl: (pid) =>
             pid
-                ? `https://newpaper.app/project/${pid}/tasks/boards`
-                : "https://newpaper.app/",
+                ? `https://spaceos.newpaper.app/project/${pid}/tasks/boards`
+                : "https://spaceos.newpaper.app/",
     },
     {
         id: "recruit",
