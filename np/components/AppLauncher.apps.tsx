@@ -51,7 +51,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         // workspace dashboard lives at `/project/<id>/`.
         buildUrl: (pid) =>
             pid
-                ? `https://spaceos.newpaper.app/project/${pid}/`
+                ? `https://spaceos.newpaper.app/workspace/${pid}/`
                 : "https://spaceos.newpaper.app/",
     },
     {
