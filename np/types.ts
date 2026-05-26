@@ -235,6 +235,76 @@ export type UpdateSavedSignatureInput = {
     name?: string;
 }
 
+// Sign Requests
+
+export type SignFieldType = "signature" | "initials" | "text" | "date";
+
+export type SignField = {
+    id: string;
+    type: SignFieldType;
+    pageIndex: number;
+    // Normalized 0..1 coordinates relative to the page (top-left origin).
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    label?: string;
+    required?: boolean;
+    value?: string;
+    imageDataUrl?: string;
+    filledAt?: number;
+}
+
+export type SignRequestStatus = "pending" | "signed" | "declined" | "revoked";
+
+export type SignRequestRecipient =
+    | { kind: "user"; userId: string }
+    | { kind: "email"; email: string; name?: string };
+
+export type SignRequest = {
+    id: string;
+    fileId: string;
+    signedFileId?: string;
+    creator: Creator;
+    created: number;
+    expiresAt?: number;
+    recipient: SignRequestRecipient;
+    fields: SignField[];
+    status: SignRequestStatus;
+    token: string;
+    message?: string;
+    signedAt?: number;
+    declinedAt?: number;
+    declineReason?: string;
+    revokedAt?: number;
+}
+
+export type CreateSignRequestInput = {
+    fileId: string;
+    recipient: SignRequestRecipient;
+    fields: SignField[];
+    message?: string;
+    expiresAt?: number;
+}
+
+export type CreatedSignRequestResult = {
+    request: SignRequest;
+    memberUrl?: string;
+    publicUrl?: string;
+}
+
+export type ResolvedMemberSignRequest = {
+    request: SignRequest;
+    file: AppFile;
+    canSign: boolean;
+}
+
+export type ResolvedPublicSignRequest = {
+    request: SignRequest;
+    file: AppFile;
+    senderName?: string;
+}
+
 export type SystemAudio = {
     id: string;
     originUri: string;

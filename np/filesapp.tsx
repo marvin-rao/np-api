@@ -5,9 +5,14 @@ import {
   AppFile,
   CreateFileShareLinkInput,
   CreateSavedSignatureInput,
+  CreateSignRequestInput,
   FileShareLink,
   ResolvedFileShareLink,
+  ResolvedMemberSignRequest,
+  ResolvedPublicSignRequest,
   SavedSignature,
+  SignField,
+  SignRequest,
   UpdateSavedSignatureInput,
 } from "./types";
 
@@ -121,3 +126,99 @@ export const useDeleteSavedSignature = () => {
   });
 };
 
+
+// Sign Requests
+
+export const useFilesAppSignRequests = (options?: {
+  enabled?: boolean;
+  fileId?: string;
+  scope?: "me" | "mine";
+}) => {
+  const { projectId } = useProjectId();
+  const params: string[] = [];
+  if (projectId) params.push(`projectId=${encodeURIComponent(projectId)}`);
+  if (options?.fileId) params.push(`fileId=${encodeURIComponent(options.fileId)}`);
+  if (options?.scope) params.push(`scope=${encodeURIComponent(options.scope)}`);
+  return useGet<SignRequest[]>({
+    path: "files_app/sign_requests",
+    options: { queryString: params.length ? `?${params.join("&")}` : "" },
+    deps: [projectId, options?.fileId, options?.scope],
+    enabled: options?.enabled !== false && !!projectId,
+  });
+};
+
+export const useCreateFilesAppSignRequest = () => {
+  return useProjectRequest<CreateSignRequestInput>({
+    path: "files_app/sign_requests",
+    method: "post",
+  });
+};
+
+export const useRevokeFilesAppSignRequest = () => {
+  return useProjectRequest<{ id: string }>({
+    path: "files_app/sign_requests",
+    method: "delete",
+  });
+};
+
+// Authed — resolve a sign request by id (recipient must be the caller).
+export const useFilesAppSignRequest = ({
+  requestId,
+  enabled = true,
+}: {
+  requestId: string;
+  enabled?: boolean;
+}) => {
+  const { projectId } = useProjectId();
+  return useGet<ResolvedMemberSignRequest>({
+    path: `files_app/sign_requests/${requestId}`,
+    options: { queryString: projectId ? `?projectId=${encodeURIComponent(projectId)}` : "" },
+    deps: [projectId, requestId],
+    enabled: enabled && !!projectId && !!requestId,
+  });
+};
+
+export const useSubmitFilesAppSignRequest = (requestId: string) => {
+  return useProjectRequest<{
+    signedFile: { url: string; size: number; mimeType: string; name?: string };
+    filledFields?: SignField[];
+  }>({
+    path: `files_app/sign_requests/${requestId}/submit`,
+    method: "post",
+  });
+};
+
+// Public — resolve a sign request by token. No auth required.
+export const useResolvePublicSignRequest = ({
+  projectId,
+  token,
+  enabled = true,
+}: {
+  projectId: string;
+  token: string;
+  enabled?: boolean;
+}) => {
+  return useGet<ResolvedPublicSignRequest>({
+    path: `sharing/files/${projectId}/sign/${token}/info`,
+    options: { queryString: "" },
+    deps: [projectId, token],
+    enabled: enabled && !!projectId && !!token,
+  });
+};
+
+export const usePublicSubmitFilesAppSignRequest = ({
+  projectId,
+  token,
+}: {
+  projectId: string;
+  token: string;
+}) => {
+  return useProjectRequest<{
+    signedFile: { url: string; size: number; mimeType: string; name?: string };
+    filledFields?: SignField[];
+    signerName?: string;
+  }>({
+    path: `sharing/files/${projectId}/sign/${token}/submit`,
+    method: "post",
+  });
+};
