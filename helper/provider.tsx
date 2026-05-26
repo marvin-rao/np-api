@@ -105,7 +105,10 @@ export const AuthProvider = (props: AuthProviderProps) => {
 
 export const useAuthSession = () => {
   const { apiBaseUrl } = useAuthData();
-  const [loading, setLoading] = useState(false);
+  // Start as `true` so consumers can render a spinner on the very first
+  // render — before the session fetch effect has had a chance to run.
+  // Otherwise there's a one-frame flash of the unauthenticated UI.
+  const [loading, setLoading] = useState(true);
   const [cookieIsPresent, setCookieIsPresent] = useState<boolean>(false);
 
   const hasCookieSession = async () => {

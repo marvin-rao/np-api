@@ -22,13 +22,52 @@ export interface NewPaperProviderProps extends AuthProviderProps {
    * Pass e.g. next-themes' `resolvedTheme === "dark"` to force a match.
    */
   dark?: boolean;
+  /**
+   * Optional fullscreen element rendered while the session cookie is being
+   * verified. Defaults to a centred spinner. Pass a branded icon+spinner to
+   * match the host app's identity. Skipped when `ignoreWorkspace` is `true`
+   * (i.e. on public/share routes that don't require auth).
+   */
+  loadingFallback?: React.ReactNode;
 }
+
+const DefaultAuthLoader = () => (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "var(--np-auth-loader-bg, #f8fafc)",
+    }}
+  >
+    <div
+      aria-label="Loading"
+      style={{
+        width: 22,
+        height: 22,
+        border: "2px solid rgba(0,0,0,0.12)",
+        borderTopColor: "rgba(0,0,0,0.45)",
+        borderRadius: "50%",
+        animation: "np-auth-spin 0.8s linear infinite",
+      }}
+    />
+    <style>{`@keyframes np-auth-spin { to { transform: rotate(360deg); } }`}</style>
+  </div>
+);
 
 export const NewPaperProvider = (props: NewPaperProviderProps) => {
   const { projectId } = useProjectId();
-  const { shouldLogin } = useAuthSession();
+  const { shouldLogin, loading } = useAuthSession();
   const [isOpen, setIsOpen] = useState(true);
-  const { osDesign = false, dark, ...authProps } = props;
+  const { osDesign = false, dark, loadingFallback, ...authProps } = props;
+
+  // Gate children behind the auth check so apps don't flash their
+  // unauthenticated UI while the session cookie is being verified.
+  // Public routes (ignoreWorkspace=true) skip this gate — they must render
+  // immediately and don't depend on the session at all.
+  const showLoader = loading && !props.ignoreWorkspace;
 
   return (
     <OsDesignProvider value={osDesign}>
@@ -44,7 +83,7 @@ export const NewPaperProvider = (props: NewPaperProviderProps) => {
             onClose={() => setIsOpen(false)}
           />
         )}
-        {props.children}
+        {showLoader ? (loadingFallback ?? <DefaultAuthLoader />) : props.children}
       </AuthProvider>
     </OsDesignProvider>
   );
