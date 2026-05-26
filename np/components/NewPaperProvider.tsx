@@ -75,8 +75,7 @@ const BrandedAuthLoader = ({ src, alt }: { src: string; alt: string }) => (
             "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
           WebkitMaskComposite: "xor",
           mask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-          // @ts-expect-error - non-standard but widely supported
-          maskComposite: "exclude",
+          maskComposite: "exclude" as React.CSSProperties["maskComposite"],
           animation: "np-auth-spin 1.6s linear infinite",
         }}
       />
