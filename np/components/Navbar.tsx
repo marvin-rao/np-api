@@ -10,8 +10,9 @@ import { openWorkspace } from "./NewPaperProvider";
 import { ProfileImage } from "./ProfileImage";
 import { WorkspaceSelector } from "./workspace/WorkspaceSelector";
 import { AppLauncher } from "./AppLauncher";
-import { navbarStyles as styles, osWorkspaceButton, osWorkspaceButtonHover, legacyWorkspaceButton, legacyWorkspaceButtonHover } from "./Navbar.styles";
+import { navbarStyles as styles, osWorkspaceButton, osWorkspaceButtonHover, osWorkspaceButtonDark, osWorkspaceButtonDarkHover, legacyWorkspaceButton, legacyWorkspaceButtonHover } from "./Navbar.styles";
 import { useOsDesign } from "../design/OsDesignContext";
+import { useResolvedDarkMode } from "./workspace/useColorScheme";
 
 const NP_NAVBAR_STYLE_ID = "np-navbar-responsive-styles";
 if (typeof document !== "undefined" && !document.getElementById(NP_NAVBAR_STYLE_ID)) {
@@ -61,8 +62,13 @@ export const NPMainActionBar = ({
   const currentWorkspace = Workspaces?.find((w) => w.id == projectId);
   const captiveMode = getCaptiveModeFromQuery();
   const osDesign = useOsDesign();
-  const wsBtn = osDesign ? osWorkspaceButton : legacyWorkspaceButton;
-  const wsBtnHover = osDesign ? osWorkspaceButtonHover : legacyWorkspaceButtonHover;
+  const isDark = useResolvedDarkMode();
+  const wsBtn = osDesign
+    ? (isDark ? osWorkspaceButtonDark : osWorkspaceButton)
+    : legacyWorkspaceButton;
+  const wsBtnHover = osDesign
+    ? (isDark ? osWorkspaceButtonDarkHover : osWorkspaceButtonHover)
+    : legacyWorkspaceButtonHover;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

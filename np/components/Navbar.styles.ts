@@ -240,3 +240,16 @@ export const osWorkspaceButtonHover: CSSProperties = {
     backgroundColor: "rgba(0,122,255,0.12)",
     color: "#0a66c2",
 };
+
+/** Dark-mode variants of the OS workspace button. */
+export const osWorkspaceButtonDark: CSSProperties = {
+    ...osWorkspaceButton,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.10)",
+    color: "#f3f4f6",
+};
+
+export const osWorkspaceButtonDarkHover: CSSProperties = {
+    backgroundColor: "rgba(10,132,255,0.22)",
+    color: "#7cc4ff",
+};
