@@ -49,7 +49,7 @@ const LOADER_KEYFRAMES = `
 }
 `;
 
-const BrandedAuthLoader = ({ src, alt }: { src: string; alt: string }) => (
+export const BrandedAuthLoader = ({ src, alt }: { src: string; alt: string }) => (
   <div
     className="np-auth-loader"
     style={{

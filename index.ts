@@ -1,5 +1,5 @@
 import { NPMainActionBar } from "./np/components/Navbar";
-import { NewPaperProvider } from "./np/components/NewPaperProvider";
+import { NewPaperProvider, BrandedAuthLoader } from "./np/components/NewPaperProvider";
 import { WorkspaceSelector } from "./np/components/workspace/WorkspaceSelector";
 import {
   useAddFilesAppFile as useWebAddFilesAppFile,
@@ -44,7 +44,7 @@ export {
   useWebNativeFileUpload, useWebUpdateFilesAppFile
 };
 
-export { NewPaperProvider, NPMainActionBar, WorkspaceSelector };
+export { NewPaperProvider, NPMainActionBar, WorkspaceSelector, BrandedAuthLoader };
 export { OsDesignProvider, useOsDesign } from "./np/design/OsDesignContext";
 export { AppLauncher } from "./np/components/AppLauncher";
 export {
