@@ -11,7 +11,11 @@ export type NotificationIdObject =
       channelType: "direct" | "group";
     }
   | { type: "task"; id: string; projectId: string }
-  | { type: "note"; id: string; projectId: string };
+  | { type: "note"; id: string; projectId: string }
+  // Files app (SpaceDrive). `folderId` is the parent folder the file lives in,
+  // letting the client navigate to it and open the file directly.
+  | { type: "file"; id: string; projectId: string; folderId?: string }
+  | { type: "folder"; id: string; projectId: string };
 
 export type NotificationDb = {
   id: string;
@@ -26,7 +30,8 @@ export type NotificationDb = {
     | "leave_request"
     | "leave_approved"
     | "new_message"
-    | "note_shared_with_me";
+    | "note_shared_with_me"
+    | "file_shared_with_me";
   creator: { sessionUid: string; projectUid: string };
   object: NotificationIdObject;
 };
