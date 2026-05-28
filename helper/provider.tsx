@@ -1,4 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { get as idbGet, set as idbSet, del as idbDel } from "idb-keyval";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   getBToken,
@@ -33,14 +36,43 @@ export type AuthProviderProps = {
   onSessionExpired: () => void;
 };
 
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 24,
+      // Treat data as fresh for 24h — don't refetch on every mount.
+      staleTime: ONE_DAY,
+      // Keep evicted (unmounted) queries in cache for 7d. Required for the
+      // persister to have anything to write between sessions, since the
+      // default 5min gcTime drops queries before they ever get persisted.
+      gcTime: ONE_DAY * 7,
+      // Serve cached data when offline; only mark as "paused" once back
+      // online does react-query attempt a network round trip.
+      networkMode: "offlineFirst",
       refetchOnWindowFocus: "always",
+      refetchOnReconnect: "always",
+    },
+    mutations: {
+      // Queue mutations while offline; auto-fire on reconnect.
+      networkMode: "offlineFirst",
     },
   },
 });
+
+// IndexedDB-backed persister. localStorage caps at ~5MB which the Files App
+// (file lists + thumbnails metadata) blows past quickly, so we go straight to
+// IDB via idb-keyval.
+const createPersister = (callerProduct: string) =>
+  createAsyncStoragePersister({
+    storage: {
+      getItem: (key) => idbGet<string>(key).then((v) => v ?? null),
+      setItem: (key, value) => idbSet(key, value),
+      removeItem: (key) => idbDel(key),
+    },
+    key: `np-rq-cache-${callerProduct}`,
+    throttleTime: 1000,
+  });
 
 export const AuthProvider = (props: AuthProviderProps) => {
   const {
@@ -92,14 +124,38 @@ export const AuthProvider = (props: AuthProviderProps) => {
     }
   }, []);
 
+  const persister = useMemo(() => createPersister(callerProduct), [callerProduct]);
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        // Persisted entries older than 7d are tossed on rehydrate.
+        maxAge: ONE_DAY * 7,
+        // Bump this string (e.g. on schema changes) to invalidate every
+        // persisted cache for this app.
+        buster: "v1",
+        dehydrateOptions: {
+          // OPT-IN persistence: only queries that explicitly set
+          //   meta: { persist: true }
+          // are written to disk. Everything else stays in-memory only.
+          // This keeps signed URLs, auth payloads, and other volatile
+          // responses out of long-term storage by default.
+          shouldDehydrateQuery: (query) => {
+            const persist =
+              (query.meta as { persist?: boolean } | undefined)?.persist === true;
+            return query.state.status === "success" && persist;
+          },
+        },
+      }}
+    >
       <AuthContext.Provider
         value={{ loginPageUrl, apiBaseUrl, callerProduct, onSessionExpired }}
       >
         {children}
       </AuthContext.Provider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 };
 

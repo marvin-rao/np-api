@@ -12,8 +12,7 @@ export type NotificationIdObject =
     }
   | { type: "task"; id: string; projectId: string }
   | { type: "note"; id: string; projectId: string }
-  // Files app (SpaceDrive). `folderId` is the parent folder the file lives in,
-  // letting the client navigate to it and open the file directly.
+  //
   | { type: "file"; id: string; projectId: string; folderId?: string }
   | { type: "folder"; id: string; projectId: string };
 
