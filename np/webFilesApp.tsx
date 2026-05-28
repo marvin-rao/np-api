@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuthData } from "../helper/provider";
 import { getBToken, isTokenExpired } from "../helper/utils";
 
@@ -208,63 +209,85 @@ const useBaseMutation = <T,>(
 };
 
 // Base query hook
+//
+// Backed by react-query so consumers automatically get:
+//   - request de-dupe across components
+//   - background refetch on window focus / reconnect
+//   - shared cache (a sibling component sees the same data instantly)
+//   - opt-in offline persistence via `options.persist`
+//
+// The return shape is preserved 1:1 with the previous useState-based
+// implementation so existing callers don't need to change.
+type BaseQueryOptions = {
+  /**
+   * When true, this query's successful results are written to IndexedDB by
+   * the persister set up in `AuthProvider`. On next load (including offline)
+   * the cached value renders immediately while a background refetch runs.
+   *
+   * Default: false (in-memory only). Opt in at the call site for stable
+   * data; leave off for anything time-sensitive (signed URLs, share links
+   * with expiry, anything containing PII you don't want on disk).
+   */
+  persist?: boolean;
+};
+
+export type { BaseQueryOptions };
+
 const useBaseQuery = <T,>(
   path: string,
   projectId?: string,
-  deps: any[] = []
+  deps: any[] = [],
+  options: BaseQueryOptions = {}
 ): QueryResult<T> => {
   const { apiBaseUrl } = useAuthData();
-  const [result, setResult] = useState<T | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [isRefetching, setIsRefetching] = useState(false);
+  const { persist = false } = options;
+
+  // Track user-initiated refetches separately from background ones so
+  // callers can show a different spinner for "pull to refresh" vs silent
+  // revalidation.
   const [isRefetchingByUser, setIsRefetchingByUser] = useState(false);
-  const [error, setError] = useState("");
 
-  const fetchData = useCallback(
-    async (isUserTriggered = false) => {
-      if (isUserTriggered) {
-        setIsRefetchingByUser(true);
-      } else {
-        setLoading(true);
-      }
-      setIsRefetching(true);
-      setError("");
-
-      try {
-        const response = await apiRequest<T>(
-          "get",
-          path,
-          apiBaseUrl,
-          undefined,
-          projectId
-        );
-        setResult(response.data);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch data");
-      } finally {
-        setLoading(false);
-        setIsRefetching(false);
-        setIsRefetchingByUser(false);
-      }
-    },
-    [path, projectId, apiBaseUrl, ...deps]
+  const meta = useMemo(
+    () => (persist ? { persist: true } : undefined),
+    [persist]
   );
 
-  const refetch = useCallback(() => fetchData(false), [fetchData]);
-  const refetchByUser = useCallback(() => fetchData(true), [fetchData]);
+  const query = useQuery<T>({
+    queryKey: [path, projectId, ...deps],
+    queryFn: async () => {
+      const response = await apiRequest<T>(
+        "get",
+        path,
+        apiBaseUrl,
+        undefined,
+        projectId
+      );
+      return response.data;
+    },
+    enabled: !!apiBaseUrl,
+    meta,
+  });
 
-  // Initial fetch
-  useEffect(() => {
-    fetchData();
-  }, [fetchData, ...deps]);
+  const refetch = useCallback(() => {
+    query.refetch();
+  }, [query]);
+
+  const refetchByUser = useCallback(async () => {
+    setIsRefetchingByUser(true);
+    try {
+      await query.refetch();
+    } finally {
+      setIsRefetchingByUser(false);
+    }
+  }, [query]);
 
   return {
-    result,
-    loading,
-    error,
+    result: query.data ?? null,
+    loading: query.isLoading,
+    error: query.error ? (query.error as Error).message ?? "" : "",
     refetch,
     refetchByUser,
-    isRefetching,
+    isRefetching: query.isFetching,
     isRefetchingByUser,
   };
 };
@@ -287,8 +310,11 @@ const validateAppFile = (file: AppFile): ApiValidatorResult => {
   return { passed: true, message: "" };
 };
 
-export const useFileAppFiles = (projectId?: string) => {
-  return useBaseQuery<AppFile[]>("files_app", projectId);
+export const useFileAppFiles = (
+  projectId?: string,
+  options?: BaseQueryOptions
+) => {
+  return useBaseQuery<AppFile[]>("files_app", projectId, [], options);
 };
 
 export const useAddFilesAppFile = (projectId?: string) => {
