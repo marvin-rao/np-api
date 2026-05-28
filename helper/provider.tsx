@@ -145,13 +145,6 @@ export const AuthProvider = (props: AuthProviderProps) => {
           shouldDehydrateQuery: (query) => {
             const persist =
               (query.meta as { persist?: boolean } | undefined)?.persist === true;
-            // TEMP debug — remove after verifying persistence wiring.
-            console.log("[rq-persist] shouldDehydrateQuery", {
-              key: query.queryKey,
-              status: query.state.status,
-              meta: query.meta,
-              persist,
-            });
             return query.state.status === "success" && persist;
           },
         },

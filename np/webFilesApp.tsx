@@ -252,9 +252,6 @@ const useBaseQuery = <T,>(
     [persist]
   );
 
-  // TEMP debug — verify meta wiring.
-  console.log("[useBaseQuery]", { path, projectId, persist, meta });
-
   const query = useQuery<T>({
     queryKey: [path, projectId, ...deps],
     queryFn: async () => {
