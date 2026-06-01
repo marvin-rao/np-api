@@ -423,7 +423,8 @@ export const useWebFileUpload = () => {
     id: string,
     file: File,
     onComplete: (result: T) => void,
-    uploadPath: string
+    uploadPath: string,
+    onProgress?: (percent: number) => void
   ) => {
     if (!file) {
       throw new Error("File is required");
@@ -437,11 +438,6 @@ export const useWebFileUpload = () => {
     const token = getBToken();
     const hasValidToken = token && !isTokenExpired(token);
 
-    const headers: HeadersInit = {};
-    if (hasValidToken) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
     try {
       const fullUrl = joinUrl(apiBaseUrl, uploadPath);
       console.log("[uploadFile] Starting upload", {
@@ -452,25 +448,48 @@ export const useWebFileUpload = () => {
         hasValidToken,
       });
 
-      const response = await fetch(fullUrl, {
-        method: "POST",
-        body: formData,
-        headers,
-        credentials: hasValidToken ? "omit" : "include",
+      // XMLHttpRequest (not fetch) so we can surface real upload progress via
+      // the `upload.onprogress` event, which fetch does not expose.
+      const result = await new Promise<{ data: T }>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", fullUrl);
+
+        if (hasValidToken) {
+          xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        } else {
+          xhr.withCredentials = true;
+        }
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable && onProgress) {
+            onProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch (parseError) {
+              reject(parseError);
+            }
+          } else {
+            console.error(
+              "[uploadFile] Upload failed",
+              xhr.status,
+              xhr.statusText
+            );
+            reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error("Upload failed: network error"));
+        xhr.onabort = () => reject(new Error("Upload aborted"));
+
+        xhr.send(formData);
       });
 
-      if (!response.ok) {
-        console.error(
-          "[uploadFile] Upload failed",
-          response.status,
-          response.statusText
-        );
-        throw new Error(
-          `Upload failed: ${response.status} ${response.statusText}`
-        );
-      }
-
-      const result = await response.json();
+      onProgress?.(100);
       console.log("[uploadFile] Upload success", { id, result });
       onComplete(result.data);
     } catch (error) {
@@ -516,9 +535,11 @@ export const useWebNativeFileUpload = ({
   const uploadFileFromUri = async ({
     id,
     uri,
+    onProgress,
   }: {
     id: string;
     uri: string;
+    onProgress?: (percent: number) => void;
   }): Promise<AppFile> => {
     // For web, uri might be a blob URL or base64
     const response = await fetch(uri);
@@ -529,7 +550,8 @@ export const useWebNativeFileUpload = ({
         id,
         new File([blob], "uploaded_file", { type: blob.type }),
         resolve,
-        `files/upload_any?projectId=${projectId}`
+        `files/upload_any?projectId=${projectId}`,
+        onProgress
       ).catch(reject);
     });
   };
