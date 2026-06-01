@@ -9,6 +9,7 @@ import {
   useWebNativeFileUpload,
   useUpdateFilesAppFile as useWebUpdateFilesAppFile,
 } from "./np/webFilesApp";
+import { useWebFileUploadV2 } from "./np/webFilesAppV2";
 
 export { LoginButton } from "./helper/AuthHelper";
 export { AuthProvider, useAuthSession } from "./helper/provider";
@@ -43,6 +44,8 @@ export {
   useWebAddFilesAppFile, useWebDeleteFilesAppFile, useWebFileAppFiles, useWebFileUpload,
   useWebNativeFileUpload, useWebUpdateFilesAppFile
 };
+export { useWebFileUploadV2 };
+export type { UploadFileResumableProps } from "./np/webFilesAppV2";
 
 export { NewPaperProvider, NPMainActionBar, WorkspaceSelector, BrandedAuthLoader };
 export { OsDesignProvider, useOsDesign } from "./np/design/OsDesignContext";
