@@ -183,7 +183,7 @@ export const NPMainActionBar = ({
                 verticalAlign: "middle",
               }}
             >
-              {currentWorkspace?.name || "Select Workspace"}
+              {currentWorkspace?.name || "Select Space"}
             </span>
             <svg
               width="12"
