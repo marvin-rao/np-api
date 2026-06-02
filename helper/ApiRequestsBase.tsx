@@ -120,11 +120,24 @@ type UseFetchWithTokenProps = {
   options: FetchOptions;
   deps?: Array<string | undefined | null>;
   enabled?: boolean;
+  /** How long the cached data stays fresh before a background refetch (ms). */
+  staleTime?: number;
+  /** How long unused cached data is kept in memory (ms). */
+  gcTime?: number;
+  /**
+   * Opt this query into long-lived caching that also survives reloads.
+   * Sets a long stale/gc time and tags the query with `meta.persist` so a
+   * `PersistQueryClientProvider` in the host app can write it to storage.
+   */
+  persist?: boolean;
 };
 
 export const useGet = <T,>(props: UseFetchWithTokenProps) => {
   const { apiBaseUrl, onSessionExpired } = useAuthData();
-  const { path, options = {}, deps = [], enabled } = props;
+  const { path, options = {}, deps = [], enabled, persist } = props;
+
+  const staleTime = props.staleTime ?? (persist ? 5 * 60 * 1000 : undefined);
+  const gcTime = props.gcTime ?? (persist ? 24 * 60 * 60 * 1000 : undefined);
 
   const fetchData = async (): Promise<T | undefined> => {
     const response = await appFetch({
@@ -153,6 +166,9 @@ export const useGet = <T,>(props: UseFetchWithTokenProps) => {
     queryKey: [path, deps],
     queryFn: fetchData,
     enabled,
+    staleTime,
+    gcTime,
+    meta: persist ? { persist: true } : undefined,
   });
 
   return { data: data, error: error, loading: isLoading, refetch };

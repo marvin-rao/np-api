@@ -64,6 +64,8 @@ export const useProjects = () => {
   return useGet<Workspace[]>({
     path: "projects/list",
     options: {},
+    // Cache the workspace list and persist it across reloads.
+    persist: true,
   });
 };
 
