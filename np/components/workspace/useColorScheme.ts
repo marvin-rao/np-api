@@ -39,13 +39,6 @@ const prefersDark = (): boolean =>
   typeof window.matchMedia === "function" &&
   window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const resolve = (override?: boolean): boolean => {
-  if (typeof override === "boolean") return override;
-  const host = readHostTheme();
-  if (host) return host === "dark";
-  return prefersDark();
-};
-
 export const useResolvedDarkMode = (override?: boolean): boolean => {
   const npTheme = useNPThemeOptional();
 
