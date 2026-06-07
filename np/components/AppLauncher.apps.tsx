@@ -105,6 +105,15 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
                 : "https://booking.newpaper.app/",
     },
     {
+        id: "calls",
+        label: "Calls",
+        fallbackGlyph: "☎",
+        buildUrl: (pid) =>
+            pid
+                ? `https://calls.newpaper.app/workspace/${pid}/`
+                : "https://calls.newpaper.app/",
+    },
+    {
         id: "tasks",
         label: "Tasks",
         iconUrl: tasksIcon,
