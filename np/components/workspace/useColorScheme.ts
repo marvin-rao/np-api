@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNPThemeOptional } from "../theme/NPThemeProvider";
 
 /**
  * Resolves the dark-mode flag the workspace modal should render with.
@@ -6,12 +7,12 @@ import { useEffect, useState } from "react";
  * Priority:
  *  1. An explicit `override` (e.g. `NewPaperProvider`'s `dark` prop) — lets
  *     the host app drive the modal directly.
- *  2. The host app's resolved theme, read from the `dark`/`light` class or
+ *  2. `<NPThemeProvider>` context, when mounted. This is the canonical
+ *     source of truth for Newpaper apps.
+ *  3. The host app's resolved theme, read from the `dark`/`light` class or
  *     `data-theme` attribute on <html> (the convention used by next-themes,
- *     Tailwind, etc.). This is what makes the modal follow an in-app theme
- *     toggle rather than only the OS setting.
- *  3. Fallback: the OS / browser `prefers-color-scheme: dark` media query,
- *     for hosts that don't apply a theme class at all.
+ *     Tailwind, etc.). Kept for legacy hosts without `NPThemeProvider`.
+ *  4. Fallback: the OS / browser `prefers-color-scheme: dark` media query.
  *
  * Re-renders when any of these change while the modal is open.
  */
@@ -46,17 +47,28 @@ const resolve = (override?: boolean): boolean => {
 };
 
 export const useResolvedDarkMode = (override?: boolean): boolean => {
-  const [dark, setDark] = useState<boolean>(() => resolve(override));
+  const npTheme = useNPThemeOptional();
+
+  const resolveWithContext = (): boolean => {
+    if (typeof override === "boolean") return override;
+    if (npTheme) return npTheme.theme === "dark";
+    const host = readHostTheme();
+    if (host) return host === "dark";
+    return prefersDark();
+  };
+
+  const [dark, setDark] = useState<boolean>(resolveWithContext);
 
   useEffect(() => {
-    setDark(resolve(override));
+    setDark(resolveWithContext());
 
     if (typeof override === "boolean") return;
+    if (npTheme) return; // context is the source of truth, no DOM watching needed
     if (typeof window === "undefined") return;
 
-    const update = () => setDark(resolve(override));
+    const update = () => setDark(resolveWithContext());
 
-    // 1. Watch the host's <html> theme class / attribute.
+    // Legacy: watch the host's <html> theme class / attribute.
     let observer: MutationObserver | undefined;
     if (typeof MutationObserver === "function" && document?.documentElement) {
       observer = new MutationObserver(update);
@@ -66,11 +78,10 @@ export const useResolvedDarkMode = (override?: boolean): boolean => {
       });
     }
 
-    // 2. Watch the OS preference (only effective when there's no host class).
+    // Watch the OS preference (only effective when there's no host class).
     let mql: MediaQueryList | undefined;
     if (typeof window.matchMedia === "function") {
       mql = window.matchMedia("(prefers-color-scheme: dark)");
-      // Safari < 14 only supports the deprecated addListener API.
       if (mql.addEventListener) mql.addEventListener("change", update);
       else mql.addListener(update);
     }
@@ -82,7 +93,8 @@ export const useResolvedDarkMode = (override?: boolean): boolean => {
         else mql.removeListener(update);
       }
     };
-  }, [override]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [override, npTheme?.theme]);
 
   return dark;
 };

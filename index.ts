@@ -49,6 +49,15 @@ export type { UploadFileResumableProps } from "./np/webFilesAppV2";
 
 export { NewPaperProvider, NPMainActionBar, WorkspaceSelector, BrandedAuthLoader };
 export { OsDesignProvider, useOsDesign } from "./np/design/OsDesignContext";
+export {
+  NPThemeProvider,
+  useNPTheme,
+  useNPThemeOptional,
+} from "./np/components/theme/NPThemeProvider";
+export type {
+  NPTheme,
+  NPThemeProviderProps,
+} from "./np/components/theme/NPThemeProvider";
 export { AppLauncher } from "./np/components/AppLauncher";
 export {
   NEWPAPER_APPS,
