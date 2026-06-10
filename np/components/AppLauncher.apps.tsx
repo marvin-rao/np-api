@@ -114,6 +114,12 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
                 : "https://calls.newpaper.app/",
     },
     {
+        id: "chat",
+        label: "Chat",
+        fallbackGlyph: "💬",
+        buildUrl: () => "https://chat.newpaper.app/",
+    },
+    {
         id: "tasks",
         label: "Tasks",
         iconUrl: tasksIcon,
