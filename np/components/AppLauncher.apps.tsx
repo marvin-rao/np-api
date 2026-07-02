@@ -17,6 +17,7 @@ import careerIcon from "./app-icons/career_app_icon.png?url";
 import spaceosIcon from "./app-icons/spaceos.png?url";
 import callsIcon from "./app-icons/calls.png?url";
 import shiftsIcon from "./app-icons/shifts.png?url";
+import chatIcon from "./app-icons/chat.png?url";
 
 export interface NewpaperAppDef {
     /** Stable id for keying. */
@@ -119,6 +120,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "chat",
         label: "Chat",
+        iconUrl: chatIcon,
         fallbackGlyph: "💬",
         buildUrl: () => "https://chat.newpaper.app/",
     },
