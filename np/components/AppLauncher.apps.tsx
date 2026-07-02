@@ -15,6 +15,8 @@ import tasksIcon from "./app-icons/tasksappicon.png?url";
 import recruitIcon from "./app-icons/recruite_app_icon.png?url";
 import careerIcon from "./app-icons/career_app_icon.png?url";
 import spaceosIcon from "./app-icons/spaceos.png?url";
+import callsIcon from "./app-icons/calls.png?url";
+import shiftsIcon from "./app-icons/shifts.png?url";
 
 export interface NewpaperAppDef {
     /** Stable id for keying. */
@@ -107,6 +109,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "calls",
         label: "Calls",
+        iconUrl: callsIcon,
         fallbackGlyph: "☎",
         buildUrl: (pid) =>
             pid
@@ -152,7 +155,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "shifts",
         label: "Shifts",
-        // No dedicated PNG yet — fall back to the gradient glyph tile.
+        iconUrl: shiftsIcon,
         fallbackGlyph: "S",
         // Shifts is not workspace-scoped.
         buildUrl: () => "https://shifts.newpaper.app/",
