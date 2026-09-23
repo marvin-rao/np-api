@@ -100,15 +100,37 @@ export const useProjectRequest = <ObjectType,>({
 export const useProjectGetBase = <T,>({
   path,
   enabled,
+  params,
 }: {
   path: string;
   enabled?: boolean;
+  /**
+   * Extra query parameters, appended after `projectId`. Entries that are
+   * undefined or empty are dropped, so a caller can pass an optional value
+   * straight through without building the string itself.
+   */
+  params?: Record<string, string | undefined>;
 }) => {
   const { projectId } = useProjectId();
+  const query = params ?? {};
+  // `Object.keys` rather than `Object.entries`: this package targets an older
+  // lib than es2017.
+  const extra = Object.keys(query)
+    .filter((key) => query[key] !== undefined && query[key] !== "")
+    .map(
+      (key) =>
+        `&${encodeURIComponent(key)}=${encodeURIComponent(
+          query[key] as string
+        )}`
+    )
+    .join("");
   return useGet<T>({
     path,
-    options: { queryString: `?projectId=${projectId}` },
-    deps: [projectId],
+    options: { queryString: `?projectId=${projectId}${extra}` },
+    // `extra` is part of the URL, so it has to be part of the cache key too —
+    // otherwise two callers asking for different scopes of the same path would
+    // share one entry and see each other's results.
+    deps: [projectId, extra],
     enabled,
   });
 };

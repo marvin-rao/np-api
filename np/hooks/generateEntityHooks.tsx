@@ -23,7 +23,11 @@ type EntityHookNames<TName extends string> = {
 // Type for the returned hooks object
 type EntityHooks<TName extends string, T> = {
   [K in EntityHookNames<TName>[keyof EntityHookNames<TName>]]: K extends EntityHookNames<TName>["get"]
-    ? (options?: { enabled?: boolean }) => ReturnType<typeof useGet<T[]>>
+    ? (options?: {
+        enabled?: boolean;
+        /** Extra query parameters for the listing. */
+        params?: Record<string, string | undefined>;
+      }) => ReturnType<typeof useGet<T[]>>
     : K extends EntityHookNames<TName>["delete"]
     ? () => ReturnType<typeof useProjectRequest<ObjectId>>
     : () => ReturnType<typeof useProjectRequest<T>>;
@@ -37,8 +41,15 @@ export function generateEntityHooks<TName extends string, T extends ObjectId>(
   const capitalizedName =
     entityName.charAt(0).toUpperCase() + entityName.slice(1);
 
-  const useGetEntities = (options?: { enabled?: boolean }) => {
-    return useProjectGetBase<T[]>({ path, enabled: options?.enabled });
+  const useGetEntities = (options?: {
+    enabled?: boolean;
+    params?: Record<string, string | undefined>;
+  }) => {
+    return useProjectGetBase<T[]>({
+      path,
+      enabled: options?.enabled,
+      params: options?.params,
+    });
   };
 
   const useAddEntity = () => {

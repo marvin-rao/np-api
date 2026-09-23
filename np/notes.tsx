@@ -3,11 +3,34 @@ import { generateEntityHooks } from "./hooks/generateEntityHooks";
 import { useProjectGetBase, useProjectId, useProjectRequest } from "./projects";
 import { Note, NotesFolder, NoteVersion, ObjectId, ServerResult } from "./types";
 
-export const { useNotes, useAddNote, useUpdateNote, useDeleteNote } =
-  generateEntityHooks<"note", Note>({
-    entityName: "note",
-    path: "notes",
-  });
+/**
+ * Which product's records a listing should return.
+ *
+ * Notes and Canvas (the board app) share one collection — a board is a note
+ * record — so an app that wants only its own work says which it is. The server
+ * tells them apart by the `originId` each app writes; that encoding stays on
+ * the server, so callers only ever name the app.
+ *
+ * Omit it and you get everything, which is what every existing caller does.
+ */
+export type NoteApp = "notes" | "canvas";
+
+type NotesQuery = { enabled?: boolean; app?: NoteApp };
+
+const {
+  useNotes: useNotesBase,
+  useAddNote,
+  useUpdateNote,
+  useDeleteNote,
+} = generateEntityHooks<"note", Note>({
+  entityName: "note",
+  path: "notes",
+});
+
+export { useAddNote, useUpdateNote, useDeleteNote };
+
+export const useNotes = (options?: NotesQuery) =>
+  useNotesBase({ enabled: options?.enabled, params: { app: options?.app } });
 
 /**
  * Move a note to the Trash (soft-delete). The note is hidden from normal
@@ -54,8 +77,8 @@ export const useRestoreNoteVersion = () =>
     method: "post",
   });
 
-export const {
-  useNotesFolders,
+const {
+  useNotesFolders: useNotesFoldersBase,
   useAddNotesFolder,
   useUpdateNotesFolder,
   useDeleteNotesFolder,
@@ -63,6 +86,15 @@ export const {
   entityName: "notesFolder",
   path: "notes/folders",
 });
+
+export { useAddNotesFolder, useUpdateNotesFolder, useDeleteNotesFolder };
+
+/** Scoped the same way as `useNotes`. The default folder is always included. */
+export const useNotesFolders = (options?: NotesQuery) =>
+  useNotesFoldersBase({
+    enabled: options?.enabled,
+    params: { app: options?.app },
+  });
 
 /**
  * Generate a note draft from a natural-language prompt.
