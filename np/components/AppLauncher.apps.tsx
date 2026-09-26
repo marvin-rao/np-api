@@ -8,6 +8,7 @@ import React from "react";
 // even without ambient `*.png` module declarations on the consumer side.
 import spaceaiIcon from "./app-icons/SpaceAi.png?url";
 import notesIcon from "./app-icons/notes.png?url";
+import canvasIcon from "./app-icons/canvas.png?url";
 import formsIcon from "./app-icons/forms.png?url";
 import spacedriveIcon from "./app-icons/spacedrive.png?url";
 import bookingIcon from "./app-icons/booking.png?url";
@@ -76,6 +77,16 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
             pid
                 ? `https://notes.newpaper.app/workspace/${pid}/`
                 : "https://notes.newpaper.app/",
+    },
+    {
+        id: "canvas",
+        label: "Canvas",
+        iconUrl: canvasIcon,
+        fallbackGlyph: "▦",
+        buildUrl: (pid) =>
+            pid
+                ? `https://canvas.newpaper.app/workspace/${pid}/`
+                : "https://canvas.newpaper.app/",
     },
     {
         id: "forms",
