@@ -9,6 +9,7 @@ import React from "react";
 import spaceaiIcon from "./app-icons/SpaceAi.png?url";
 import notesIcon from "./app-icons/notes.png?url";
 import canvasIcon from "./app-icons/canvas.png?url";
+import indabaIcon from "./app-icons/indaba.png?url";
 import formsIcon from "./app-icons/forms.png?url";
 import spacedriveIcon from "./app-icons/spacedrive.png?url";
 import bookingIcon from "./app-icons/booking.png?url";
@@ -150,6 +151,17 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         iconUrl: chatIcon,
         fallbackGlyph: "💬",
         buildUrl: () => "https://chat.newpaper.app/",
+    },
+    {
+        id: "indaba",
+        label: "Indaba",
+        description: "Company announcements people read and acknowledge",
+        iconUrl: indabaIcon,
+        fallbackGlyph: "I",
+        buildUrl: (pid) =>
+            pid
+                ? `https://indaba.newpaper.app/workspace/${pid}/`
+                : "https://indaba.newpaper.app/",
     },
     {
         id: "tasks",

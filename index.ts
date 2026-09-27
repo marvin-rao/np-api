@@ -15,6 +15,7 @@ export { LoginButton } from "./helper/AuthHelper";
 export { AuthProvider, useAuthSession } from "./helper/provider";
 
 export * from "./api";
+export * from "./np/announcements";
 export * from "./helper/utils";
 export * from "./np/calendar";
 export * from "./np/career_types";
