@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useProjectId } from "../projects";
 import { useResolvedDarkMode } from "./workspace/useColorScheme";
 import {
@@ -32,9 +33,18 @@ if (
         transform-origin: top center !important;
       }
       .np-app-launcher-grid { gap: 2px !important; }
+      .np-app-launcher-hr { padding: 8px !important; }
       .np-app-launcher-tile { padding: 10px 4px !important; }
       .np-app-launcher-tile img,
       .np-app-launcher-tile .np-app-launcher-fallback { width: 48px !important; height: 48px !important; border-radius: 12px !important; }
+    }
+    @keyframes np-app-tip-in {
+      from { opacity: 0; transform: translateY(var(--np-tip-dy, 4px)) scale(0.96); }
+      to { opacity: 1; transform: none; }
+    }
+    /* Touch screens can't hover; a tap opens the app instead. */
+    @media (hover: none) {
+      .np-app-tip { display: none !important; }
     }
   `;
     document.head.appendChild(s);
@@ -67,11 +77,37 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
     const dark = useResolvedDarkMode(darkOverride);
     const { projectId } = useProjectId();
     const [open, setOpen] = useState(false);
+    // Tooltip for the tile under the pointer (or keyboard focus).
+    const [tip, setTip] = useState<{ app: NewpaperAppDef; rect: DOMRect } | null>(null);
+    const tipTimer = useRef<number | undefined>(undefined);
+    // Once a tooltip has shown, moving to the next tile shows its tooltip
+    // straight away instead of waiting out the delay again.
+    const tipWarmUntil = useRef(0);
+
+    const showTip = (app: NewpaperAppDef, el: HTMLElement, immediate = false) => {
+        if (!app.description) return;
+        window.clearTimeout(tipTimer.current);
+        const rect = el.getBoundingClientRect();
+        const delay = immediate || Date.now() < tipWarmUntil.current ? 0 : 400;
+        tipTimer.current = window.setTimeout(() => setTip({ app, rect }), delay);
+    };
+    const hideTip = () => {
+        window.clearTimeout(tipTimer.current);
+        setTip((t) => {
+            if (t) tipWarmUntil.current = Date.now() + 500;
+            return null;
+        });
+    };
+    useEffect(() => () => window.clearTimeout(tipTimer.current), []);
     const wrapRef = useRef<HTMLDivElement | null>(null);
 
     // Click outside / Escape to close.
     useEffect(() => {
-        if (!open) return;
+        if (!open) {
+            window.clearTimeout(tipTimer.current);
+            setTip(null);
+            return;
+        }
         const onDown = (e: MouseEvent) => {
             if (!wrapRef.current) return;
             if (!wrapRef.current.contains(e.target as Node)) setOpen(false);
@@ -88,6 +124,51 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
     }, [open]);
 
     const palette = useMemo(() => makePalette(dark), [dark]);
+    const mainApps = apps.filter((a) => a.group !== "hr");
+    const hrApps = apps.filter((a) => a.group === "hr");
+
+    const renderTile = (app: NewpaperAppDef, hoverBg: string) => (
+        <a
+            key={app.id}
+            className="np-app-launcher-tile"
+            href={buildNewpaperAppUrl(app, projectId)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+                hideTip();
+                setOpen(false);
+            }}
+            aria-label={
+                app.description ? `${app.label}. ${app.description}` : app.label
+            }
+            onFocus={(e) => showTip(app, e.currentTarget, true)}
+            onBlur={hideTip}
+            style={{
+                ...styles.tile,
+                color: palette.tileLabel,
+            }}
+            onMouseEnter={(e) => {
+                showTip(app, e.currentTarget);
+                e.currentTarget.style.backgroundColor = hoverBg;
+            }}
+            onMouseLeave={(e) => {
+                hideTip();
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.transform = "scale(1)";
+            }}
+            onMouseDown={(e) => {
+                e.currentTarget.style.backgroundColor = palette.tileActiveBg;
+                e.currentTarget.style.transform = "scale(0.96)";
+            }}
+            onMouseUp={(e) => {
+                e.currentTarget.style.backgroundColor = hoverBg;
+                e.currentTarget.style.transform = "scale(1)";
+            }}
+        >
+            <NewpaperAppIcon app={app} />
+            <div style={styles.tileLabel}>{app.label}</div>
+        </a>
+    );
 
     return (
         <div ref={wrapRef} style={styles.wrap}>
@@ -157,6 +238,7 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                         : "opacity 140ms ease-out, transform 160ms ease-out, visibility 0s linear 160ms",
                 }}
                 role="menu"
+                onScroll={hideTip}
             >
                 {onChooseWorkspace && (
                     <button
@@ -236,48 +318,179 @@ export const AppLauncher: React.FC<AppLauncherProps> = ({
                 >
                     Newpaper apps
                 </div>
-                <div style={styles.grid} className="np-app-launcher-grid">
-                    {apps.map((app) => (
-                        <a
-                            key={app.id}
-                            className="np-app-launcher-tile"
-                            href={buildNewpaperAppUrl(app, projectId)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setOpen(false)}
-                            style={{
-                                ...styles.tile,
-                                color: palette.tileLabel,
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    palette.tileHoverBg;
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    "transparent";
-                                e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onMouseDown={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    palette.tileActiveBg;
-                                e.currentTarget.style.transform = "scale(0.96)";
-                            }}
-                            onMouseUp={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    palette.tileHoverBg;
-                                e.currentTarget.style.transform = "scale(1)";
-                            }}
-                        >
-                            <NewpaperAppIcon app={app} />
-                            <div style={styles.tileLabel}>{app.label}</div>
-                        </a>
-                    ))}
+                <div
+                    style={styles.grid}
+                    className="np-app-launcher-grid"
+                >
+                    {mainApps.map((app) => renderTile(app, palette.tileHoverBg))}
                 </div>
+                {hrApps.length > 0 && (
+                    <section
+                        aria-label="HR apps"
+                        className="np-app-launcher-hr"
+                        style={{
+                            ...styles.hrCard,
+                            background: palette.hrCardBg,
+                            border: `0.5px solid ${palette.hrCardBorder}`,
+                        }}
+                    >
+                        <div style={styles.hrHeader}>
+                            <span
+                                aria-hidden="true"
+                                style={{
+                                    ...styles.hrBadge,
+                                    background: palette.hrBadgeBg,
+                                    boxShadow: palette.hrBadgeShadow,
+                                }}
+                            >
+                                <PeopleIcon />
+                            </span>
+                            <span style={styles.hrHeaderText}>
+                                <span
+                                    style={{
+                                        ...styles.hrTitle,
+                                        color: palette.tileLabel,
+                                    }}
+                                >
+                                    HR
+                                </span>
+                                <span
+                                    style={{
+                                        ...styles.hrCaption,
+                                        color: palette.hint,
+                                    }}
+                                >
+                                    People, hiring and rosters
+                                </span>
+                            </span>
+                            <span
+                                style={{
+                                    ...styles.hrCount,
+                                    color: palette.hrAccent,
+                                    background: palette.hrCountBg,
+                                }}
+                            >
+                                {hrApps.length} apps
+                            </span>
+                        </div>
+                        <div style={styles.grid} className="np-app-launcher-grid">
+                            {hrApps.map((app) => renderTile(app, palette.hrTileHoverBg))}
+                        </div>
+                    </section>
+                )}
             </div>
+            {tip && <AppTooltip app={tip.app} rect={tip.rect} dark={dark} />}
         </div>
     );
 };
+
+/**
+ * A tile's tooltip. Portalled to <body> with fixed positioning so the
+ * popover's scrolling can't clip it. Sits above the tile, flips below when
+ * there's no room, and is nudged back inside the viewport after measuring —
+ * the arrow stays on the tile either way.
+ */
+const AppTooltip: React.FC<{ app: NewpaperAppDef; rect: DOMRect; dark: boolean }> = ({
+    app,
+    rect,
+    dark,
+}) => {
+    const GAP = 8;
+    const EDGE = 8;
+    const bubbleRef = useRef<HTMLDivElement | null>(null);
+    const [shift, setShift] = useState(0);
+    const centre = rect.left + rect.width / 2;
+    const below = rect.top < 96;
+    const bg = dark ? "rgba(246,246,250,0.97)" : "rgba(24,24,28,0.94)";
+
+    useLayoutEffect(() => {
+        const half = (bubbleRef.current?.offsetWidth ?? 0) / 2;
+        const clamped = Math.min(
+            Math.max(centre, EDGE + half),
+            window.innerWidth - EDGE - half
+        );
+        setShift(clamped - centre);
+    }, [centre, app]);
+
+    return createPortal(
+        <div
+            role="tooltip"
+            className="np-app-tip"
+            style={{
+                position: "fixed",
+                left: centre + shift,
+                transform: "translateX(-50%)",
+                zIndex: 1100,
+                pointerEvents: "none",
+                ...(below
+                    ? { top: rect.bottom + GAP }
+                    : { bottom: window.innerHeight - rect.top + GAP }),
+            }}
+        >
+            <div
+                ref={bubbleRef}
+                style={
+                    {
+                        position: "relative",
+                        width: "max-content",
+                        maxWidth: 220,
+                        padding: "8px 11px",
+                        borderRadius: 10,
+                        background: bg,
+                        color: dark ? "#1c1c1e" : "#fff",
+                        fontSize: 12,
+                        lineHeight: 1.4,
+                        textAlign: "center",
+                        boxShadow: dark
+                            ? "0 10px 28px -8px rgba(0,0,0,0.6)"
+                            : "0 10px 28px -8px rgba(0,0,0,0.45)",
+                        animation:
+                            "np-app-tip-in 160ms cubic-bezier(0.16, 1, 0.3, 1)",
+                        "--np-tip-dy": below ? "-4px" : "4px",
+                    } as React.CSSProperties
+                }
+            >
+                {app.description}
+                <span
+                    aria-hidden="true"
+                    style={{
+                        position: "absolute",
+                        // Undo the viewport nudge so the arrow points at the tile.
+                        left: `calc(50% - ${shift}px - 5px)`,
+                        width: 10,
+                        height: 10,
+                        background: bg,
+                        transform: "rotate(45deg)",
+                        borderRadius: 2,
+                        ...(below ? { top: -4 } : { bottom: -4 }),
+                    }}
+                />
+            </div>
+        </div>,
+        document.body
+    );
+};
+
+/** Two people, front and back — the HR group's badge. */
+const PeopleIcon: React.FC = () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6" cy="5.25" r="2.25" fill="currentColor" />
+        <path
+            d="M1.75 13c0-2.35 1.9-4.25 4.25-4.25S10.25 10.65 10.25 13"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+        />
+        <circle cx="11.25" cy="5.75" r="1.75" fill="currentColor" opacity="0.7" />
+        <path
+            d="M11.5 8.9c1.6.25 2.75 1.8 2.75 3.6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            opacity="0.7"
+        />
+    </svg>
+);
 
 const NineDotIcon: React.FC = () => (
     <svg
@@ -317,6 +530,15 @@ const makePalette = (dark: boolean) =>
               tileActiveBg: "rgba(255,255,255,0.12)",
               workspaceRowBg: "rgba(255,255,255,0.05)",
               workspaceRowHoverBg: "rgba(255,255,255,0.1)",
+              hint: "rgba(255,255,255,0.6)",
+              hrCardBg:
+                  "radial-gradient(120% 90% at 100% 0%, rgba(244,114,182,0.16) 0%, rgba(244,114,182,0) 55%), linear-gradient(160deg, rgba(129,140,248,0.16) 0%, rgba(129,140,248,0.06) 100%)",
+              hrCardBorder: "rgba(165,180,252,0.22)",
+              hrBadgeBg: "linear-gradient(135deg, #818cf8 0%, #ec4899 100%)",
+              hrBadgeShadow: "0 4px 12px -4px rgba(236,72,153,0.6)",
+              hrAccent: "#c7d2fe",
+              hrCountBg: "rgba(165,180,252,0.14)",
+              hrTileHoverBg: "rgba(255,255,255,0.08)",
           }
         : {
               btnIcon: "rgba(0,0,0,0.65)",
@@ -333,6 +555,15 @@ const makePalette = (dark: boolean) =>
               tileActiveBg: "rgba(0,0,0,0.09)",
               workspaceRowBg: "rgba(0,0,0,0.04)",
               workspaceRowHoverBg: "rgba(0,0,0,0.07)",
+              hint: "rgba(0,0,0,0.55)",
+              hrCardBg:
+                  "radial-gradient(120% 90% at 100% 0%, rgba(244,114,182,0.14) 0%, rgba(244,114,182,0) 55%), linear-gradient(160deg, rgba(99,102,241,0.10) 0%, rgba(99,102,241,0.03) 100%)",
+              hrCardBorder: "rgba(99,102,241,0.16)",
+              hrBadgeBg: "linear-gradient(135deg, #6366f1 0%, #ec4899 100%)",
+              hrBadgeShadow: "0 4px 12px -4px rgba(236,72,153,0.45)",
+              hrAccent: "#4f46e5",
+              hrCountBg: "rgba(99,102,241,0.10)",
+              hrTileHoverBg: "rgba(255,255,255,0.7)",
           };
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -363,6 +594,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         backdropFilter: "saturate(180%) blur(30px)",
         WebkitBackdropFilter: "saturate(180%) blur(30px)",
         transformOrigin: "top right",
+        maxHeight: "calc(100vh - 72px)",
+        overflowY: "auto",
         willChange: "opacity, transform",
     },
     eyebrow: {
@@ -436,6 +669,51 @@ const styles: { [key: string]: React.CSSProperties } = {
         transition:
             "background-color 140ms ease, transform 120ms ease",
         outline: "none",
+    },
+    hrCard: {
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 16,
+    },
+    hrHeader: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "2px 4px 8px",
+    },
+    hrBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 28,
+        height: 28,
+        borderRadius: 9,
+        color: "#fff",
+        flexShrink: 0,
+    },
+    hrHeaderText: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minWidth: 0,
+    },
+    hrTitle: {
+        fontSize: 13,
+        fontWeight: 700,
+        letterSpacing: "0.02em",
+        lineHeight: 1.2,
+    },
+    hrCaption: {
+        fontSize: 11,
+        lineHeight: 1.3,
+    },
+    hrCount: {
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: "0.04em",
+        padding: "3px 8px",
+        borderRadius: 999,
+        flexShrink: 0,
     },
     tileLabel: {
         fontSize: 12,

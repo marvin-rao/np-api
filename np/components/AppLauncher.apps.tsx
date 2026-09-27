@@ -25,6 +25,13 @@ export interface NewpaperAppDef {
     id: string;
     /** Display label shown under the icon. */
     label: string;
+    /** One line on what the app is for, shown when a tile is hovered. */
+    description?: string;
+    /**
+     * Section the launcher shows the app in. Omitted = the main grid;
+     * "hr" = the HR group at the bottom (people, hiring and rosters).
+     */
+    group?: "hr";
     /**
      * Builder for the launch URL. Receives the active workspace id (may be
      * `null` if no workspace is loaded) and returns the absolute URL to
@@ -49,6 +56,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "spaceos",
         label: "SpaceOS",
+        description: "Your workspace home, with every Newpaper tool in one place",
         iconUrl: spaceosIcon,
         fallbackGlyph: "◆",
         // SpaceOS is the main Newpaper shell. The
@@ -61,6 +69,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "spaceai",
         label: "Space AI",
+        description: "An AI assistant that works across your workspace",
         iconUrl: spaceaiIcon,
         fallbackGlyph: "✦",
         buildUrl: (pid) =>
@@ -71,6 +80,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "notes",
         label: "Notes",
+        description: "Write, organise and share notes and documents",
         iconUrl: notesIcon,
         fallbackGlyph: "N",
         buildUrl: (pid) =>
@@ -81,6 +91,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "canvas",
         label: "Canvas",
+        description: "An infinite whiteboard for sticky notes, diagrams and plans",
         iconUrl: canvasIcon,
         fallbackGlyph: "▦",
         buildUrl: (pid) =>
@@ -91,6 +102,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "forms",
         label: "Forms",
+        description: "Build forms and surveys, and collect responses",
         iconUrl: formsIcon,
         fallbackGlyph: "F",
         buildUrl: (pid) =>
@@ -101,6 +113,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "files",
         label: "Files",
+        description: "Store, organise and share your files",
         iconUrl: spacedriveIcon,
         fallbackGlyph: "Fi",
         buildUrl: (pid) =>
@@ -111,6 +124,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "bookings",
         label: "Bookings",
+        description: "Let people book appointments and time with you",
         iconUrl: bookingIcon,
         fallbackGlyph: "B",
         buildUrl: (pid) =>
@@ -121,6 +135,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "calls",
         label: "Calls",
+        description: "Voice and video calls with your team",
         iconUrl: callsIcon,
         fallbackGlyph: "☎",
         buildUrl: (pid) =>
@@ -131,6 +146,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "chat",
         label: "Chat",
+        description: "Message your team, one-to-one or in groups",
         iconUrl: chatIcon,
         fallbackGlyph: "💬",
         buildUrl: () => "https://chat.newpaper.app/",
@@ -138,6 +154,7 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     {
         id: "tasks",
         label: "Tasks",
+        description: "Plan and track work on task boards",
         iconUrl: tasksIcon,
         fallbackGlyph: "T",
         // Tasks lives inside the SpaceOS shell at
@@ -149,7 +166,9 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     },
     {
         id: "recruit",
+        group: "hr",
         label: "Recruit",
+        description: "Post jobs and manage candidates through hiring",
         iconUrl: recruitIcon,
         fallbackGlyph: "R",
         buildUrl: (pid) =>
@@ -159,7 +178,9 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     },
     {
         id: "career",
+        group: "hr",
         label: "Career",
+        description: "Your public careers site, where candidates find and apply for jobs",
         iconUrl: careerIcon,
         fallbackGlyph: "C",
         // Career is the public-facing site, not workspace-scoped.
@@ -167,7 +188,9 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
     },
     {
         id: "shifts",
+        group: "hr",
         label: "Shifts",
+        description: "Schedule staff shifts and manage rosters",
         iconUrl: shiftsIcon,
         fallbackGlyph: "S",
         // Shifts is not workspace-scoped.
