@@ -1,8 +1,5 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
-import { appFetch, RequestMethod } from "../helper/fetchUtils";
-import { useAuthData } from "../helper/provider";
-import { useProjectGetBase, useProjectId } from "./projects";
+import { useProjectGetBase, useProjectRequest } from "./projects";
+import { ObjectId } from "./types";
 
 /**
  * Indaba: company announcements. Workspace admins publish official posts;
@@ -287,147 +284,57 @@ export const useShiftTemplates = (options?: { enabled?: boolean }) =>
   useProjectGetBase<ShiftTemplate[]>({ path: "shifts/types", enabled: options?.enabled });
 
 // ── Writes ───────────────────────────────────────────────────────────────────
+//
+// All writes are `useProjectRequest` hooks, like the rest of the package:
+// `submit(body, ({ message, data }) => …)`, with `loading` and `error`. Callers
+// refetch the reads they show after a successful submit.
 
-/**
- * An awaitable request: resolves with the response's data, rejects with the
- * server's message ("Choose who this is for"), and refreshes every cached
- * announcements query afterwards so lists and badges stay current.
- */
-const useAnnouncementsRequest = <Body, Result>(
-  path: string,
-  method: RequestMethod,
-  /** Writes refresh cached lists; read-only calls (a preview, an export) don't. */
-  { invalidates = method !== "GET" }: { invalidates?: boolean } = {}
-) => {
-  const { apiBaseUrl, onSessionExpired } = useAuthData();
-  const { projectId } = useProjectId();
-  const queryClient = useQueryClient();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const run = useCallback(
-    async (body?: Body, params?: Record<string, string>): Promise<Result> => {
-      if (!projectId) throw new Error("No workspace selected");
-      setLoading(true);
-      setError(null);
-      try {
-        const extra = Object.keys(params ?? {})
-          .map((k) => `&${encodeURIComponent(k)}=${encodeURIComponent((params as Record<string, string>)[k])}`)
-          .join("");
-        const response = await appFetch({
-          method,
-          url: `${apiBaseUrl}${path}?projectId=${encodeURIComponent(projectId)}${extra}`,
-          body,
-        });
-        const json = await response.json().catch(() => ({}));
-        if (response.status === 403 && JSON.stringify(json).includes("Provide bearer or cookie")) {
-          onSessionExpired();
-        }
-        if (!response.ok) {
-          throw new Error(json?.message || `Request failed (${response.status})`);
-        }
-        if (invalidates) {
-          await queryClient.invalidateQueries({
-            predicate: (q) => {
-              const key = q.queryKey?.[0];
-              return typeof key === "string" && key.startsWith("announcements");
-            },
-          });
-        }
-        return json?.data as Result;
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        setError(message);
-        throw new Error(message);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [apiBaseUrl, invalidates, method, onSessionExpired, path, projectId, queryClient]
-  );
-
-  return { run, loading, error };
-};
-
-/** Create a draft. Workspace admins only. */
+/** Create a draft. Workspace admins only. `data` is the new Announcement. */
 export const useAddAnnouncement = () =>
-  useAnnouncementsRequest<AnnouncementDraft, Announcement>("announcements", "post");
+  useProjectRequest<AnnouncementDraft>({ path: "announcements", method: "post" });
 
 /**
  * Save fields and/or move the post along with `action`. With
  * `resetAcknowledgements`, a material edit makes everyone acknowledge again.
+ * `data` is `{ announcement, reached? }`.
  */
 export const useUpdateAnnouncement = () =>
-  useAnnouncementsRequest<
-    AnnouncementDraft & { id: string; action?: AnnouncementAction; resetAcknowledgements?: boolean },
-    { announcement: Announcement; reached?: number }
-  >("announcements", "PATCH");
+  useProjectRequest<
+    AnnouncementDraft & { id: string; action?: AnnouncementAction; resetAcknowledgements?: boolean }
+  >({ path: "announcements", method: "PATCH" });
 
 /** Drafts only; published posts are archived instead. */
 export const useDeleteAnnouncement = () =>
-  useAnnouncementsRequest<{ id: string }, { id: string }>("announcements", "delete");
+  useProjectRequest<ObjectId>({ path: "announcements", method: "delete" });
 
-/** How many people an audience reaches right now, for "Reaches N people". */
+/** How many people an audience reaches: `data` is `{ count, sample }`. */
 export const usePreviewAnnouncementAudience = () =>
-  useAnnouncementsRequest<
-    { audience: AnnouncementAudience },
-    { count: number; sample: AnnouncementPerson[] }
-  >("announcements/audience_preview", "post", { invalidates: false });
+  useProjectRequest<{ audience: AnnouncementAudience }>({ path: "announcements/audience_preview", method: "post" });
 
 export const useMarkAnnouncementRead = () =>
-  useAnnouncementsRequest<{ announcementId: string }, AnnouncementReceipt>("announcements/read", "post");
+  useProjectRequest<{ announcementId: string }>({ path: "announcements/read", method: "post" });
 
 /** "I have read and understood" for the version the reader saw. */
 export const useAcknowledgeAnnouncement = () =>
-  useAnnouncementsRequest<{ announcementId: string; version: number }, AnnouncementReceipt>(
-    "announcements/acknowledge",
-    "post"
-  );
+  useProjectRequest<{ announcementId: string; version: number }>({ path: "announcements/acknowledge", method: "post" });
 
+/** Toggle my reaction: `data` is the post's AnnouncementReactions. */
 export const useReactToAnnouncement = () =>
-  useAnnouncementsRequest<{ announcementId: string; emoji: string }, AnnouncementReactions>(
-    "announcements/react",
-    "post"
-  );
+  useProjectRequest<{ announcementId: string; emoji: string }>({ path: "announcements/react", method: "post" });
 
 export const useAddAnnouncementComment = () =>
-  useAnnouncementsRequest<{ announcementId: string; text: string }, AnnouncementComment>(
-    "announcements/comments",
-    "post"
-  );
+  useProjectRequest<{ announcementId: string; text: string }>({ path: "announcements/comments", method: "post" });
 
 export const useDeleteAnnouncementComment = () =>
-  useAnnouncementsRequest<{ announcementId: string; commentId: string }, { id: string }>(
-    "announcements/comments",
-    "delete"
-  );
+  useProjectRequest<{ announcementId: string; commentId: string }>({ path: "announcements/comments", method: "delete" });
 
-/** Re-notify everyone who hasn't acknowledged (or read). */
+/** Re-notify everyone who hasn't acknowledged (or read): `data` is `{ nudged }`. */
 export const useNudgeAnnouncement = () =>
-  useAnnouncementsRequest<{ announcementId: string }, { nudged: number }>("announcements/nudge", "post");
+  useProjectRequest<{ announcementId: string }>({ path: "announcements/nudge", method: "post" });
 
 export const useUpdateAnnouncementSettings = () =>
-  useAnnouncementsRequest<Partial<AnnouncementSettings>, AnnouncementSettings>(
-    "announcements/settings",
-    "PATCH"
-  );
+  useProjectRequest<Partial<AnnouncementSettings>>({ path: "announcements/settings", method: "PATCH" });
 
-/** The evidence pack as CSV or PDF, saved straight to the user's downloads. */
-export const useExportAnnouncement = () => {
-  const request = useAnnouncementsRequest<undefined, AnnouncementExport>("announcements/export", "GET");
-  const download = useCallback(
-    async (announcementId: string, format: "csv" | "pdf") => {
-      const file = await request.run(undefined, { announcementId, format });
-      const bytes = Uint8Array.from(atob(file.base64), (c) => c.charCodeAt(0));
-      const url = URL.createObjectURL(new Blob([bytes], { type: file.mimeType }));
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = file.filename;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      return file;
-    },
-    [request]
-  );
-  return { download, loading: request.loading, error: request.error };
-};
+/** The evidence pack: `data` is an AnnouncementExport (base64 CSV or PDF). */
+export const useExportAnnouncement = () =>
+  useProjectRequest<{ announcementId: string; format: "csv" | "pdf" }>({ path: "announcements/export", method: "post" });
