@@ -45,6 +45,20 @@ export type PayrollBankAccount = {
   holder: string;
 };
 
+/** An address structured the way SARS needs it on tax certificates. */
+export type PayrollAddress = {
+  unitNumber?: string;
+  complex?: string;
+  streetNumber?: string;
+  street: string;
+  suburb?: string;
+  city?: string;
+  /** 4 digits in South Africa. */
+  postalCode: string;
+  /** 2-letter country code (ZA). */
+  country: string;
+};
+
 export type PayrollEmployer = {
   legalName: string;
   tradingName?: string;
@@ -58,6 +72,13 @@ export type PayrollEmployer = {
   payDay: number;
   contactPhone?: string;
   contactEmail?: string;
+  /** Street address for SARS certificates (the company record). */
+  physicalAddress?: PayrollAddress;
+  /** Who SARS contacts about reconciliations. */
+  payrollContact?: { firstName: string; surname: string; position?: string; phone: string };
+  /** SIC7 industry code, 5 digits. */
+  sic7?: string;
+  diplomaticIndemnity?: boolean;
 };
 
 export type PayrollPerson = { id: string; name: string; avatar: string; email: string };
@@ -134,11 +155,18 @@ export type PayrollPersonDetails = {
   endReason?: string;
   idNumber?: string;
   passportNumber?: string;
+  /** 3-letter code of the passport's country. */
+  passportCountry?: string;
   /** From the SA ID when there is one. */
   dateOfBirth?: string;
   taxNumber?: string;
   address?: string;
-  bank?: PayrollBankAccount & { bankName: string };
+  /** Home address, structured for SARS. */
+  residential?: PayrollAddress;
+  /** Work or cell number SARS can use. */
+  workPhone?: string;
+  email?: string;
+  bank?: PayrollBankAccount & { bankName: string; holderRelationship: "own" | "joint" | "third_party" };
   pay: { basis: "monthly" | "hourly"; amount: number; hoursPerMonth: number };
   recurringEarnings: PayrollEarning[];
   recurringDeductions: (PayrollDeduction & { percentage?: number })[];
@@ -167,10 +195,13 @@ export type PayrollPersonInput = {
   startDate: string;
   idNumber?: string;
   passportNumber?: string;
+  passportCountry?: string;
   dateOfBirth?: string;
   taxNumber?: string;
   address?: string;
-  bank?: { bankName: string; branchCode: string; accountNumber: string; accountType: "1" | "2" | "3"; holder: string };
+  residential?: PayrollAddress;
+  workPhone?: string;
+  bank?: { bankName: string; branchCode: string; accountNumber: string; accountType: "1" | "2" | "3"; holder: string; holderRelationship?: "own" | "joint" | "third_party" };
   pay: { basis: "monthly" | "hourly"; amount: number; hoursPerMonth: number };
   recurringEarnings: PayrollEarning[];
   /** Each needs the date the employee consented (BCEA s34). */
@@ -219,7 +250,7 @@ export type PayRun = {
   filedAt?: number;
   filedBy?: string;
   emp201Reference?: string;
-  bankFile?: { sha256: string; generatedAt: number; generatedBy: string; count: number; issue: number };
+  bankFile?: { sha256: string; generatedAt: number; generatedBy: string; count: number; issue: number; format?: string };
   emp201Due: string;
 };
 
@@ -245,8 +276,18 @@ export type PayRunLine = {
   blocking: PayrollWarning[];
 };
 
+/** A bank file this company can make, chosen from the bank it pays from. */
+export type PayrollBankFileFormat = {
+  id: "fnb_csv" | "fnb_acb" | "payment_list";
+  label: string;
+  description: string;
+};
+
 export type PayRunDetail = {
   run: PayRun;
+  /** Files for the paying bank first; the payment list is always last. */
+  bankFormats: PayrollBankFileFormat[];
+  payingBank: string | null;
   people: { approvedBy: PayrollPerson | null; paidBy: PayrollPerson | null; filedBy: PayrollPerson | null };
   lines: PayRunLine[];
 };
@@ -353,7 +394,7 @@ export type PayrollPayslip = {
 export type MyPayslip = { runId: string; period: string; payDate: string; releasedAt: number; payslip: PayrollPayslip };
 
 /** A generated file: base64 contents with a name and type. */
-export type PayrollFile = { filename: string; mimeType: string; base64: string; sha256?: string; issue?: number };
+export type PayrollFile = { filename: string; mimeType: string; base64: string; sha256?: string; issue?: number; certificates?: number };
 
 // ── Reads ────────────────────────────────────────────────────────────────────
 
@@ -449,9 +490,9 @@ export const useApprovePayRun = () =>
 export const useReopenPayRun = () =>
   useProjectRequest<{ runId: string; reason: string }>({ path: "payroll/runs/reopen", method: "post" });
 
-/** FNB bank file for an approved run. `data` is a PayrollFile. */
+/** A bank file (or the payment list) for an approved run. `data` is a PayrollFile. */
 export const usePayRunBankFile = () =>
-  useProjectRequest<{ runId: string }>({ path: "payroll/runs/bank_file", method: "post" });
+  useProjectRequest<{ runId: string; format?: PayrollBankFileFormat["id"] }>({ path: "payroll/runs/bank_file", method: "post" });
 
 /** Record that salaries went out; releases everyone's payslips. */
 export const useMarkPayRunPaid = () =>
@@ -469,9 +510,23 @@ export const usePreviewPayslip = () =>
 export const usePayslipPdf = () =>
   useProjectRequest<{ runId: string; userId?: string }>({ path: "payroll/payslip_pdf", method: "post" });
 
-/** IRP5 code totals as CSV. `data` is a PayrollFile. */
+/**
+ * Exports. "reconciliation": IRP5 code totals as CSV. "easyfile": SARS's
+ * e@syFile Employer import file (IRP5/IT3(a) certificates). `data` is a
+ * PayrollFile, or `{ problems }` listing what SARS needs that's missing.
+ */
 export const useExportPayroll = () =>
-  useProjectRequest<{ type: "reconciliation"; taxYear: number; interim?: boolean }>({ path: "payroll/export", method: "post" });
+  useProjectRequest<{ type: "reconciliation" | "easyfile"; taxYear: number; interim?: boolean; test?: boolean }>({ path: "payroll/export", method: "post" });
+
+export type PayrollSarsLists = {
+  source: string;
+  sic7: { code: string; label: string; eti: boolean }[];
+  countries: { name: string; code2: string; code3: string }[];
+};
+
+/** SARS's SIC7 industry codes and country codes, for pickers. */
+export const usePayrollSarsLists = (options?: { enabled?: boolean }) =>
+  useProjectGetBase<PayrollSarsLists>({ path: "payroll/sars/lists", enabled: options?.enabled });
 
 /** Try numbers without saving anything. `data` is a PayrollResult. */
 export const useCalculatePay = () =>
@@ -485,4 +540,6 @@ export const useCalculatePay = () =>
       travelMostlyBusiness?: boolean;
       sdlExempt?: boolean;
     };
+    /** Monthly deductions; `percentage` is a share of cash pay, like in a pay run. */
+    deductions?: { label: string; amount: number; percentage?: number; damageOrLoss?: boolean }[];
   }>({ path: "payroll/calculate", method: "post" });

@@ -254,6 +254,27 @@ export const useAnnouncementCounts = (options?: { enabled?: boolean }) =>
     enabled: options?.enabled,
   });
 
+/** My live posts in brief: counts, what waits for my acknowledgement, the newest few. */
+export const useMyAnnouncements = (options?: { enabled?: boolean }) =>
+  useProjectGetBase<{
+    usesAnnouncements: boolean;
+    unread: number;
+    needsAck: number;
+    awaitingAck: MyAnnouncementItem[];
+    latest: MyAnnouncementItem[];
+  }>({ path: "announcements/mine", enabled: options?.enabled });
+
+export type MyAnnouncementItem = {
+  id: string;
+  title: string;
+  priority: AnnouncementPriority;
+  category: string;
+  publishedAt?: number;
+  ackDueAt?: number;
+  unread: boolean;
+  needsAck: boolean;
+};
+
 export const useAnnouncementComments = (announcementId?: string, options?: { enabled?: boolean }) =>
   useProjectGetBase<AnnouncementComment[]>({
     path: "announcements/comments",

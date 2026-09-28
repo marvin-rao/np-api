@@ -23,6 +23,7 @@ import leaveIcon from "./app-icons/leave.png?url";
 import timeTrackingIcon from "./app-icons/timetracking.png?url";
 import payslipsIcon from "./app-icons/payslips.png?url";
 import chatIcon from "./app-icons/chat.png?url";
+import meIcon from "./app-icons/me.png?url";
 
 export interface NewpaperAppDef {
     /** Stable id for keying. */
@@ -200,6 +201,18 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         fallbackGlyph: "C",
         // Career is the public-facing site, not workspace-scoped.
         buildUrl: () => "https://career.newpaper.app/",
+    },
+    {
+        id: "me",
+        group: "hr",
+        label: "Employee Portal",
+        description: "Your shifts, leave, payslips and to-dos in one place",
+        iconUrl: meIcon,
+        fallbackGlyph: "E",
+        buildUrl: (pid) =>
+            pid
+                ? `https://employee.newpaper.app/workspace/${pid}/`
+                : "https://employee.newpaper.app/",
     },
     {
         id: "shifts",
