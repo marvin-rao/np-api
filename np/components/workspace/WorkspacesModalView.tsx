@@ -3,6 +3,7 @@ import { useAuthData } from "../../../helper/provider";
 import { useCreateWorkspace } from "../../projects";
 import { Workspace } from "../../types";
 import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
+import { byRecent, rememberWorkspace } from "./recentWorkspaces";
 import { makeStyle } from "./styles";
 import { useResolvedDarkMode } from "./useColorScheme";
 
@@ -36,14 +37,16 @@ export const WorkspacesModalView = ({
   const [showCreateForm, setShowCreateForm] = useState(false);
   const { submit, loading: createLoading, error } = useCreateWorkspace();
 
-  const filteredWorkspaces = workspaces
-    .filter(
+  // The workspace picked last time comes first, then newest created.
+  const filteredWorkspaces = byRecent(
+    workspaces.filter(
       (workspace) =>
         workspace.name.toLowerCase().includes(filter.toLowerCase()) ||
         (workspace.description &&
           workspace.description.toLowerCase().includes(filter.toLowerCase()))
-    )
-    .sort((a, b) => b.created - a.created);
+    ),
+    (a, b) => b.created - a.created
+  );
 
   const handleClearSearch = () => {
     setFilter("");
@@ -257,6 +260,7 @@ export const WorkspacesModalView = ({
                     }}
                     onClick={() => {
                       setSelectedId(workspace.id);
+                      rememberWorkspace(workspace.id);
                       onSelect(workspace);
                     }}
                     onMouseEnter={() => setHoveredId(workspace.id)}

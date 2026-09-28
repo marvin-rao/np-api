@@ -19,6 +19,9 @@ import careerIcon from "./app-icons/career_app_icon.png?url";
 import spaceosIcon from "./app-icons/spaceos.png?url";
 import callsIcon from "./app-icons/calls.png?url";
 import shiftsIcon from "./app-icons/shifts.png?url";
+import leaveIcon from "./app-icons/leave.png?url";
+import timeTrackingIcon from "./app-icons/timetracking.png?url";
+import payslipsIcon from "./app-icons/payslips.png?url";
 import chatIcon from "./app-icons/chat.png?url";
 
 export interface NewpaperAppDef {
@@ -207,6 +210,43 @@ export const NEWPAPER_APPS: NewpaperAppDef[] = [
         fallbackGlyph: "S",
         // Shifts is not workspace-scoped.
         buildUrl: () => "https://shifts.newpaper.app/",
+    },
+    {
+        id: "leave",
+        group: "hr",
+        label: "Leave",
+        description: "Apply for leave, approve requests and see balances",
+        iconUrl: leaveIcon,
+        fallbackGlyph: "L",
+        // Leave lives in the main Newpaper app.
+        buildUrl: (pid) =>
+            pid
+                ? `https://newpaper.app/project/${pid}/leave/home`
+                : "https://newpaper.app/",
+    },
+    {
+        id: "time-tracking",
+        group: "hr",
+        label: "Time Tracking",
+        description: "Log hours worked and see time on the calendar",
+        iconUrl: timeTrackingIcon,
+        fallbackGlyph: "T",
+        buildUrl: (pid) =>
+            pid
+                ? `https://newpaper.app/project/${pid}/time-tracking/calendar`
+                : "https://newpaper.app/",
+    },
+    {
+        id: "payslips",
+        group: "hr",
+        label: "Payslips",
+        description: "Your payslips, and payslips for your team",
+        iconUrl: payslipsIcon,
+        fallbackGlyph: "P",
+        buildUrl: (pid) =>
+            pid
+                ? `https://newpaper.app/project/${pid}/accounting/payslips/mypayslips`
+                : "https://newpaper.app/",
     },
 ];
 
