@@ -17,6 +17,7 @@ export { AuthProvider, useAuthSession } from "./helper/provider";
 export * from "./api";
 export * from "./np/announcements";
 export * from "./np/payroll";
+export * from "./np/platform";
 export * from "./np/portal";
 export * from "./np/leave";
 export * from "./np/timetracking";
