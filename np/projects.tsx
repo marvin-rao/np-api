@@ -69,6 +69,22 @@ export const useProjects = () => {
   });
 };
 
+/** A project (task board) in a workspace, as listed for pickers. */
+export type WorkspaceProject = { id: string; name: string; permissions?: { private?: boolean } };
+
+/**
+ * The projects in any workspace you belong to that you can see (private
+ * projects only if you're in them). For pickers that choose the workspace
+ * first, unlike the hooks that read the workspace from the address.
+ */
+export const useWorkspaceProjects = (workspaceId?: string) =>
+  useGet<WorkspaceProject[]>({
+    path: "tasks/boards/list",
+    options: { queryString: `?projectId=${encodeURIComponent(workspaceId ?? "")}&type=Tasks` },
+    deps: [workspaceId],
+    enabled: !!workspaceId,
+  });
+
 export const useCreateWorkspace = () => {
   return useRequest<Workspace, ServerResult<Workspace>>({
     path: "projects",
